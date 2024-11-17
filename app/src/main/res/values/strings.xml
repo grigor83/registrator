@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Registar</string>
+    <string name="os_label_name">osnovna sredstva</string>
+    <string name="employers_label_name">zaposleni</string>
+    <string name="locations_label_name">lokacije</string>
+    <string name="census_lists_label_name">popisne liste</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

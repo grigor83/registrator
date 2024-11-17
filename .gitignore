@@ -1,72 +1,15 @@
-# Gradle Files
-.gradle/
-build/
-*/build/
-!gradle-wrapper.jar
-
-# Local configuration files
-.idea/
 *.iml
-*.ipr
-*.iws
-out/
-local.properties
-
-# Signing keys
-*.keystore
-
-# Android-specific files
-/capture/
-/.idea/caches/
-/.idea/libraries/
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
 /.idea/modules.xml
 /.idea/workspace.xml
 /.idea/navEditor.xml
 /.idea/assetWizardSettings.xml
-/.idea/codeStyles/
-/.idea/gradle.xml
-/.idea/vcs.xml
-*.jks
-**/gradle-wrapper.properties
-
-# OS-specific files
 .DS_Store
-Thumbs.db
-
-# Logs
-*.log
-
-# Compiled files
-*.class
-
-# Miscellaneous
-*.swp
-*.lock
-*.orig
-*.bak
-*.tmp
-*.old
-*.jar
-*.apk
-*.ap_
-
-# ProGuard
-proguard/
-
-# NDK
-obj/
-.externalNativeBuild/
-
-# IntelliJ
-.idea/misc.xml
-.idea/modules.xml
-.idea/vcs.xml
-.idea/dictionaries/
-.idea/libraries/
-.idea/runConfigurations/
-.idea/codeStyles/
-.idea/compiler.xml
-
-# Debug and release configurations
-*.apk
-*.ap_
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
