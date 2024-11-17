@@ -95,8 +95,8 @@ public class FixedAssetsAdapter extends RecyclerView.Adapter<FixedAssetsAdapter.
         String location = locationQuery.toLowerCase();
 
         for (FixedAsset asset : fixedAssetList) {
-            boolean matchesTitle = !titleQuery.isEmpty() && asset.getTitle().toLowerCase().contains(title);
-            boolean matchesLocation = !locationQuery.isEmpty() && asset.getLocation().getCity().toLowerCase().contains(location);
+            boolean matchesTitle = !titleQuery.isEmpty() && asset.getTitle().toLowerCase().startsWith(title);
+            boolean matchesLocation = !locationQuery.isEmpty() && asset.getLocation().getCity().toLowerCase().startsWith(location);
 
             // If either query is empty, skip checking it; otherwise match one or both
             if ((titleQuery.isEmpty() && matchesLocation) ||

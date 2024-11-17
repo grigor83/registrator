@@ -1,4 +1,4 @@
-package com.example.registar.tabs;
+package com.example.registar.fragment;
 
 import android.os.Bundle;
 
