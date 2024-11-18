@@ -29,13 +29,16 @@
             android:id="@+id/tabLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/teal_200"/>
+            app:tabBackground="@drawable/tab_background_selector"
+            app:tabIndicator="@color/secondary"
+            app:tabTextAppearance="@style/CustomTabTextStyle"/>
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="@dimen/viewpager_layout_height"
+        android:layout_margin="@dimen/viewpager_layout_margin"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/appBarLayout" />
 

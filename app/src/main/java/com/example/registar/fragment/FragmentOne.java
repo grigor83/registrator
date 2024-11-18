@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.registar.R;
 import com.example.registar.adapter.FixedAssetsAdapter;
@@ -122,4 +123,5 @@ public class FragmentOne extends Fragment {
 
         adapter.filter(titleQuery, locationQuery);
     }
+
 }

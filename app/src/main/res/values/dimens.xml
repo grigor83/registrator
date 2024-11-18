@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="tabTextSize">25sp</dimen>
+
+    <!-- settings for viewpager in activity_main layout  -->
+    <dimen name="viewpager_layout_height">0dp</dimen>
+    <dimen name="viewpager_layout_margin">8dp</dimen>
+
+    <!-- settings for container of search edit texts in fragment_one layout  -->
+    <dimen name="edit_texts_container_padding_top">10dp</dimen>
+    <!-- settings for recyclerview in fragment_one layout  -->
+    <dimen name="recyclerview_side_margin">3dp</dimen>
+    <dimen name="recyclerview_margin_top">8dp</dimen>
+    <!-- settings for floating action button in fragment_one layout  -->
+    <dimen name="floating_action_button_margin">10dp</dimen>
+
+    <!-- settings for assets_recycler_item layout  -->
+    <dimen name="asset_recycler_item_height">80dp</dimen>
+    <dimen name="asset_recycler_item_margin_bottom">8dp</dimen>
+    <dimen name="recycler_imageview_width">80dp</dimen>
+    <dimen name="recycler_imageview_padding">5dp</dimen>
+    <dimen name="recycler_imageview_margins">5dp</dimen>
+    <dimen name="recycler_imageview_margin_end">15dp</dimen>
+    <dimen name="textview_title_padding">3dp</dimen>
+    <dimen name="textview_title_textSize">18sp</dimen>
+    <dimen name="textview_textSize">15sp</dimen>
+
+    <!-- settings for popup_crud  -->
+    <dimen name="popup_crud_padding">8dp</dimen>
+
+</resources>

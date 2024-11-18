@@ -3,15 +3,14 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@drawable/popup_crud_background"
-    android:padding="8dp">
+    android:background="@drawable/popup_crud_background">
 
     <TextView
         android:id="@+id/action_edit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp"
-        android:text="Edit"
+        android:padding="@dimen/popup_crud_padding"
+        android:text="@string/popup_crud_textview_edit_text"
         android:clickable="true"
         android:focusable="true"/>
 
@@ -19,8 +18,8 @@
         android:id="@+id/action_delete"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp"
-        android:text="Delete"
+        android:padding="@dimen/popup_crud_padding"
+        android:text="@string/popup_crud_textview_delete_text"
         android:clickable="true"
         android:focusable="true"/>
 </LinearLayout>

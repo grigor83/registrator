@@ -1,9 +1,27 @@
 <resources>
     <string name="app_name">Registar</string>
-    <string name="os_label_name">osnovna sredstva</string>
-    <string name="employers_label_name">zaposleni</string>
-    <string name="locations_label_name">lokacije</string>
-    <string name="census_lists_label_name">popisne liste</string>
+    <string name="assets_tab_name">osnovna sredstva</string>
+    <string name="employers_tab_name">zaposleni</string>
+    <string name="locations_tab_name">lokacije</string>
+    <string name="census_lists_tab_name">popisne liste</string>
+    <string name="settings">Podešavanja</string>
+    <string name="languages">Jezici</string>
+    <string name="chair">stolica</string>
+    <string name="computer">računar</string>
+    <string name="search_by_title">Pretraži po nazivu</string>
+    <string name="search_by_location">Pretraži po lokaciji</string>
+    <string name="textview_title_text">Naziv</string>
+    <string name="textview_description_text">Opis</string>
+    <string name="textview_location_text">Lokacija</string>
+
+
+    <string name="fab_contentDescription">Add Item</string>
+    <string name="imageview_contentDescription">Picture</string>
+
+    <string name="popup_crud_textview_edit_text">Izmijeni</string>
+    <string name="popup_crud_textview_delete_text">Obriši</string>
+
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

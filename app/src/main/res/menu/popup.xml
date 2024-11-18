@@ -6,12 +6,12 @@
         android:id="@+id/settings"
         app:showAsAction="never"
         android:orderInCategory="100"
-        android:title="Podešavanja"/>
+        android:title="@string/settings"/>
 
     <item
         android:id="@+id/languages"
         app:showAsAction="never"
         android:orderInCategory="200"
-        android:title="Jezici"/>
+        android:title="@string/languages"/>
 
 </menu>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Background for the active (selected) tab -->
+    <item android:drawable="@color/secondary" android:state_selected="true" />
+    <!-- Background for inactive tabs -->
+    <item android:drawable="@color/primary" />
+</selector>

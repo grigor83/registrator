@@ -1,19 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="80dp"
-    android:background="@color/light_blue_A400"
-    android:layout_margin="5dp">
+    android:layout_height="@dimen/asset_recycler_item_height"
+    android:layout_marginBottom="@dimen/asset_recycler_item_margin_bottom"
+    android:background="@drawable/recycler_item_background">
 
     <ImageView
         android:id="@+id/icon"
-        android:layout_width="80dp"
+        android:layout_width="@dimen/recycler_imageview_width"
         android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
-        android:padding="5dp"
-        android:contentDescription="TODO"
+        android:padding="@dimen/recycler_imageview_padding"
+        android:layout_marginTop="@dimen/recycler_imageview_margins"
+        android:layout_marginBottom="@dimen/recycler_imageview_margins"
+        android:layout_marginStart="@dimen/recycler_imageview_margins"
+        android:layout_marginEnd="@dimen/recycler_imageview_margin_end"
+        android:contentDescription="@string/imageview_contentDescription"
+        android:background="@drawable/imageview_background"
         android:src="@drawable/chair">
 
     </ImageView>
@@ -24,10 +29,10 @@
         android:layout_height="wrap_content"
         android:layout_toEndOf="@id/icon"
         android:layout_alignParentTop="true"
-        android:paddingTop="4dp"
-        android:paddingBottom="3dp"
-        android:text="Title"
-        android:textSize="20sp" />
+        android:paddingTop="@dimen/textview_title_padding"
+        android:paddingBottom="@dimen/textview_title_padding"
+        android:text="@string/textview_title_text"
+        android:textSize="@dimen/textview_title_textSize" />
 
     <TextView
         android:id="@+id/description"
@@ -35,8 +40,8 @@
         android:layout_height="wrap_content"
         android:layout_toEndOf="@id/icon"
         android:layout_below="@id/title"
-        android:text="Description"
-        android:textSize="15sp" />
+        android:text="@string/textview_description_text"
+        android:textSize="@dimen/textview_textSize" />
 
     <TextView
         android:id="@+id/location"
@@ -44,7 +49,7 @@
         android:layout_height="wrap_content"
         android:layout_toEndOf="@id/icon"
         android:layout_below="@id/description"
-        android:text="Location"
-        android:textSize="15sp" />
+        android:text="@string/textview_location_text"
+        android:textSize="@dimen/textview_textSize" />
 
 </RelativeLayout>

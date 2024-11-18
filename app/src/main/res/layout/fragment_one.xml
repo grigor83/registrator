@@ -1,50 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <!-- Container for EditTexts and Button -->
+    <!-- Main Linear Layout -->
     <LinearLayout
+        android:id="@+id/main"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <!-- Vertical container for EditTexts -->
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!-- Container for EditTexts -->
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_weight="1">
+            android:paddingTop="@dimen/edit_texts_container_padding_top">
 
             <EditText
                 android:id="@+id/titleSearch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Search by title"/>
+                android:hint="@string/search_by_title" />
 
             <EditText
                 android:id="@+id/locationSearch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Search by location"/>
+                android:hint="@string/search_by_location" />
         </LinearLayout>
-        <!-- Add Button -->
-        <Button
-            android:id="@+id/addItemButton"
-            android:layout_width="30dp"
+
+        <!-- RecyclerView -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/fixedAssetsRecycler"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
-            android:text="+"
-            android:layout_margin="8dp"
-            android:padding="8dp"
-            android:onClick="addNewAsset"/>
+            android:layout_marginTop="@dimen/recyclerview_margin_top"
+            android:layout_marginLeft="@dimen/recyclerview_side_margin"
+            android:layout_marginRight="@dimen/recyclerview_side_margin"/>
     </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/fixedAssetsRecycler"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-</LinearLayout>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/floating_action_button_margin"
+        android:layout_gravity="end|bottom"
+        app:srcCompat="@drawable/ic_add"
+        android:contentDescription="@string/fab_contentDescription"
+        android:onClick="addNewAsset"/>
+</FrameLayout>

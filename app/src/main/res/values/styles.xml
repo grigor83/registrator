@@ -4,4 +4,20 @@
         <item name="android:background">@color/black_overlay</item>
     </style>
 
+    <style name="CustomToolbarStyle" parent="Widget.AppCompat.ActionBar">
+        <!-- Customize your theme here. -->
+        <item name="android:background">@color/primary</item>
+        <item name="popupTheme">@style/CustomPopupTheme</item>
+    </style>
+
+    <!-- Custom toolbar popup style  -->
+    <style name="CustomPopupTheme" parent="Widget.AppCompat.PopupMenu">
+        <item name="android:backgroundTint">@color/primary_variant</item>
+    </style>
+
+    <style name="CustomTabTextStyle" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">@dimen/tabTextSize</item>
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+
 </resources>

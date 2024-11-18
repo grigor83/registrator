@@ -2,6 +2,7 @@ package com.example.registar.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.registar.AssetActivity;
 import com.example.registar.R;
 import com.example.registar.model.FixedAsset;
 
@@ -63,7 +65,8 @@ public class FixedAssetsAdapter extends RecyclerView.Adapter<FixedAssetsAdapter.
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "Kliknuli ste", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(context, AssetActivity.class);
+                context.startActivity(intent);
             }
         });
 
@@ -121,8 +124,7 @@ public class FixedAssetsAdapter extends RecyclerView.Adapter<FixedAssetsAdapter.
 
         // Set click listeners for menu items
         popupView.findViewById(R.id.action_edit).setOnClickListener(v -> {
-            Toast.makeText(context, "Edit " + filteredFixedAssetList.get(position),
-                    Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Edit " + filteredFixedAssetList.get(position), Toast.LENGTH_SHORT).show();
             popupWindow.dismiss();
         });
 
