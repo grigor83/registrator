@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +34,24 @@ import java.util.Objects;
 public class FragmentOne extends Fragment {
 
     private final List<FixedAsset> assets = new ArrayList<>();
+    FixedAssetsAdapter adapter;
+
+    //Launcher za rezultat koji se vraća iz AssetActivity. Ovaj launcher se proslijedi FixedAsset adapteru, koji onda pokreće AssetActivity pomoću njega.
+    // Ako user u AssetActivity stisne dugme za brisanje iz toolbar-a, vratiće int position. Ako user stisne dugme edit, pa ode na AssetActivityEditable
+    // i u slučaju da napravi neke izmjene, te izmjene ce se vratiti prvo u AssetActivity, pa onda ovdje, tj. u Fixedadapter.
+    private final ActivityResultLauncher<Intent> deleteActivityLauncher =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == RESULT_OK) {
+                    int position = Objects.requireNonNull(result.getData()).getIntExtra("position", -1);
+                    if (position != -1)
+                        adapter.deleteAsset(position);
+
+                    FixedAsset returnedAsset = (FixedAsset) Objects.requireNonNull(result.getData()).getSerializableExtra("updatedAsset");
+                    if (returnedAsset != null){
+                        adapter.editAsset(returnedAsset);
+                    }
+                }
+            });
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -75,12 +94,12 @@ public class FragmentOne extends Fragment {
         Employee k = new Employee("ivan", "Ivanković", "komercijalista");
         Location bl = new Location("Banjaluka");
         Location kv = new Location("Kotor Varoš");
-        for (int i=0; i<100; i++){
+        for (int i=0; i<7; i++){
             if (i%2 == 0)
-                assets.add(new FixedAsset("stolica", "kancelarijska stolica", "slika",
+                assets.add(new FixedAsset(i, "stolica"+i, "kancelarijska stolica", "slika",
                         555, 45, LocalDate.now(), m, bl));
             else
-                assets.add(new FixedAsset("računar", "desktop računar", "slika",
+                assets.add(new FixedAsset(i, "računar"+i, "desktop računar", "slika",
                         1000, 500, LocalDate.now(), k, kv));
         }
     }
@@ -94,7 +113,7 @@ public class FragmentOne extends Fragment {
         RecyclerView recyclerView = view.findViewById(R.id.fixedAssetsRecycler);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        FixedAssetsAdapter adapter = new FixedAssetsAdapter(assets, view.getContext());
+        adapter = new FixedAssetsAdapter(assets, view.getContext(), deleteActivityLauncher);
         recyclerView.setAdapter(adapter);
 
         EditText titleSearch = view.findViewById(R.id.titleSearch);

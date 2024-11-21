@@ -25,6 +25,7 @@ import java.util.Objects;
 
 public class AssetActivity extends AppCompatActivity {
     FixedAsset asset;
+    int position;
     TextView titleTextview, descriptionTextview,priceTextview, employeeTextview,
             locationTextview, creationDateTextview, barcodeTextview;
     ImageView imageView;
@@ -78,7 +79,7 @@ public class AssetActivity extends AppCompatActivity {
                     break;
             }
         }
-
+        position = getIntent().getIntExtra("position", -1);
     }
 
     @Override
@@ -99,26 +100,46 @@ public class AssetActivity extends AppCompatActivity {
             Toast.makeText(this, R.string.settings, Toast.LENGTH_SHORT).show();
         else if (item.getItemId() == R.id.action_languages)
             Toast.makeText(this, R.string.languages, Toast.LENGTH_SHORT).show();
-        else if (item.getItemId() == R.id.action_delete)
-            Toast.makeText(this, R.string.popup_crud_textview_delete_text, Toast.LENGTH_SHORT).show();
+        else if (item.getItemId() == R.id.action_delete){
+            Intent resultIntent = new Intent();
+            resultIntent.putExtra("position", position);
+            setResult(RESULT_OK, resultIntent);
+            finish();
+        }
         else if (item.getItemId() == R.id.action_edit){
             Intent intent = new Intent(this, AssetActivityEditable.class);
             intent.putExtra("clickedAsset", asset);
             editActivityLauncher.launch(intent);
         }
-        else if (item.getItemId() == android.R.id.home)
+        else if (item.getItemId() == android.R.id.home){
+            putAssetToResultIntent();
             this.finish();
+        }
 
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onBackPressed() {
+        putAssetToResultIntent();
+        super.onBackPressed();
+    }
+
     private void updateUI(){
-        titleTextview.setText(asset.getTitle());
-        descriptionTextview.setText(asset.getDescription());
-        creationDateTextview.setText(asset.getCreationDate().toString());
+        titleTextview.setText(asset.getTitle().trim());
+        descriptionTextview.setText(asset.getDescription().trim());
+        creationDateTextview.setText(asset.getCreationDate().toString().trim());
         priceTextview.setText(String.valueOf(asset.getPrice()));
-        employeeTextview.setText(asset.getEmployee().getFullName());
-        barcodeTextview.setText(String.valueOf(asset.getBarcode()));
-        locationTextview.setText(asset.getLocation().getCity());
+        employeeTextview.setText(asset.getEmployee().getFullName().trim());
+        barcodeTextview.setText(String.valueOf(asset.getBarcode()).trim());
+        locationTextview.setText(asset.getLocation().getCity().trim());
+    }
+
+    private void putAssetToResultIntent(){
+        if (asset != null){
+            Intent resultIntent = new Intent();
+            resultIntent.putExtra("updatedAsset", asset);
+            setResult(RESULT_OK, resultIntent);
+        }
     }
 }

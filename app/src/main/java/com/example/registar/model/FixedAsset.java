@@ -6,15 +6,16 @@ import java.time.LocalDate;
 public class FixedAsset implements Serializable {
 
     private String title, description, picture;
-    private int barcode, price;
+    private int id, barcode, price;
     private LocalDate creationDate;
     private Employee employee;
     private Location location;
     
     public FixedAsset(){}
 
-    public FixedAsset(String title, String description, String picture, int barcode, int price,
+    public FixedAsset(int id, String title, String description, String picture, int barcode, int price,
                       LocalDate createDate, Employee employee, Location location) {
+        this.id = id;
         this.title = title;
         this.description = description;
         this.picture = picture;
@@ -23,6 +24,14 @@ public class FixedAsset implements Serializable {
         this.creationDate = createDate;
         this.employee = employee;
         this.location = location;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -88,4 +97,20 @@ public class FixedAsset implements Serializable {
     public void setLocation(Location location) {
         this.location = location;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null || getClass() != obj.getClass())
+            return false;
+        FixedAsset that = (FixedAsset) obj;
+        return id == that.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(id); // Generate hash code based on id
+    }
+
 }

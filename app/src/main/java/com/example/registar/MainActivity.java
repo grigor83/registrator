@@ -1,6 +1,8 @@
 package com.example.registar;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -73,5 +75,16 @@ public class MainActivity extends AppCompatActivity {
 
     public void addNewAsset(View v){
         Toast.makeText(v.getContext(), "floating", Toast.LENGTH_SHORT).show();
+    }
+
+    public static void showCustomToast(Context context){
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View layout = inflater.inflate(R.layout.toast_custom, null);
+        //TextView text = layout.findViewById(R.id.toast_text);
+
+        Toast toast = new Toast(context);
+        toast.setDuration(Toast.LENGTH_SHORT);
+        toast.setView(layout);
+        toast.show();
     }
 }

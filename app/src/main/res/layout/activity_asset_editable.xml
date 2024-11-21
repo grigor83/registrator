@@ -19,26 +19,19 @@
 
     <ImageView
         android:id="@+id/icon"
+        style="@style/ImageviewStyle"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/imageview_height"
-        android:padding="@dimen/recycler_imageview_padding"
-        android:layout_margin="@dimen/recycler_imageview_margins"
-        android:contentDescription="@string/imageview_contentDescription"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:background="@drawable/background_editable"
-        android:src="@drawable/chair"
         android:onClick="openImagePicker"/>
 
     <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
+        style="@style/ScrollbarStyle"
         app:layout_constraintTop_toBottomOf="@id/icon"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="@dimen/edit_texts_container_padding_top"
-        android:layout_marginStart="@dimen/popup_crud_padding"
-        android:layout_marginEnd="@dimen/popup_crud_padding">
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -169,13 +162,13 @@
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/cancel"
-                    style="@style/CancelAndSaveButtons"
+                    style="@style/CancelSaveButton"
                     android:text="@string/btn_cancel_text"
                     android:onClick="cancelEditing"/>
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/save"
-                    style="@style/CancelAndSaveButtons"
+                    style="@style/CancelSaveButton"
                     android:text="@string/btn_save_text"
                     android:onClick="saveAsset"/>
             </LinearLayout>
