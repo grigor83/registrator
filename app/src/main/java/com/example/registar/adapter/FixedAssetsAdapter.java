@@ -66,6 +66,8 @@ public class FixedAssetsAdapter extends RecyclerView.Adapter<FixedAssetsAdapter.
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, AssetActivity.class);
+                intent.putExtra("clickedAsset", asset);
+                intent.putExtra("position", position);
                 context.startActivity(intent);
             }
         });
@@ -138,7 +140,6 @@ public class FixedAssetsAdapter extends RecyclerView.Adapter<FixedAssetsAdapter.
         // Show the popup at the exact touch location
         popupWindow.showAtLocation(view, Gravity.NO_GRAVITY, (int) touchX, (int) touchY);
     }
-
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView title, description, location;

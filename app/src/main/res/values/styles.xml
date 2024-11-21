@@ -20,4 +20,62 @@
         <item name="android:textColor">@android:color/black</item>
     </style>
 
+    <!-- Custom TextviewLabel style  -->
+    <style name="TextViewStyleLabel">
+        <item name="android:layout_width">@dimen/textview_title_width</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/background_textview</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:layout_margin">@dimen/recycler_imageview_margins</item>
+        <item name="android:paddingLeft">@dimen/textview_padding_side</item>
+        <item name="android:paddingRight">@dimen/textview_padding_side</item>
+        <item name="android:paddingTop">@dimen/textview_padding</item>
+        <item name="android:paddingBottom">@dimen/textview_padding</item>
+    </style>
+
+    <!-- Custom Textview style  -->
+    <style name="TextViewStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:background">@drawable/background_recycler_item</item>
+        <item name="android:layout_margin">@dimen/recycler_imageview_margins</item>
+        <item name="android:padding">@dimen/recycler_imageview_padding</item>
+    </style>
+
+
+
+    <!-- Style for edit mode -->
+    <style name="EditToolbar" parent="CustomToolbarStyle">
+        <item name="android:background">@color/secondary</item>
+    </style>
+
+    <style name="TextViewStyleInEditMode" parent="TextViewStyleLabel">
+        <item name="android:background">@drawable/background_editable</item>
+    </style>
+
+    <!-- Custom Edittext style  -->
+    <style name="EditTextStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:background">@drawable/background_edittext</item>
+        <item name="android:layout_margin">@dimen/recycler_imageview_margins</item>
+        <item name="android:padding">@dimen/edittext_padding</item>
+        <item name="android:inputType">textMultiLine</item>
+        <item name="android:importantForAutofill">no</item>
+    </style>
+
+    <style name="CancelAndSaveButtons" parent="ThemeOverlay.AppCompat">
+        <item name="android:layout_width">@dimen/btn_width</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">@dimen/textview_padding</item>
+        <item name="android:layout_marginEnd">@dimen/textview_padding</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:background">@drawable/background_button</item>
+    </style>
+
 </resources>

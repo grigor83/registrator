@@ -52,14 +52,20 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.popup, menu);
+
+        MenuItem deleteItem = menu.findItem(R.id.action_delete);
+        MenuItem editItem = menu.findItem(R.id.action_edit);
+        deleteItem.setVisible(false);
+        editItem.setVisible(false);
+
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.settings)
+        if (item.getItemId() == R.id.action_settings)
             Toast.makeText(this, R.string.settings, Toast.LENGTH_SHORT).show();
-        else if (item.getItemId() == R.id.languages)
+        else if (item.getItemId() == R.id.action_languages)
             Toast.makeText(this, R.string.languages, Toast.LENGTH_SHORT).show();
 
         return super.onOptionsItemSelected(item);

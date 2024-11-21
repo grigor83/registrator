@@ -1,7 +1,12 @@
 package com.example.registar.fragment;
 
+import static android.app.Activity.RESULT_OK;
+
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,6 +28,7 @@ import com.example.registar.model.Location;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class FragmentOne extends Fragment {
 
@@ -71,9 +77,11 @@ public class FragmentOne extends Fragment {
         Location kv = new Location("Kotor Varoš");
         for (int i=0; i<100; i++){
             if (i%2 == 0)
-                assets.add(new FixedAsset("stolica", "kancelarijska stolica", "slika", 555, 45, LocalDate.now(), m, bl));
+                assets.add(new FixedAsset("stolica", "kancelarijska stolica", "slika",
+                        555, 45, LocalDate.now(), m, bl));
             else
-                assets.add(new FixedAsset("računar", "desktop računar", "slika", 1000, 500, LocalDate.now(), k, kv));
+                assets.add(new FixedAsset("računar", "desktop računar", "slika",
+                        1000, 500, LocalDate.now(), k, kv));
         }
     }
 

@@ -3,15 +3,27 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/settings"
+        android:id="@+id/action_settings"
         app:showAsAction="never"
         android:orderInCategory="100"
         android:title="@string/settings"/>
 
     <item
-        android:id="@+id/languages"
+        android:id="@+id/action_languages"
         app:showAsAction="never"
         android:orderInCategory="200"
         android:title="@string/languages"/>
+
+    <item
+        android:id="@+id/action_delete"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/delete_icon"
+        android:title="@string/popup_crud_textview_delete_text"/>
+
+    <item
+        android:id="@+id/action_edit"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/edit_icon"
+        android:title="@string/popup_crud_textview_edit_text"/>
 
 </menu>

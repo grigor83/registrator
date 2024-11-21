@@ -1,6 +1,8 @@
 package com.example.registar.model;
 
-public class Location {
+import java.io.Serializable;
+
+public class Location implements Serializable {
 
     private String city;
 

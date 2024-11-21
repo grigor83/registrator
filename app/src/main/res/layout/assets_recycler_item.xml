@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/asset_recycler_item_height"
     android:layout_marginBottom="@dimen/asset_recycler_item_margin_bottom"
-    android:background="@drawable/recycler_item_background">
+    android:background="@drawable/background_highlighted">
 
     <ImageView
         android:id="@+id/icon"
@@ -18,7 +18,7 @@
         android:layout_marginStart="@dimen/recycler_imageview_margins"
         android:layout_marginEnd="@dimen/recycler_imageview_margin_end"
         android:contentDescription="@string/imageview_contentDescription"
-        android:background="@drawable/imageview_background"
+        android:background="@drawable/background_imageview"
         android:src="@drawable/chair">
 
     </ImageView>
@@ -38,10 +38,14 @@
         android:id="@+id/description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingEnd="@dimen/recycler_imageview_padding"
         android:layout_toEndOf="@id/icon"
         android:layout_below="@id/title"
         android:text="@string/textview_description_text"
-        android:textSize="@dimen/textview_textSize" />
+        android:textSize="@dimen/textview_textSize"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:singleLine="true"/>
 
     <TextView
         android:id="@+id/location"

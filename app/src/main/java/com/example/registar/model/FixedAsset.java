@@ -1,24 +1,26 @@
 package com.example.registar.model;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class FixedAsset {
+public class FixedAsset implements Serializable {
 
     private String title, description, picture;
     private int barcode, price;
-    private LocalDate createDate;
+    private LocalDate creationDate;
     private Employee employee;
     private Location location;
     
     public FixedAsset(){}
 
-    public FixedAsset(String title, String description, String picture, int barcode, int price, LocalDate createDate, Employee employee, Location location) {
+    public FixedAsset(String title, String description, String picture, int barcode, int price,
+                      LocalDate createDate, Employee employee, Location location) {
         this.title = title;
         this.description = description;
         this.picture = picture;
         this.barcode = barcode;
         this.price = price;
-        this.createDate = createDate;
+        this.creationDate = createDate;
         this.employee = employee;
         this.location = location;
     }
@@ -63,12 +65,12 @@ public class FixedAsset {
         this.price = price;
     }
 
-    public LocalDate getCreateDate() {
-        return createDate;
+    public LocalDate getCreationDate() {
+        return creationDate;
     }
 
-    public void setCreateDate(LocalDate createDate) {
-        this.createDate = createDate;
+    public void setCreationDate(LocalDate creationDate) {
+        this.creationDate = creationDate;
     }
 
     public Employee getEmployee() {

@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="tabTextSize">25sp</dimen>
+    <dimen name="drawable_background_padding">8dp</dimen>
+    <dimen name="drawable_border_radius">8dp</dimen>
 
     <!-- settings for viewpager in activity_main layout  -->
     <dimen name="viewpager_layout_height">0dp</dimen>
@@ -27,5 +29,16 @@
 
     <!-- settings for popup_crud  -->
     <dimen name="popup_crud_padding">8dp</dimen>
+
+    <!-- settings for activity_asset layout  -->
+    <dimen name="textview_title_width">95dp</dimen>
+    <dimen name="textview_padding_side">12dp</dimen>
+    <dimen name="textview_padding">8dp</dimen>
+    <dimen name="imageview_height">200dp</dimen>
+    <dimen name="textview_price_width">150dp</dimen>
+
+    <dimen name="edittext_padding">10dp</dimen>
+    <dimen name="btn_width">130dp</dimen>
+    <dimen name="btn_container_margin">50dp</dimen>
 
 </resources>

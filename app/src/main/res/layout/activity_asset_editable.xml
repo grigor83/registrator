@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AssetActivity">
+    tools:context=".AssetActivityEditable">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -14,19 +14,20 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:theme="@style/CustomToolbarStyle">
+        android:theme="@style/EditToolbar">
     </androidx.appcompat.widget.Toolbar>
 
     <ImageView
         android:id="@+id/icon"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/imageview_height"
         android:padding="@dimen/recycler_imageview_padding"
         android:layout_margin="@dimen/recycler_imageview_margins"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
         android:contentDescription="@string/imageview_contentDescription"
-        android:background="@drawable/background_imageview"
-        android:src="@drawable/chair"/>
+        android:background="@drawable/background_editable"
+        android:src="@drawable/chair"
+        android:onClick="openImagePicker"/>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -44,93 +45,106 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+                        <!-- Title -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
                 <TextView
-                    style="@style/TextViewStyleLabel"
-                    android:text="@string/textview_title_text"/>
-                <TextView
+                    style="@style/TextViewStyleInEditMode"
+                    android:text="@string/textview_title_text"
+                    android:labelFor="@id/title"/>
+                <EditText
                     android:id="@+id/title"
-                    style="@style/TextViewStyle"
-                    android:text="@string/textview_title_text"/>
+                    style="@style/EditTextStyle"/>
             </LinearLayout>
 
+            <!-- Description -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
                 <TextView
-                    style="@style/TextViewStyleLabel"
-                    android:text="@string/textview_description_text"/>
-                <TextView
+                    style="@style/TextViewStyleInEditMode"
+                    android:text="@string/textview_description_text"
+                    android:labelFor="@id/description"/>
+                <EditText
                     android:id="@+id/description"
-                    style="@style/TextViewStyle"
-                    android:text="@string/textview_description_text"/>
+                    style="@style/EditTextStyle"/>
             </LinearLayout>
 
+            <!-- Location -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
                 <TextView
-                    style="@style/TextViewStyleLabel"
-                    android:text="@string/textview_location_text"/>
-                <TextView
+                    style="@style/TextViewStyleInEditMode"
+                    android:text="@string/textview_location_text"
+                    android:labelFor="@id/location"/>
+                <EditText
                     android:id="@+id/location"
-                    style="@style/TextViewStyle"
-                    android:text="@string/textview_location_text"/>
+                    style="@style/EditTextStyle"/>
             </LinearLayout>
 
+            <!-- Employee -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
                 <TextView
-                    style="@style/TextViewStyleLabel"
+                    style="@style/TextViewStyleInEditMode"
                     android:layout_width="wrap_content"
-                    android:text="@string/textview_employee_name"/>
-                <TextView
+                    android:text="@string/textview_employee_name"
+                    android:labelFor="@id/employee"/>
+                <EditText
                     android:id="@+id/employee"
-                    style="@style/TextViewStyle"
-                    android:text="@string/textview_employee_name"/>
+                    style="@style/EditTextStyle"/>
             </LinearLayout>
 
+            <!-- Creation date -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
                 <TextView
-                    style="@style/TextViewStyleLabel"
+                    style="@style/TextViewStyleInEditMode"
                     android:layout_width="wrap_content"
                     android:text="@string/textview_creation_date_text"/>
                 <TextView
                     android:id="@+id/creation_date"
-                    style="@style/TextViewStyle"
-                    android:text="@string/textview_creation_date_text"/>
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/textview_creation_date_text"
+                    android:background="@drawable/background_recycler_item"
+                    android:layout_margin="@dimen/recycler_imageview_margins"
+                    android:padding="@dimen/recycler_imageview_padding"/>
             </LinearLayout>
 
+            <!-- Barcode -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
                 <TextView
-                    style="@style/TextViewStyleLabel"
+                    style="@style/TextViewStyleInEditMode"
                     android:layout_width="wrap_content"
-                    android:text="@string/textview_price_text"/>
-                <TextView
+                    android:text="@string/textview_price_text"
+                    android:labelFor="@id/price"/>
+                <EditText
                     android:id="@+id/price"
-                    style="@style/TextViewStyle"
-                    android:text="@string/textview_price_text"/>
+                    style="@style/EditTextStyle"
+                    android:inputType="number"/>
+
                 <TextView
-                    style="@style/TextViewStyleLabel"
+                    style="@style/TextViewStyleInEditMode"
                     android:layout_width="wrap_content"
                     android:layout_gravity="center"
                     android:text="@string/textview_barcode"/>
@@ -143,6 +157,27 @@
                     android:background="@drawable/background_recycler_item"
                     android:layout_margin="@dimen/recycler_imageview_margins"
                     android:padding="@dimen/recycler_imageview_padding"/>
+            </LinearLayout>
+
+            <!-- Save and Cancel buttons -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="@dimen/btn_container_margin"
+                android:gravity="center">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/cancel"
+                    style="@style/CancelAndSaveButtons"
+                    android:text="@string/btn_cancel_text"
+                    android:onClick="cancelEditing"/>
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/save"
+                    style="@style/CancelAndSaveButtons"
+                    android:text="@string/btn_save_text"
+                    android:onClick="saveAsset"/>
             </LinearLayout>
 
         </LinearLayout>

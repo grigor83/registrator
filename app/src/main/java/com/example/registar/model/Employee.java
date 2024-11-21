@@ -1,6 +1,8 @@
 package com.example.registar.model;
 
-public class Employee {
+import java.io.Serializable;
+
+public class Employee implements Serializable {
 
     private String name, lastName, position;
 
@@ -24,6 +26,10 @@ public class Employee {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getFullName(){
+        return name + " " + lastName;
     }
 
     public String getPosition() {

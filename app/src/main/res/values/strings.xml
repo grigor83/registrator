@@ -10,9 +10,14 @@
     <string name="computer">računar</string>
     <string name="search_by_title">Pretraži po nazivu</string>
     <string name="search_by_location">Pretraži po lokaciji</string>
-    <string name="textview_title_text">Naziv</string>
-    <string name="textview_description_text">Opis</string>
-    <string name="textview_location_text">Lokacija</string>
+    <string name="textview_title_text">Naziv:</string>
+    <string name="textview_description_text">Opis:</string>
+    <string name="textview_location_text">Lokacija:</string>
+    <string name="textview_price_text">Cijena:</string>
+    <string name="textview_creation_date_text">Datum kreiranja:</string>
+    <string name="textview_employee_name">Zaduženi radnik:</string>
+    <string name="btn_cancel_text">otkaži</string>
+    <string name="btn_save_text">sačuvaj</string>
 
 
     <string name="fab_contentDescription">Add Item</string>
@@ -24,4 +29,6 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="textview_barcode">Barkod:</string>
+
 </resources>
