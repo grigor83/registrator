@@ -31,5 +31,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="textview_barcode">Barkod:</string>
     <string name="toast_delete_message">Obrisano</string>
+    <string name="error_text">Ovo polje je obavezno!</string>
 
 </resources>

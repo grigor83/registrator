@@ -4,7 +4,7 @@
     <!-- Highlight color when the view is pressed -->
     <item android:state_pressed="true">
         <shape>
-            <solid android:color="@color/secondary"/>
+            <solid android:color="@color/primary"/>
             <corners
                 android:radius="@dimen/drawable_background_padding" />
             <stroke

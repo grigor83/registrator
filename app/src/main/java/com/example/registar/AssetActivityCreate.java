@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
@@ -24,9 +23,10 @@ import com.example.registar.model.Employee;
 import com.example.registar.model.FixedAsset;
 import com.example.registar.model.Location;
 
+import java.time.LocalDate;
 import java.util.Objects;
 
-public class AssetActivityEditable extends AppCompatActivity {
+public class AssetActivityCreate extends AppCompatActivity {
     private ActivityResultLauncher<Intent> pickImageLauncher;
     FixedAsset asset;
     EditText titleTextview, descriptionTextview,priceTextview, employeeTextview, locationTextview;
@@ -37,7 +37,7 @@ public class AssetActivityEditable extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_asset_editable);
+        setContentView(R.layout.activity_asset_create);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -57,17 +57,7 @@ public class AssetActivityEditable extends AppCompatActivity {
         barcodeTextview = findViewById(R.id.barcode);
         imageView = findViewById(R.id.icon);
 
-        final FixedAsset retrievedAsset = (FixedAsset) getIntent().getSerializableExtra("clickedAsset");
-        if (retrievedAsset != null) {
-            asset = retrievedAsset;
-            titleTextview.setText(asset.getTitle());
-            descriptionTextview.setText(asset.getDescription());
-            creationDateTextview.setText(asset.getCreationDate().toString());
-            priceTextview.setText(String.valueOf(asset.getPrice()));
-            employeeTextview.setText(asset.getEmployee().getFullName());
-            barcodeTextview.setText(String.valueOf(asset.getBarcode()));
-            locationTextview.setText(asset.getLocation().getCity());
-        }
+        creationDateTextview.setText(LocalDate.now().toString());
 
         // Set click listener for the ImageView
         ImageView imageView = findViewById(R.id.icon);
@@ -95,7 +85,7 @@ public class AssetActivityEditable extends AppCompatActivity {
         pickImageLauncher.launch(intent); // Launch the image picker
     }
 
-    public void cancelEditing(View view) {
+    public void cancel(View view) {
         finish();
     }
 
@@ -103,14 +93,17 @@ public class AssetActivityEditable extends AppCompatActivity {
         if (!validateInputs())
             return;
 
-        asset.setTitle(String.valueOf(titleTextview.getText()).trim());
-        asset.setDescription(String.valueOf(descriptionTextview.getText()).trim());
-        asset.setPrice((Integer.parseInt(priceTextview.getText().toString().trim())));
-        asset.setLocation(new Location((String.valueOf(locationTextview.getText())).trim()));
-        asset.getEmployee().setName((String.valueOf(employeeTextview.getText())).trim());
+        asset = new FixedAsset();
+        asset.setTitle(String.valueOf(titleTextview.getText()));
+        asset.setDescription(String.valueOf(descriptionTextview.getText()));
+        asset.setPrice((Integer.parseInt(priceTextview.getText().toString())));
+        asset.setLocation(new Location((String.valueOf(locationTextview.getText()))));
+        asset.setEmployee(new Employee(employeeTextview.getText().toString(), "nesto", "direktor"));
+        asset.setCreationDate(LocalDate.parse(creationDateTextview.getText()));
+        asset.setBarcode(45);
 
         Intent resultIntent = new Intent();
-        resultIntent.putExtra("updatedAsset", asset);
+        resultIntent.putExtra("createdAsset", asset);
         setResult(RESULT_OK, resultIntent);
         finish();
     }
@@ -156,5 +149,4 @@ public class AssetActivityEditable extends AppCompatActivity {
 
         return isValid;
     }
-
 }

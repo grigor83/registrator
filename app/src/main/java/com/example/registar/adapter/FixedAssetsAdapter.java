@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
@@ -31,6 +32,7 @@ public class FixedAssetsAdapter extends RecyclerView.Adapter<FixedAssetsAdapter.
     private final Context context;
     private float touchX, touchY;
     private final ActivityResultLauncher<Intent> deleteActivityLauncher;
+    private int highlightedItemPosition = -1;
 
     public FixedAssetsAdapter(List<FixedAsset> fixedAssetList, Context context,
                               ActivityResultLauncher<Intent> deleteActivityLauncher) {
@@ -68,6 +70,12 @@ public class FixedAssetsAdapter extends RecyclerView.Adapter<FixedAssetsAdapter.
                 break;
         }
 
+        // Set the background based on whether the item is highlighted
+        if (highlightedItemPosition == position)
+            holder.itemView.setBackgroundResource(R.drawable.background_textview); // Highlighted background
+        else
+            holder.itemView.setBackgroundResource(R.drawable.background_highlighted); // Default background
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -75,6 +83,9 @@ public class FixedAssetsAdapter extends RecyclerView.Adapter<FixedAssetsAdapter.
                 intent.putExtra("clickedAsset", asset);
                 intent.putExtra("position", holder.getAdapterPosition());
                 deleteActivityLauncher.launch(intent);
+
+                highlightedItemPosition = -1;
+                notifyDataSetChanged();
             }
         });
 
@@ -86,7 +97,7 @@ public class FixedAssetsAdapter extends RecyclerView.Adapter<FixedAssetsAdapter.
             return false;
         });
 
-        holder.itemView.setOnLongClickListener(v -> {
+        holder.itemView.setOnLongClickListener(v -> {// Highlight the item only on the first long click
             showPopupMenu(v, asset, holder.getAdapterPosition());
             return true;
         });
@@ -122,6 +133,12 @@ public class FixedAssetsAdapter extends RecyclerView.Adapter<FixedAssetsAdapter.
     }
 
     private void showPopupMenu(View view, FixedAsset asset, int position) {
+        if (highlightedItemPosition != position) {
+            // Remove highlight from the previous item and highlight the current one
+            highlightedItemPosition = position;
+            notifyDataSetChanged(); // Notify RecyclerView to update all items
+        }
+
         View popupView = LayoutInflater.from(context).inflate(R.layout.popup_crud, null);
         PopupWindow popupWindow = new PopupWindow(popupView,
                 ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -145,6 +162,9 @@ public class FixedAssetsAdapter extends RecyclerView.Adapter<FixedAssetsAdapter.
         Intent intent = new Intent(context, AssetActivityEditable.class);
         intent.putExtra("clickedAsset", asset);
         deleteActivityLauncher.launch(intent);
+
+        highlightedItemPosition = -1;
+        notifyDataSetChanged();
     }
 
     // Metod se poziva u FragmentOne u deleteActivityLauncher
@@ -165,8 +185,17 @@ public class FixedAssetsAdapter extends RecyclerView.Adapter<FixedAssetsAdapter.
         FixedAsset assetToRemove = filteredFixedAssetList.remove(position);
         if (assetToRemove != null)
             fixedAssetList.remove(assetToRemove);
+
+        //highlightedHolder = null;
+        highlightedItemPosition = -1;
         notifyItemRemoved(position);
         showCustomToast(context);
+    }
+
+    public void addAssetToList(FixedAsset createdAsset) {
+        fixedAssetList.add(createdAsset);
+        filteredFixedAssetList.add(0, createdAsset);
+        notifyDataSetChanged();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

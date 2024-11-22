@@ -12,9 +12,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Registar.Custom">
         <activity
+            android:name=".AssetActivityCreate"
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity
             android:name=".AssetActivityEditable"
-            android:windowSoftInputMode="adjustPan"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".AssetActivity"
             android:exported="false" />

@@ -9,7 +9,7 @@
         android:id="@+id/action_edit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/popup_crud_padding"
+        android:padding="@dimen/textview_padding"
         android:text="@string/popup_crud_textview_edit_text"
         android:clickable="true"
         android:focusable="true"/>
@@ -18,7 +18,7 @@
         android:id="@+id/action_delete"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/popup_crud_padding"
+        android:padding="@dimen/textview_padding"
         android:text="@string/popup_crud_textview_delete_text"
         android:clickable="true"
         android:focusable="true"/>

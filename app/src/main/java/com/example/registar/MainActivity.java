@@ -73,10 +73,6 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void addNewAsset(View v){
-        Toast.makeText(v.getContext(), "floating", Toast.LENGTH_SHORT).show();
-    }
-
     public static void showCustomToast(Context context){
         LayoutInflater inflater = LayoutInflater.from(context);
         View layout = inflater.inflate(R.layout.toast_custom, null);

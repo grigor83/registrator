@@ -13,18 +13,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.Toast;
 
+import com.example.registar.AssetActivityCreate;
 import com.example.registar.R;
 import com.example.registar.adapter.FixedAssetsAdapter;
 import com.example.registar.model.Employee;
 import com.example.registar.model.FixedAsset;
 import com.example.registar.model.Location;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -39,7 +39,7 @@ public class FragmentOne extends Fragment {
     //Launcher za rezultat koji se vraća iz AssetActivity. Ovaj launcher se proslijedi FixedAsset adapteru, koji onda pokreće AssetActivity pomoću njega.
     // Ako user u AssetActivity stisne dugme za brisanje iz toolbar-a, vratiće int position. Ako user stisne dugme edit, pa ode na AssetActivityEditable
     // i u slučaju da napravi neke izmjene, te izmjene ce se vratiti prvo u AssetActivity, pa onda ovdje, tj. u Fixedadapter.
-    private final ActivityResultLauncher<Intent> deleteActivityLauncher =
+    private final ActivityResultLauncher<Intent> deleteAssetLauncher =
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
                 if (result.getResultCode() == RESULT_OK) {
                     int position = Objects.requireNonNull(result.getData()).getIntExtra("position", -1);
@@ -47,9 +47,17 @@ public class FragmentOne extends Fragment {
                         adapter.deleteAsset(position);
 
                     FixedAsset returnedAsset = (FixedAsset) Objects.requireNonNull(result.getData()).getSerializableExtra("updatedAsset");
-                    if (returnedAsset != null){
+                    if (returnedAsset != null)
                         adapter.editAsset(returnedAsset);
-                    }
+                }
+            });
+
+    private final ActivityResultLauncher<Intent> createAssetLauncher =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == RESULT_OK) {
+                    FixedAsset createdAsset = (FixedAsset) Objects.requireNonNull(result.getData()).getSerializableExtra("createdAsset");
+                    if (createdAsset != null)
+                        adapter.addAssetToList(createdAsset);
                 }
             });
 
@@ -113,7 +121,7 @@ public class FragmentOne extends Fragment {
         RecyclerView recyclerView = view.findViewById(R.id.fixedAssetsRecycler);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        adapter = new FixedAssetsAdapter(assets, view.getContext(), deleteActivityLauncher);
+        adapter = new FixedAssetsAdapter(assets, view.getContext(), deleteAssetLauncher);
         recyclerView.setAdapter(adapter);
 
         EditText titleSearch = view.findViewById(R.id.titleSearch);
@@ -136,6 +144,12 @@ public class FragmentOne extends Fragment {
 
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+        });
+
+        FloatingActionButton fab = view.findViewById(R.id.fab);
+        fab.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), AssetActivityCreate.class);
+            createAssetLauncher.launch(intent);
         });
 
         return view;
