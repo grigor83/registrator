@@ -1,10 +1,6 @@
 <resources>
 
-    <style name="ActionBar.Fullscreen" parent="Widget.AppCompat.ActionBar">
-        <item name="android:background">@color/black_overlay</item>
-    </style>
-
-    <style name="CustomToolbarStyle" parent="Widget.AppCompat.ActionBar">
+    <style name="MyToolbarStyle" parent="Widget.AppCompat.ActionBar">
         <!-- Customize your theme here. -->
         <item name="android:background">@color/primary</item>
         <item name="popupTheme">@style/CustomPopup.Theme</item>
@@ -48,7 +44,7 @@
 
 
     <!-- Style for edit mode -->
-    <style name="EditToolbar" parent="CustomToolbarStyle">
+    <style name="EditToolbar" parent="MyToolbarStyle">
         <item name="android:background">@color/secondary</item>
     </style>
 

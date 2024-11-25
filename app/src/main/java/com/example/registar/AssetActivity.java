@@ -19,12 +19,12 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.registar.model.FixedAsset;
+import com.example.registar.model.Asset;
 
 import java.util.Objects;
 
 public class AssetActivity extends AppCompatActivity {
-    FixedAsset asset;
+    Asset asset;
     int position;
     TextView titleTextview, descriptionTextview,priceTextview, employeeTextview,
             locationTextview, creationDateTextview, barcodeTextview;
@@ -32,7 +32,7 @@ public class AssetActivity extends AppCompatActivity {
 
     private final ActivityResultCallback<ActivityResult> resultCallback = result -> {
         if (result.getResultCode() == RESULT_OK) {
-            asset = (FixedAsset) Objects.requireNonNull(result.getData()).getSerializableExtra("updatedAsset");
+            asset = (Asset) Objects.requireNonNull(result.getData()).getSerializableExtra("updatedAsset");
             updateUI();
         }
     };
@@ -63,7 +63,7 @@ public class AssetActivity extends AppCompatActivity {
         barcodeTextview = findViewById(R.id.barcode);
         imageView = findViewById(R.id.icon);
 
-        FixedAsset retrievedAsset = (FixedAsset) getIntent().getSerializableExtra("clickedAsset");
+        Asset retrievedAsset = (Asset) getIntent().getSerializableExtra("clickedAsset");
         if (retrievedAsset != null) {
             asset = retrievedAsset;
             updateUI();
@@ -107,7 +107,7 @@ public class AssetActivity extends AppCompatActivity {
             finish();
         }
         else if (item.getItemId() == R.id.action_edit){
-            Intent intent = new Intent(this, AssetActivityEditable.class);
+            Intent intent = new Intent(this, AssetEditActivity.class);
             intent.putExtra("clickedAsset", asset);
             editActivityLauncher.launch(intent);
         }

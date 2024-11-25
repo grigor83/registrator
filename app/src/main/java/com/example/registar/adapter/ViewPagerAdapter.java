@@ -5,10 +5,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.example.registar.fragment.FragmentFour;
-import com.example.registar.fragment.FragmentOne;
-import com.example.registar.fragment.FragmentThree;
-import com.example.registar.fragment.FragmentTwo;
+import com.example.registar.fragment.FirstFragment;
+import com.example.registar.fragment.FourthFragment;
+import com.example.registar.fragment.ThirdFragment;
+import com.example.registar.fragment.SecondFragment;
 
 public class ViewPagerAdapter extends FragmentStateAdapter {
     public ViewPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
@@ -19,11 +19,11 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
     @Override
     public Fragment createFragment(int position) {
         switch (position) {
-            case 0: return new FragmentOne();
-            case 1: return new FragmentTwo();
-            case 2: return new FragmentThree();
-            case 3: return new FragmentFour();
-            default: return new FragmentOne();
+            case 0: return new FirstFragment();
+            case 1: return new SecondFragment();
+            case 2: return new ThirdFragment();
+            case 3: return new FourthFragment();
+            default: return new FirstFragment();
         }
     }
 

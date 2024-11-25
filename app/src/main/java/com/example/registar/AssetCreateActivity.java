@@ -1,37 +1,48 @@
 package com.example.registar;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.camera.core.ImageCapture;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.registar.model.Asset;
 import com.example.registar.model.Employee;
-import com.example.registar.model.FixedAsset;
 import com.example.registar.model.Location;
 
+import java.io.File;
 import java.time.LocalDate;
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-public class AssetActivityCreate extends AppCompatActivity {
+public class AssetCreateActivity extends AppCompatActivity {
     private ActivityResultLauncher<Intent> pickImageLauncher;
-    FixedAsset asset;
+    Asset asset;
     EditText titleTextview, descriptionTextview,priceTextview, employeeTextview, locationTextview;
     TextView creationDateTextview, barcodeTextview;
     ImageView imageView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +81,21 @@ public class AssetActivityCreate extends AppCompatActivity {
                     }
                 }
         );
+
+        MainActivity.takePictureLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK){
+                        imageView.setImageURI(MainActivity.photoURI);
+                        Log.i("kamera", String.valueOf(getExternalFilesDir(Environment.DIRECTORY_PICTURES)));
+                    }
+                }
+        );
+
+        imageView.setOnClickListener(v -> {
+            MainActivity.openCamera(this);
+        });
+
     }
 
     @Override
@@ -93,7 +119,7 @@ public class AssetActivityCreate extends AppCompatActivity {
         if (!validateInputs())
             return;
 
-        asset = new FixedAsset();
+        asset = new Asset();
         asset.setTitle(String.valueOf(titleTextview.getText()));
         asset.setDescription(String.valueOf(descriptionTextview.getText()));
         asset.setPrice((Integer.parseInt(priceTextview.getText().toString())));
@@ -149,4 +175,6 @@ public class AssetActivityCreate extends AppCompatActivity {
 
         return isValid;
     }
+
+
 }

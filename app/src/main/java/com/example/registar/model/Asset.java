@@ -3,7 +3,7 @@ package com.example.registar.model;
 import java.io.Serializable;
 import java.time.LocalDate;
 
-public class FixedAsset implements Serializable {
+public class Asset implements Serializable {
 
     private String title, description, picture;
     private int id, barcode, price;
@@ -11,10 +11,10 @@ public class FixedAsset implements Serializable {
     private Employee employee;
     private Location location;
     
-    public FixedAsset(){}
+    public Asset(){}
 
-    public FixedAsset(int id, String title, String description, String picture, int barcode, int price,
-                      LocalDate createDate, Employee employee, Location location) {
+    public Asset(int id, String title, String description, String picture, int barcode, int price,
+                 LocalDate createDate, Employee employee, Location location) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -104,7 +104,7 @@ public class FixedAsset implements Serializable {
             return true;
         if (obj == null || getClass() != obj.getClass())
             return false;
-        FixedAsset that = (FixedAsset) obj;
+        Asset that = (Asset) obj;
         return id == that.id;
     }
 

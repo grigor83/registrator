@@ -1,6 +1,7 @@
 package com.example.registar;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.Manifest;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -16,19 +18,20 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.registar.model.Employee;
-import com.example.registar.model.FixedAsset;
+import com.example.registar.model.Asset;
 import com.example.registar.model.Location;
 
 import java.util.Objects;
 
-public class AssetActivityEditable extends AppCompatActivity {
+public class AssetEditActivity extends AppCompatActivity {
     private ActivityResultLauncher<Intent> pickImageLauncher;
-    FixedAsset asset;
+    Asset asset;
     EditText titleTextview, descriptionTextview,priceTextview, employeeTextview, locationTextview;
     TextView creationDateTextview, barcodeTextview;
     ImageView imageView;
@@ -57,7 +60,7 @@ public class AssetActivityEditable extends AppCompatActivity {
         barcodeTextview = findViewById(R.id.barcode);
         imageView = findViewById(R.id.icon);
 
-        final FixedAsset retrievedAsset = (FixedAsset) getIntent().getSerializableExtra("clickedAsset");
+        final Asset retrievedAsset = (Asset) getIntent().getSerializableExtra("clickedAsset");
         if (retrievedAsset != null) {
             asset = retrievedAsset;
             titleTextview.setText(asset.getTitle());

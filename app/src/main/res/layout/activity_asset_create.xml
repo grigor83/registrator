@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AssetActivityCreate">
+    tools:context=".AssetCreateActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -23,8 +23,7 @@
         app:layout_constraintTop_toBottomOf="@id/toolbar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:background="@drawable/background_editable"
-        android:onClick="openImagePicker"/>
+        android:background="@drawable/background_editable"/>
 
     <ScrollView
         style="@style/ScrollbarStyle"

@@ -3,7 +3,6 @@ package com.example.registar.adapter;
 import static com.example.registar.MainActivity.showCustomToast;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -13,32 +12,34 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.registar.AssetActivity;
-import com.example.registar.AssetActivityEditable;
+import com.example.registar.AssetEditActivity;
 import com.example.registar.R;
-import com.example.registar.model.FixedAsset;
+import com.example.registar.model.Asset;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class FixedAssetsAdapter extends RecyclerView.Adapter<FixedAssetsAdapter.ViewHolder>{
-    private final List<FixedAsset> fixedAssetList, filteredFixedAssetList;
-    private final Context context;
+public class AssetsAdapter extends RecyclerView.Adapter<AssetsAdapter.ViewHolder>{
+    private final FragmentActivity activity;
+    private final List<Asset> assetList, filteredAssetList;
+    private final View popupView;
     private float touchX, touchY;
     private final ActivityResultLauncher<Intent> deleteActivityLauncher;
-    private int highlightedItemPosition = -1;
+    public int highlightedItemPosition = -1;
 
-    public FixedAssetsAdapter(List<FixedAsset> fixedAssetList, Context context,
-                              ActivityResultLauncher<Intent> deleteActivityLauncher) {
-        this.fixedAssetList = fixedAssetList;
-        this.filteredFixedAssetList = new ArrayList<>(fixedAssetList);
-        this.context = context;
+    public AssetsAdapter(FragmentActivity activity, List<Asset> assetList,
+                         ActivityResultLauncher<Intent> deleteActivityLauncher) {
+        this.assetList = assetList;
+        this.filteredAssetList = new ArrayList<>(assetList);
+        this.activity = activity;
+        popupView = LayoutInflater.from(activity).inflate(R.layout.popup_crud, null);
         this.deleteActivityLauncher = deleteActivityLauncher;
     }
 
@@ -54,7 +55,7 @@ public class FixedAssetsAdapter extends RecyclerView.Adapter<FixedAssetsAdapter.
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        final FixedAsset asset = filteredFixedAssetList.get(position);
+        final Asset asset = filteredAssetList.get(position);
         holder.title.setText(asset.getTitle());
         holder.description.setText(asset.getDescription());
         holder.location.setText(asset.getLocation().getCity());
@@ -79,7 +80,7 @@ public class FixedAssetsAdapter extends RecyclerView.Adapter<FixedAssetsAdapter.
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, AssetActivity.class);
+                Intent intent = new Intent(activity, AssetActivity.class);
                 intent.putExtra("clickedAsset", asset);
                 intent.putExtra("position", holder.getAdapterPosition());
                 deleteActivityLauncher.launch(intent);
@@ -106,17 +107,17 @@ public class FixedAssetsAdapter extends RecyclerView.Adapter<FixedAssetsAdapter.
 
     @Override
     public int getItemCount() {
-        return filteredFixedAssetList.size();
+        return filteredAssetList.size();
     }
 
     // Method to filter the list by title and location
     public void filter(String titleQuery, String locationQuery) {
-        filteredFixedAssetList.clear();
+        filteredAssetList.clear();
 
         String title = titleQuery.toLowerCase();
         String location = locationQuery.toLowerCase();
 
-        for (FixedAsset asset : fixedAssetList) {
+        for (Asset asset : assetList) {
             boolean matchesTitle = !titleQuery.isEmpty() && asset.getTitle().toLowerCase().startsWith(title);
             boolean matchesLocation = !locationQuery.isEmpty() && asset.getLocation().getCity().toLowerCase().startsWith(location);
 
@@ -124,33 +125,32 @@ public class FixedAssetsAdapter extends RecyclerView.Adapter<FixedAssetsAdapter.
             if ((titleQuery.isEmpty() && matchesLocation) ||
                     (locationQuery.isEmpty() && matchesTitle) ||
                     (matchesTitle && matchesLocation))
-                filteredFixedAssetList.add(asset);
+                filteredAssetList.add(asset);
             else if (titleQuery.isEmpty() && locationQuery.isEmpty())
-                filteredFixedAssetList.addAll(fixedAssetList);
+                filteredAssetList.addAll(assetList);
         }
 
         notifyDataSetChanged();
     }
 
-    private void showPopupMenu(View view, FixedAsset asset, int position) {
+    private void showPopupMenu(View view, Asset asset, int position) {
         if (highlightedItemPosition != position) {
             // Remove highlight from the previous item and highlight the current one
             highlightedItemPosition = position;
             notifyDataSetChanged(); // Notify RecyclerView to update all items
         }
 
-        View popupView = LayoutInflater.from(context).inflate(R.layout.popup_crud, null);
         PopupWindow popupWindow = new PopupWindow(popupView,
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 true);
 
         popupView.findViewById(R.id.action_edit).setOnClickListener(v -> {
-            startActivityEditable(asset);
+            startEditActivity(asset);
             popupWindow.dismiss();
         });
         popupView.findViewById(R.id.action_delete).setOnClickListener(v -> {
-            deleteAsset(position);
+            deleteAssetFromList(position);
             popupWindow.dismiss();
         });
 
@@ -158,8 +158,8 @@ public class FixedAssetsAdapter extends RecyclerView.Adapter<FixedAssetsAdapter.
         popupWindow.showAtLocation(view, Gravity.NO_GRAVITY, (int) touchX, (int) touchY);
     }
 
-    public void startActivityEditable(FixedAsset asset){
-        Intent intent = new Intent(context, AssetActivityEditable.class);
+    public void startEditActivity(Asset asset){
+        Intent intent = new Intent(activity, AssetEditActivity.class);
         intent.putExtra("clickedAsset", asset);
         deleteActivityLauncher.launch(intent);
 
@@ -167,34 +167,33 @@ public class FixedAssetsAdapter extends RecyclerView.Adapter<FixedAssetsAdapter.
         notifyDataSetChanged();
     }
 
-    // Metod se poziva u FragmentOne u deleteActivityLauncher
-    public void editAsset(FixedAsset returnedAsset) {
-        for (int i = 0; i < filteredFixedAssetList.size(); i++) {
-            if (filteredFixedAssetList.get(i).getId() == returnedAsset.getId()) {
-                filteredFixedAssetList.set(i, returnedAsset);
-                fixedAssetList.remove(returnedAsset);
-                fixedAssetList.add(returnedAsset);
+    // Metod se poziva u FirstFragment u deleteActivityLauncher
+    public void replaceAssetInList(Asset returnedAsset) {
+        for (int i = 0; i < filteredAssetList.size(); i++) {
+            if (filteredAssetList.get(i).getId() == returnedAsset.getId()) {
+                filteredAssetList.set(i, returnedAsset);
+                assetList.remove(returnedAsset);
+                assetList.add(returnedAsset);
                 notifyItemChanged(i);
                 break;
             }
         }
     }
 
-    // Metod se poziva u FragmentOne u deleteActivityLauncher i ovdje u adapteru na long click
-    public void deleteAsset(int position){
-        FixedAsset assetToRemove = filteredFixedAssetList.remove(position);
+    // Metod se poziva u FirstFragment u deleteActivityLauncher i ovdje u adapteru na long click
+    public void deleteAssetFromList(int position){
+        Asset assetToRemove = filteredAssetList.remove(position);
         if (assetToRemove != null)
-            fixedAssetList.remove(assetToRemove);
+            assetList.remove(assetToRemove);
 
-        //highlightedHolder = null;
         highlightedItemPosition = -1;
         notifyItemRemoved(position);
-        showCustomToast(context);
+        showCustomToast(activity);
     }
 
-    public void addAssetToList(FixedAsset createdAsset) {
-        fixedAssetList.add(createdAsset);
-        filteredFixedAssetList.add(0, createdAsset);
+    public void addAssetToList(Asset createdAsset) {
+        assetList.add(createdAsset);
+        filteredAssetList.add(0, createdAsset);
         notifyDataSetChanged();
     }
 
