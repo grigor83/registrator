@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -106,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
         toast.show();
     }
 
-    public static void openCamera(Context context){
+    public static void requestCameraPermission(Context context){
         // Check if camera permission is already granted
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -124,13 +125,14 @@ public class MainActivity extends AppCompatActivity {
         if (cameraIntent.resolveActivity(context.getPackageManager()) != null)
             try {
                 File photoFile = createImageFile(context);
+                ((AssetCreateActivity) context).imagePath = photoFile.getAbsolutePath();
                 photoURI = FileProvider.getUriForFile(context, "com.example.registar.fileprovider", photoFile);
                 cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-
                 takePictureLauncher.launch(cameraIntent);
             }
             catch (IOException ex) {
                 Toast.makeText(context, R.string.error_creating_file, Toast.LENGTH_SHORT).show();
+                photoURI = null;
             }
     }
 
@@ -138,7 +140,17 @@ public class MainActivity extends AppCompatActivity {
         // Create a unique file name
         String timeStamp = String.valueOf(LocalDateTime.now());
         String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES); // Private app storage
+        //  App-Specific Directory does not require WRITE_EXTERNAL_STORAGE permissions
+        File storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        if (storageDir != null) {
+            if (!storageDir.exists() && !storageDir.mkdirs()) {
+                Log.e("File Creation", "Failed to create directory: " + storageDir.getAbsolutePath());
+            } else {
+                Log.d("File Creation", "Directory created or exists: " + storageDir.getAbsolutePath());
+            }
+        } else {
+            Log.e("File Creation", "Failed to get external directory.");
+        }
 
         return File.createTempFile(imageFileName, ".jpg", storageDir);
     }
@@ -146,7 +158,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-
         if (requestCode == CAMERA_PERMISSION_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permission granted
@@ -180,4 +191,5 @@ public class MainActivity extends AppCompatActivity {
                 .create()
                 .show();
     }
+
 }

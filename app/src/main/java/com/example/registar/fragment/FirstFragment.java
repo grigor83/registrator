@@ -38,7 +38,7 @@ public class FirstFragment extends Fragment {
 
     //Launcher za rezultat koji se vraća iz AssetActivity. Ovaj launcher se proslijedi Asset adapteru, koji onda pokreće AssetActivity pomoću njega.
     // Ako user u AssetActivity stisne dugme za brisanje iz toolbar-a, vratiće int position. Ako user stisne dugme edit, pa ode na AssetEditActivity
-    // i u slučaju da napravi neke izmjene, te izmjene ce se vratiti prvo u AssetActivity, pa onda ovdje, tj. u Fixedadapter.
+    // i u slučaju da napravi neke izmjene, te izmjene ce se vratiti prvo u AssetActivity, pa onda ovdje, tj. u AssetAdapter.
     private final ActivityResultLauncher<Intent> deleteAssetLauncher =
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
                 if (result.getResultCode() == RESULT_OK) {
@@ -46,10 +46,13 @@ public class FirstFragment extends Fragment {
                     if (position != -1)
                         adapter.deleteAssetFromList(position);
 
-                    Asset returnedAsset = (Asset) Objects.requireNonNull(result.getData()).getSerializableExtra("updatedAsset");
-                    if (returnedAsset != null)
-                        adapter.replaceAssetInList(returnedAsset);
+                    Asset updatedAsset = (Asset) Objects.requireNonNull(result.getData()).getSerializableExtra("updatedAsset");
+                    if (updatedAsset != null)
+                        adapter.replaceAssetInList(updatedAsset);
+
                 }
+                else
+                    adapter.notifyDataSetChanged();
             });
 
     private final ActivityResultLauncher<Intent> createAssetLauncher =
@@ -69,7 +72,7 @@ public class FirstFragment extends Fragment {
         Employee k = new Employee("ivan", "Ivanković", "komercijalista");
         Location bl = new Location("Banjaluka");
         Location kv = new Location("Kotor Varoš");
-        for (int i=0; i<7; i++){
+        for (int i=0; i<107; i++){
             if (i%2 == 0)
                 assets.add(new Asset(i, "stolica"+i, "kancelarijska stolica", "slika",
                         555, 45, LocalDate.now(), m, bl));
@@ -83,7 +86,7 @@ public class FirstFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View fragmentLayout = inflater.inflate(R.layout.fragment_one, container, false);
+        View fragmentLayout = inflater.inflate(R.layout.first_fragment, container, false);
 
         RecyclerView recyclerView = fragmentLayout.findViewById(R.id.fixedAssetsRecycler);
         recyclerView.setHasFixedSize(true);

@@ -5,7 +5,7 @@ import java.time.LocalDate;
 
 public class Asset implements Serializable {
 
-    private String title, description, picture;
+    private String title, description, imagePath;
     private int id, barcode, price;
     private LocalDate creationDate;
     private Employee employee;
@@ -13,12 +13,12 @@ public class Asset implements Serializable {
     
     public Asset(){}
 
-    public Asset(int id, String title, String description, String picture, int barcode, int price,
+    public Asset(int id, String title, String description, String imagePath, int barcode, int price,
                  LocalDate createDate, Employee employee, Location location) {
         this.id = id;
         this.title = title;
         this.description = description;
-        this.picture = picture;
+        this.imagePath = imagePath;
         this.barcode = barcode;
         this.price = price;
         this.creationDate = createDate;
@@ -50,12 +50,12 @@ public class Asset implements Serializable {
         this.description = description;
     }
 
-    public String getPicture() {
-        return picture;
+    public String getImagePath() {
+        return imagePath;
     }
 
-    public void setPicture(String picture) {
-        this.picture = picture;
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 
     public int getBarcode() {

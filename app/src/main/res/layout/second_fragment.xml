@@ -19,6 +19,15 @@
         android:layout_height="wrap_content"
         android:hint="Search by location" />
 
+    <Button
+        android:id="@+id/btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="start"
+        >
+
+    </Button>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/fixedAssetsRecycler"
         android:layout_width="match_parent"

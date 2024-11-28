@@ -38,13 +38,9 @@ dependencies {
     implementation libs.activity
     implementation libs.constraintlayout
     implementation libs.camera.lifecycle
+    implementation libs.exifinterface
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
 
-    def camerax_version = "1.4.0" // Replace with the latest version available
-    implementation libs.camera.core
-    implementation libs.camera.lifecycle
-    implementation libs.camera.view
-    implementation libs.camera.camera2
 }

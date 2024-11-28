@@ -1,6 +1,7 @@
 package com.example.registar;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -9,8 +10,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -21,23 +20,25 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.registar.model.Asset;
 
+import java.io.File;
 import java.util.Objects;
 
 public class AssetActivity extends AppCompatActivity {
-    Asset asset;
-    int position;
-    TextView titleTextview, descriptionTextview,priceTextview, employeeTextview,
+    private Asset asset;
+    private int position;
+    private TextView titleTextview, descriptionTextview,priceTextview, employeeTextview,
             locationTextview, creationDateTextview, barcodeTextview;
-    ImageView imageView;
+    private ImageView imageView;
+    boolean shouldReturn = false;
 
-    private final ActivityResultCallback<ActivityResult> resultCallback = result -> {
-        if (result.getResultCode() == RESULT_OK) {
-            asset = (Asset) Objects.requireNonNull(result.getData()).getSerializableExtra("updatedAsset");
-            updateUI();
-        }
-    };
     private final ActivityResultLauncher<Intent> editActivityLauncher =
-            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), resultCallback);
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == RESULT_OK) {
+                    asset = (Asset) Objects.requireNonNull(result.getData()).getSerializableExtra("updatedAsset");
+                    shouldReturn = true;
+                    updateUI();
+                }
+            });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,21 +64,10 @@ public class AssetActivity extends AppCompatActivity {
         barcodeTextview = findViewById(R.id.barcode);
         imageView = findViewById(R.id.icon);
 
-        Asset retrievedAsset = (Asset) getIntent().getSerializableExtra("clickedAsset");
-        if (retrievedAsset != null) {
-            asset = retrievedAsset;
+        Asset clickedAsset = (Asset) getIntent().getSerializableExtra("clickedAsset");
+        if (clickedAsset != null) {
+            asset = clickedAsset;
             updateUI();
-            switch (asset.getTitle()) {
-                case "stolica":
-                    imageView.setImageResource(R.drawable.chair);
-                    break;
-                case "računar":
-                    imageView.setImageResource(R.drawable.computer_24);
-                    break;
-                default:
-                    imageView.setImageResource(R.mipmap.ic_launcher);
-                    break;
-            }
         }
         position = getIntent().getIntExtra("position", -1);
     }
@@ -133,10 +123,28 @@ public class AssetActivity extends AppCompatActivity {
         employeeTextview.setText(asset.getEmployee().getFullName().trim());
         barcodeTextview.setText(String.valueOf(asset.getBarcode()).trim());
         locationTextview.setText(asset.getLocation().getCity().trim());
+        File file = new File(asset.getImagePath());
+        if (file.exists()){
+            Uri imageUri = Uri.fromFile(file);
+            BitmapHelper.processImageInBackground(this, imageView, imageUri);
+            //imageView.setImageURI(imageUri);
+            /*
+            BitmapHelper.processImageInBackground(
+                    this,
+                    imageView.getWidth(),
+                    imageView.getHeight(),
+                    imageUri,
+                    bitmap -> {
+                        imageView.setImageBitmap(bitmap);
+                    }
+            );
+
+             */
+        }
     }
 
     private void putAssetToResultIntent(){
-        if (asset != null){
+        if (shouldReturn){
             Intent resultIntent = new Intent();
             resultIntent.putExtra("updatedAsset", asset);
             setResult(RESULT_OK, resultIntent);

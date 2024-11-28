@@ -4,6 +4,8 @@ import static com.example.registar.MainActivity.showCustomToast;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.net.Uri;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -20,9 +22,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.registar.AssetActivity;
 import com.example.registar.AssetEditActivity;
+import com.example.registar.BitmapHelper;
 import com.example.registar.R;
 import com.example.registar.model.Asset;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +35,7 @@ public class AssetsAdapter extends RecyclerView.Adapter<AssetsAdapter.ViewHolder
     private final List<Asset> assetList, filteredAssetList;
     private final View popupView;
     private float touchX, touchY;
-    private final ActivityResultLauncher<Intent> deleteActivityLauncher;
+    private final ActivityResultLauncher<Intent> deleteAssetLauncher;
     public int highlightedItemPosition = -1;
 
     public AssetsAdapter(FragmentActivity activity, List<Asset> assetList,
@@ -39,8 +43,8 @@ public class AssetsAdapter extends RecyclerView.Adapter<AssetsAdapter.ViewHolder
         this.assetList = assetList;
         this.filteredAssetList = new ArrayList<>(assetList);
         this.activity = activity;
-        popupView = LayoutInflater.from(activity).inflate(R.layout.popup_crud, null);
-        this.deleteActivityLauncher = deleteActivityLauncher;
+        this.popupView = LayoutInflater.from(activity).inflate(R.layout.popup_crud, null);
+        this.deleteAssetLauncher = deleteActivityLauncher;
     }
 
     // Kreira prazan viewHolder u koji još nisu upisani podaci
@@ -59,17 +63,6 @@ public class AssetsAdapter extends RecyclerView.Adapter<AssetsAdapter.ViewHolder
         holder.title.setText(asset.getTitle());
         holder.description.setText(asset.getDescription());
         holder.location.setText(asset.getLocation().getCity());
-        switch (asset.getTitle()) {
-            case "stolica":
-                holder.icon.setImageResource(R.drawable.chair);
-                break;
-            case "računar":
-                holder.icon.setImageResource(R.drawable.computer_24);
-                break;
-            default:
-                holder.icon.setImageResource(R.mipmap.ic_launcher);
-                break;
-        }
 
         // Set the background based on whether the item is highlighted
         if (highlightedItemPosition == position)
@@ -83,10 +76,9 @@ public class AssetsAdapter extends RecyclerView.Adapter<AssetsAdapter.ViewHolder
                 Intent intent = new Intent(activity, AssetActivity.class);
                 intent.putExtra("clickedAsset", asset);
                 intent.putExtra("position", holder.getAdapterPosition());
-                deleteActivityLauncher.launch(intent);
+                deleteAssetLauncher.launch(intent);
 
                 highlightedItemPosition = -1;
-                notifyDataSetChanged();
             }
         });
 
@@ -102,6 +94,33 @@ public class AssetsAdapter extends RecyclerView.Adapter<AssetsAdapter.ViewHolder
             showPopupMenu(v, asset, holder.getAdapterPosition());
             return true;
         });
+
+        File file = new File(asset.getImagePath());
+        if (file.exists()) {
+            Log.i("BitmapHelper", "File does exist: " + asset.getImagePath());
+            Uri imageUri = Uri.fromFile(file);
+            /*
+            BitmapHelper.processImageInBackground(
+                    activity,
+                    80,
+                    80,
+                    imageUri,
+                    bitmap -> {
+                        // Ensure the ViewHolder is still bound to the same position
+                        if (holder.getAdapterPosition() == position)
+                            holder.icon.setImageBitmap(bitmap);
+                        else
+                            holder.icon.setImageBitmap(null);
+                    }
+            );
+
+             */
+            BitmapHelper.processImageInBackground(activity, holder.icon, imageUri);
+        }
+        else {
+            holder.icon.setImageBitmap(null);
+            holder.icon.setImageResource(R.drawable.chair);
+        }
 
     }
 
@@ -126,8 +145,10 @@ public class AssetsAdapter extends RecyclerView.Adapter<AssetsAdapter.ViewHolder
                     (locationQuery.isEmpty() && matchesTitle) ||
                     (matchesTitle && matchesLocation))
                 filteredAssetList.add(asset);
-            else if (titleQuery.isEmpty() && locationQuery.isEmpty())
+            else if (titleQuery.isEmpty() && locationQuery.isEmpty()){
+                filteredAssetList.clear();
                 filteredAssetList.addAll(assetList);
+            }
         }
 
         notifyDataSetChanged();
@@ -161,7 +182,7 @@ public class AssetsAdapter extends RecyclerView.Adapter<AssetsAdapter.ViewHolder
     public void startEditActivity(Asset asset){
         Intent intent = new Intent(activity, AssetEditActivity.class);
         intent.putExtra("clickedAsset", asset);
-        deleteActivityLauncher.launch(intent);
+        deleteAssetLauncher.launch(intent);
 
         highlightedItemPosition = -1;
         notifyDataSetChanged();
@@ -169,12 +190,12 @@ public class AssetsAdapter extends RecyclerView.Adapter<AssetsAdapter.ViewHolder
 
     // Metod se poziva u FirstFragment u deleteActivityLauncher
     public void replaceAssetInList(Asset returnedAsset) {
-        for (int i = 0; i < filteredAssetList.size(); i++) {
-            if (filteredAssetList.get(i).getId() == returnedAsset.getId()) {
-                filteredAssetList.set(i, returnedAsset);
-                assetList.remove(returnedAsset);
-                assetList.add(returnedAsset);
-                notifyItemChanged(i);
+        for (int i = 0; i < assetList.size(); i++) {
+            if (assetList.get(i).getId() == returnedAsset.getId()) {
+                assetList.set(i, returnedAsset);
+                filteredAssetList.clear();
+                filteredAssetList.addAll(assetList);
+                notifyDataSetChanged();
                 break;
             }
         }
@@ -193,7 +214,7 @@ public class AssetsAdapter extends RecyclerView.Adapter<AssetsAdapter.ViewHolder
 
     public void addAssetToList(Asset createdAsset) {
         assetList.add(createdAsset);
-        filteredAssetList.add(0, createdAsset);
+        filteredAssetList.add(createdAsset);
         notifyDataSetChanged();
     }
 

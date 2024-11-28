@@ -1,12 +1,8 @@
 package com.example.registar;
 
-import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MenuItem;
@@ -14,14 +10,12 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.camera.core.ImageCapture;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -30,15 +24,13 @@ import com.example.registar.model.Asset;
 import com.example.registar.model.Employee;
 import com.example.registar.model.Location;
 
-import java.io.File;
 import java.time.LocalDate;
 import java.util.Objects;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class AssetCreateActivity extends AppCompatActivity {
     private ActivityResultLauncher<Intent> pickImageLauncher;
     Asset asset;
+    String imagePath;
     EditText titleTextview, descriptionTextview,priceTextview, employeeTextview, locationTextview;
     TextView creationDateTextview, barcodeTextview;
     ImageView imageView;
@@ -82,19 +74,29 @@ public class AssetCreateActivity extends AppCompatActivity {
                 }
         );
 
+        imageView.setOnClickListener(v -> {
+            MainActivity.requestCameraPermission(this);
+        });
+
         MainActivity.takePictureLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == RESULT_OK){
-                        imageView.setImageURI(MainActivity.photoURI);
-                        Log.i("kamera", String.valueOf(getExternalFilesDir(Environment.DIRECTORY_PICTURES)));
+                        BitmapHelper.processImageInBackground(this, imageView, MainActivity.photoURI);
+                        /*
+                        BitmapHelper.processImageInBackground(
+                                this,
+                                imageView.getWidth(),
+                                imageView.getHeight(),
+                                MainActivity.photoURI,
+                                bitmap -> {
+                                    imageView.setImageBitmap(bitmap);
+                                }
+                        );
+                         */
                     }
                 }
         );
-
-        imageView.setOnClickListener(v -> {
-            MainActivity.openCamera(this);
-        });
 
     }
 
@@ -120,6 +122,7 @@ public class AssetCreateActivity extends AppCompatActivity {
             return;
 
         asset = new Asset();
+        asset.setId(1002);
         asset.setTitle(String.valueOf(titleTextview.getText()));
         asset.setDescription(String.valueOf(descriptionTextview.getText()));
         asset.setPrice((Integer.parseInt(priceTextview.getText().toString())));
@@ -127,6 +130,7 @@ public class AssetCreateActivity extends AppCompatActivity {
         asset.setEmployee(new Employee(employeeTextview.getText().toString(), "nesto", "direktor"));
         asset.setCreationDate(LocalDate.parse(creationDateTextview.getText()));
         asset.setBarcode(45);
+        asset.setImagePath(imagePath);
 
         Intent resultIntent = new Intent();
         resultIntent.putExtra("createdAsset", asset);
@@ -175,6 +179,7 @@ public class AssetCreateActivity extends AppCompatActivity {
 
         return isValid;
     }
+
 
 
 }
