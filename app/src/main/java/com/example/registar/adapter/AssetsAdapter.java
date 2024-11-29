@@ -17,12 +17,11 @@ import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.registar.AssetActivity;
 import com.example.registar.AssetEditActivity;
-import com.example.registar.BitmapHelper;
+import com.example.registar.helper.BitmapHelper;
 import com.example.registar.R;
 import com.example.registar.model.Asset;
 
@@ -31,19 +30,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AssetsAdapter extends RecyclerView.Adapter<AssetsAdapter.ViewHolder>{
-    private final FragmentActivity activity;
     private final List<Asset> assetList, filteredAssetList;
-    private final View popupView;
+    private View popupView;
     private float touchX, touchY;
     private final ActivityResultLauncher<Intent> deleteAssetLauncher;
     public int highlightedItemPosition = -1;
 
-    public AssetsAdapter(FragmentActivity activity, List<Asset> assetList,
+    public AssetsAdapter(List<Asset> assetList,
                          ActivityResultLauncher<Intent> deleteActivityLauncher) {
         this.assetList = assetList;
         this.filteredAssetList = new ArrayList<>(assetList);
-        this.activity = activity;
-        this.popupView = LayoutInflater.from(activity).inflate(R.layout.popup_crud, null);
         this.deleteAssetLauncher = deleteActivityLauncher;
     }
 
@@ -53,6 +49,7 @@ public class AssetsAdapter extends RecyclerView.Adapter<AssetsAdapter.ViewHolder
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         View v = layoutInflater.inflate(R.layout.assets_recycler_item, parent, false);
+        this.popupView = LayoutInflater.from(parent.getContext()).inflate(R.layout.popup_crud, null);
         return new ViewHolder(v);
     }
 
@@ -73,7 +70,7 @@ public class AssetsAdapter extends RecyclerView.Adapter<AssetsAdapter.ViewHolder
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(activity, AssetActivity.class);
+                Intent intent = new Intent(popupView.getContext(), AssetActivity.class);
                 intent.putExtra("clickedAsset", asset);
                 intent.putExtra("position", holder.getAdapterPosition());
                 deleteAssetLauncher.launch(intent);
@@ -90,7 +87,13 @@ public class AssetsAdapter extends RecyclerView.Adapter<AssetsAdapter.ViewHolder
             return false;
         });
 
-        holder.itemView.setOnLongClickListener(v -> {// Highlight the item only on the first long click
+        holder.itemView.setOnLongClickListener(v -> {
+            // Highlight the item only on the first long click
+            if (highlightedItemPosition != holder.getAdapterPosition()) {
+                // Remove highlight from the previous item and highlight the current one
+                highlightedItemPosition = holder.getAdapterPosition();
+                notifyItemChanged(position);
+            }
             showPopupMenu(v, asset, holder.getAdapterPosition());
             return true;
         });
@@ -99,23 +102,10 @@ public class AssetsAdapter extends RecyclerView.Adapter<AssetsAdapter.ViewHolder
         if (file.exists()) {
             Log.i("BitmapHelper", "File does exist: " + asset.getImagePath());
             Uri imageUri = Uri.fromFile(file);
-            /*
-            BitmapHelper.processImageInBackground(
-                    activity,
-                    80,
-                    80,
-                    imageUri,
-                    bitmap -> {
-                        // Ensure the ViewHolder is still bound to the same position
-                        if (holder.getAdapterPosition() == position)
-                            holder.icon.setImageBitmap(bitmap);
-                        else
-                            holder.icon.setImageBitmap(null);
-                    }
-            );
-
-             */
-            BitmapHelper.processImageInBackground(activity, holder.icon, imageUri);
+            // Dimensions of imageview are now available
+            holder.icon.post(() -> {
+                BitmapHelper.processImageInBackground(popupView.getContext(), holder.icon, imageUri);
+            });
         }
         else {
             holder.icon.setImageBitmap(null);
@@ -155,12 +145,6 @@ public class AssetsAdapter extends RecyclerView.Adapter<AssetsAdapter.ViewHolder
     }
 
     private void showPopupMenu(View view, Asset asset, int position) {
-        if (highlightedItemPosition != position) {
-            // Remove highlight from the previous item and highlight the current one
-            highlightedItemPosition = position;
-            notifyDataSetChanged(); // Notify RecyclerView to update all items
-        }
-
         PopupWindow popupWindow = new PopupWindow(popupView,
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -180,7 +164,7 @@ public class AssetsAdapter extends RecyclerView.Adapter<AssetsAdapter.ViewHolder
     }
 
     public void startEditActivity(Asset asset){
-        Intent intent = new Intent(activity, AssetEditActivity.class);
+        Intent intent = new Intent(popupView.getContext(), AssetEditActivity.class);
         intent.putExtra("clickedAsset", asset);
         deleteAssetLauncher.launch(intent);
 
@@ -209,7 +193,7 @@ public class AssetsAdapter extends RecyclerView.Adapter<AssetsAdapter.ViewHolder
 
         highlightedItemPosition = -1;
         notifyItemRemoved(position);
-        showCustomToast(activity);
+        showCustomToast(popupView.getContext());
     }
 
     public void addAssetToList(Asset createdAsset) {

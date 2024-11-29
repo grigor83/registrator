@@ -1,16 +1,7 @@
 package com.example.registar;
 
-import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
-import android.provider.Settings;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,13 +9,8 @@ import android.view.View;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -34,15 +20,7 @@ import com.example.registar.adapter.ViewPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
-import java.io.File;
-import java.io.IOException;
-import java.time.LocalDateTime;
-
 public class MainActivity extends AppCompatActivity {
-    public static final int CAMERA_PERMISSION_CODE = 100;
-    public static final String[] CAMERA_PERMISSION = { Manifest.permission.CAMERA };
-    public static ActivityResultLauncher<Intent> takePictureLauncher;
-    public static Uri photoURI;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,89 +85,5 @@ public class MainActivity extends AppCompatActivity {
         toast.show();
     }
 
-    public static void requestCameraPermission(Context context){
-        // Check if camera permission is already granted
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
-                != PackageManager.PERMISSION_GRANTED) {
-            // Request the camera permission
-            ActivityCompat.requestPermissions((Activity) context, CAMERA_PERMISSION, CAMERA_PERMISSION_CODE);
-        } else {
-            // Permission is already granted
-            takePicture(context);
-        }
-    }
-
-    private static void takePicture(Context context){
-        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Ensure the camera intent can be handled
-        if (cameraIntent.resolveActivity(context.getPackageManager()) != null)
-            try {
-                File photoFile = createImageFile(context);
-                ((AssetCreateActivity) context).imagePath = photoFile.getAbsolutePath();
-                photoURI = FileProvider.getUriForFile(context, "com.example.registar.fileprovider", photoFile);
-                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                takePictureLauncher.launch(cameraIntent);
-            }
-            catch (IOException ex) {
-                Toast.makeText(context, R.string.error_creating_file, Toast.LENGTH_SHORT).show();
-                photoURI = null;
-            }
-    }
-
-    private static File createImageFile(Context context) throws IOException {
-        // Create a unique file name
-        String timeStamp = String.valueOf(LocalDateTime.now());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        //  App-Specific Directory does not require WRITE_EXTERNAL_STORAGE permissions
-        File storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        if (storageDir != null) {
-            if (!storageDir.exists() && !storageDir.mkdirs()) {
-                Log.e("File Creation", "Failed to create directory: " + storageDir.getAbsolutePath());
-            } else {
-                Log.d("File Creation", "Directory created or exists: " + storageDir.getAbsolutePath());
-            }
-        } else {
-            Log.e("File Creation", "Failed to get external directory.");
-        }
-
-        return File.createTempFile(imageFileName, ".jpg", storageDir);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        if (requestCode == CAMERA_PERMISSION_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission granted
-                takePicture(this);
-            } else {
-                // Permission denied
-                if (!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
-                    // "Don't Ask Again" scenario detected
-                    openAppSettings();
-                } else {
-                    // Permission denied without "Don't Ask Again"
-                    Toast.makeText(this, R.string.permission_camera_denied, Toast.LENGTH_SHORT).show();
-                }
-            }
-        }
-        else
-            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
-
-    private void openAppSettings() {
-        new AlertDialog.Builder(this)
-                .setTitle(R.string.permission_denied_title)
-                .setMessage(R.string.permission_permanent_denied)
-                .setPositiveButton(R.string.settings, (dialog, which) -> {
-                    Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                    Uri uri = Uri.fromParts("package", getPackageName(), null);
-                    intent.setData(uri);
-                    startActivity(intent);
-                })
-                .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
-                .create()
-                .show();
-    }
 
 }

@@ -35,5 +35,9 @@
     <string name="permission_camera_denied">Nemate dozvolu za upotrebu kamere!</string>
     <string name="permission_denied_title">Pristup kameri odbijen</string>
     <string name="permission_permanent_denied">Pristup kameri je permanentno odbijen. Možete je omogućiti u podešavanjima aplikacije</string>
+    <string name="select_image_source">Izaberi sliku</string>
+    <string name="pick_from_gallery">Galerija</string>
+    <string name="take_photo">Uslikaj</string>
+    <string name="cancel">Otkaži</string>
 
 </resources>

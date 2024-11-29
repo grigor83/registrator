@@ -23,8 +23,7 @@
         app:layout_constraintTop_toBottomOf="@id/toolbar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:background="@drawable/background_editable"
-        android:onClick="openImagePicker"/>
+        android:background="@drawable/background_editable"/>
 
     <ScrollView
         style="@style/ScrollbarStyle"

@@ -3,8 +3,6 @@ package com.example.registar;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -12,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
-import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,6 +17,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.registar.helper.BitmapHelper;
+import com.example.registar.helper.ImageHelper;
 import com.example.registar.model.Asset;
 import com.example.registar.model.Employee;
 import com.example.registar.model.Location;
@@ -28,12 +27,8 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 public class AssetCreateActivity extends AppCompatActivity {
-    private ActivityResultLauncher<Intent> pickImageLauncher;
-    Asset asset;
-    String imagePath;
-    EditText titleTextview, descriptionTextview,priceTextview, employeeTextview, locationTextview;
-    TextView creationDateTextview, barcodeTextview;
-    ImageView imageView;
+    private EditText titleTextview, descriptionTextview,priceTextview, employeeTextview, locationTextview;
+    private TextView creationDateTextview, barcodeTextview;
 
 
     @Override
@@ -53,18 +48,16 @@ public class AssetCreateActivity extends AppCompatActivity {
 
         titleTextview = findViewById(R.id.title);
         descriptionTextview = findViewById(R.id.description);
+        locationTextview = findViewById(R.id.location);
+        employeeTextview = findViewById(R.id.employee);
         creationDateTextview = findViewById(R.id.creation_date);
         priceTextview = findViewById(R.id.price);
-        employeeTextview = findViewById(R.id.employee);
-        locationTextview = findViewById(R.id.location);
         barcodeTextview = findViewById(R.id.barcode);
-        imageView = findViewById(R.id.icon);
-
         creationDateTextview.setText(LocalDate.now().toString());
-
-        // Set click listener for the ImageView
         ImageView imageView = findViewById(R.id.icon);
-        pickImageLauncher = registerForActivityResult(
+        imageView.setOnClickListener(v -> ImageHelper.showImageOptions(this));
+
+        ImageHelper.pickImageLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == RESULT_OK && result.getData() != null) {
@@ -74,30 +67,13 @@ public class AssetCreateActivity extends AppCompatActivity {
                 }
         );
 
-        imageView.setOnClickListener(v -> {
-            MainActivity.requestCameraPermission(this);
-        });
-
-        MainActivity.takePictureLauncher = registerForActivityResult(
+        ImageHelper.takePictureLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
-                    if (result.getResultCode() == RESULT_OK){
-                        BitmapHelper.processImageInBackground(this, imageView, MainActivity.photoURI);
-                        /*
-                        BitmapHelper.processImageInBackground(
-                                this,
-                                imageView.getWidth(),
-                                imageView.getHeight(),
-                                MainActivity.photoURI,
-                                bitmap -> {
-                                    imageView.setImageBitmap(bitmap);
-                                }
-                        );
-                         */
-                    }
+                    if (result.getResultCode() == RESULT_OK)
+                        BitmapHelper.processImageInBackground(this, imageView, ImageHelper.photoURI);
                 }
         );
-
     }
 
     @Override
@@ -108,12 +84,8 @@ public class AssetCreateActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void openImagePicker(View v) {
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        pickImageLauncher.launch(intent); // Launch the image picker
-    }
-
     public void cancel(View view) {
+        ImageHelper.imagePath = null;
         finish();
     }
 
@@ -121,7 +93,7 @@ public class AssetCreateActivity extends AppCompatActivity {
         if (!validateInputs())
             return;
 
-        asset = new Asset();
+        Asset asset = new Asset();
         asset.setId(1002);
         asset.setTitle(String.valueOf(titleTextview.getText()));
         asset.setDescription(String.valueOf(descriptionTextview.getText()));
@@ -130,7 +102,12 @@ public class AssetCreateActivity extends AppCompatActivity {
         asset.setEmployee(new Employee(employeeTextview.getText().toString(), "nesto", "direktor"));
         asset.setCreationDate(LocalDate.parse(creationDateTextview.getText()));
         asset.setBarcode(45);
-        asset.setImagePath(imagePath);
+        if (ImageHelper.imagePath != null){
+            asset.setImagePath(ImageHelper.imagePath);
+            ImageHelper.imagePath = null;
+        }
+        else
+            asset.setImagePath("nema slike");
 
         Intent resultIntent = new Intent();
         resultIntent.putExtra("createdAsset", asset);
@@ -179,7 +156,5 @@ public class AssetCreateActivity extends AppCompatActivity {
 
         return isValid;
     }
-
-
 
 }

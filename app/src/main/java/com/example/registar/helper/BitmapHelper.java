@@ -1,4 +1,4 @@
-package com.example.registar;
+package com.example.registar.helper;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -9,6 +9,8 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.widget.ImageView;
+
+import com.example.registar.R;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,32 +34,13 @@ public class BitmapHelper {
                 e.printStackTrace();
             }
 
-            MainActivity.photoURI = null;
+            ImageHelper.photoURI = null;
         });
-    }
-
-    public static void processImageInBackground(Context context, int width, int height, Uri photoUri, BitmapCallback callback) {
-        createThreadpool();
-        executor.execute(() -> {
-            try {
-                Bitmap scaledBitmap = getBitmapFromUri(context, photoUri, width, height);
-                Handler handler = new Handler(Looper.getMainLooper());
-                handler.post(() -> callback.onBitmapReady(scaledBitmap));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            MainActivity.photoURI = null;
-        });
-    }
-
-    public interface BitmapCallback {
-        void onBitmapReady(Bitmap bitmap);
     }
 
     private static Bitmap getBitmapFromUri(Context context, Uri photoUri, int width, int height) throws IOException {
         InputStream inputStream = context.getContentResolver().openInputStream(photoUri);
-        /*
+
         // Decode with inJustDecodeBounds=true to check dimensions
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
@@ -76,10 +59,8 @@ public class BitmapHelper {
             inputStream.close();
 
         // Correct orientation
+        //Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
         return correctBitmapOrientation(context, photoUri, bitmap);
-
-         */
-        return BitmapFactory.decodeStream(inputStream);
     }
 
     private static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
@@ -137,7 +118,7 @@ public class BitmapHelper {
 
     public static void createThreadpool(){
         if (executor == null)
-            executor = Executors.newFixedThreadPool(15);
+            executor = Executors.newFixedThreadPool(7);
     }
 
 }

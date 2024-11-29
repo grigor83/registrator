@@ -1,40 +1,34 @@
 package com.example.registar;
 
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.Manifest;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.registar.helper.BitmapHelper;
+import com.example.registar.helper.ImageHelper;
 import com.example.registar.model.Asset;
 import com.example.registar.model.Location;
 
+import java.io.File;
 import java.util.Objects;
 
 public class AssetEditActivity extends AppCompatActivity {
-    private ActivityResultLauncher<Intent> pickImageLauncher;
-    Asset asset;
-    EditText titleTextview, descriptionTextview,priceTextview, employeeTextview, locationTextview;
-    TextView creationDateTextview, barcodeTextview;
-    ImageView imageView;
+    private Asset asset;
+    private EditText titleTextview, descriptionTextview,priceTextview, employeeTextview, locationTextview;
+    private TextView barcodeTextview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,28 +47,35 @@ public class AssetEditActivity extends AppCompatActivity {
 
         titleTextview = findViewById(R.id.title);
         descriptionTextview = findViewById(R.id.description);
-        creationDateTextview = findViewById(R.id.creation_date);
-        priceTextview = findViewById(R.id.price);
-        employeeTextview = findViewById(R.id.employee);
         locationTextview = findViewById(R.id.location);
+        employeeTextview = findViewById(R.id.employee);
+        TextView creationDateTextview = findViewById(R.id.creation_date);
+        priceTextview = findViewById(R.id.price);
         barcodeTextview = findViewById(R.id.barcode);
-        imageView = findViewById(R.id.icon);
+        ImageView imageView = findViewById(R.id.icon);
+        imageView.setOnClickListener(v -> ImageHelper.showImageOptions(this));
 
         final Asset retrievedAsset = (Asset) getIntent().getSerializableExtra("clickedAsset");
         if (retrievedAsset != null) {
             asset = retrievedAsset;
             titleTextview.setText(asset.getTitle());
             descriptionTextview.setText(asset.getDescription());
+            locationTextview.setText(asset.getLocation().getCity());
+            employeeTextview.setText(asset.getEmployee().getFullName());
             creationDateTextview.setText(asset.getCreationDate().toString());
             priceTextview.setText(String.valueOf(asset.getPrice()));
-            employeeTextview.setText(asset.getEmployee().getFullName());
             barcodeTextview.setText(String.valueOf(asset.getBarcode()));
-            locationTextview.setText(asset.getLocation().getCity());
+            File file = new File(asset.getImagePath());
+            if (file.exists()) {
+                Uri imageUri = Uri.fromFile(file);
+                // Dimensions of imageview are now available
+                imageView.post(() -> {
+                    BitmapHelper.processImageInBackground(this, imageView, imageUri);
+                });
+            }
         }
 
-        // Set click listener for the ImageView
-        ImageView imageView = findViewById(R.id.icon);
-        pickImageLauncher = registerForActivityResult(
+        ImageHelper.pickImageLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == RESULT_OK && result.getData() != null) {
@@ -83,22 +84,28 @@ public class AssetEditActivity extends AppCompatActivity {
                     }
                 }
         );
+
+        ImageHelper.takePictureLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK)
+                        BitmapHelper.processImageInBackground(this, imageView, ImageHelper.photoURI);
+                }
+        );
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == android.R.id.home)
+        if (item.getItemId() == android.R.id.home){
+            ImageHelper.imagePath = null;
             this.finish();
+        }
 
         return super.onOptionsItemSelected(item);
     }
 
-    public void openImagePicker(View v) {
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        pickImageLauncher.launch(intent); // Launch the image picker
-    }
-
     public void cancelEditing(View view) {
+        ImageHelper.imagePath = null;
         finish();
     }
 
@@ -111,6 +118,10 @@ public class AssetEditActivity extends AppCompatActivity {
         asset.setPrice((Integer.parseInt(priceTextview.getText().toString().trim())));
         asset.setLocation(new Location((String.valueOf(locationTextview.getText())).trim()));
         asset.getEmployee().setName((String.valueOf(employeeTextview.getText())).trim());
+        if (ImageHelper.imagePath != null){
+            asset.setImagePath(ImageHelper.imagePath);
+            ImageHelper.imagePath = null;
+        }
 
         Intent resultIntent = new Intent();
         resultIntent.putExtra("updatedAsset", asset);

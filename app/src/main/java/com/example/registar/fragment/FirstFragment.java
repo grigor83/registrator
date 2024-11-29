@@ -34,7 +34,7 @@ import java.util.Objects;
 public class FirstFragment extends Fragment {
 
     private final List<Asset> assets = new ArrayList<>();
-    AssetsAdapter adapter;
+    private AssetsAdapter adapter;
 
     //Launcher za rezultat koji se vraća iz AssetActivity. Ovaj launcher se proslijedi Asset adapteru, koji onda pokreće AssetActivity pomoću njega.
     // Ako user u AssetActivity stisne dugme za brisanje iz toolbar-a, vratiće int position. Ako user stisne dugme edit, pa ode na AssetEditActivity
@@ -62,6 +62,8 @@ public class FirstFragment extends Fragment {
                     if (createdAsset != null)
                         adapter.addAssetToList(createdAsset);
                 }
+                else
+                    adapter.notifyDataSetChanged();
             });
 
     @Override
@@ -72,7 +74,7 @@ public class FirstFragment extends Fragment {
         Employee k = new Employee("ivan", "Ivanković", "komercijalista");
         Location bl = new Location("Banjaluka");
         Location kv = new Location("Kotor Varoš");
-        for (int i=0; i<107; i++){
+        for (int i=0; i<17; i++){
             if (i%2 == 0)
                 assets.add(new Asset(i, "stolica"+i, "kancelarijska stolica", "slika",
                         555, 45, LocalDate.now(), m, bl));
@@ -80,6 +82,8 @@ public class FirstFragment extends Fragment {
                 assets.add(new Asset(i, "računar"+i, "desktop računar", "slika",
                         1000, 500, LocalDate.now(), k, kv));
         }
+
+        adapter = new AssetsAdapter(assets, deleteAssetLauncher);
     }
 
     @Override
@@ -91,7 +95,6 @@ public class FirstFragment extends Fragment {
         RecyclerView recyclerView = fragmentLayout.findViewById(R.id.fixedAssetsRecycler);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(fragmentLayout.getContext()));
-        adapter = new AssetsAdapter(getActivity(), assets, deleteAssetLauncher);
         recyclerView.setAdapter(adapter);
 
         EditText titleSearch = fragmentLayout.findViewById(R.id.titleSearch);
@@ -121,7 +124,6 @@ public class FirstFragment extends Fragment {
             Intent intent = new Intent(getActivity(), AssetCreateActivity.class);
             createAssetLauncher.launch(intent);
             adapter.highlightedItemPosition = -1;
-            adapter.notifyDataSetChanged();
         });
 
         return fragmentLayout;

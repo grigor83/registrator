@@ -18,6 +18,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.registar.helper.BitmapHelper;
 import com.example.registar.model.Asset;
 
 import java.io.File;
@@ -29,7 +30,7 @@ public class AssetActivity extends AppCompatActivity {
     private TextView titleTextview, descriptionTextview,priceTextview, employeeTextview,
             locationTextview, creationDateTextview, barcodeTextview;
     private ImageView imageView;
-    boolean shouldReturn = false;
+    private boolean shouldReturn = false;
 
     private final ActivityResultLauncher<Intent> editActivityLauncher =
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
@@ -126,20 +127,9 @@ public class AssetActivity extends AppCompatActivity {
         File file = new File(asset.getImagePath());
         if (file.exists()){
             Uri imageUri = Uri.fromFile(file);
-            BitmapHelper.processImageInBackground(this, imageView, imageUri);
-            //imageView.setImageURI(imageUri);
-            /*
-            BitmapHelper.processImageInBackground(
-                    this,
-                    imageView.getWidth(),
-                    imageView.getHeight(),
-                    imageUri,
-                    bitmap -> {
-                        imageView.setImageBitmap(bitmap);
-                    }
-            );
-
-             */
+            imageView.post(() -> {
+                BitmapHelper.processImageInBackground(this, imageView, imageUri);
+            });
         }
     }
 
@@ -150,4 +140,5 @@ public class AssetActivity extends AppCompatActivity {
             setResult(RESULT_OK, resultIntent);
         }
     }
+
 }
