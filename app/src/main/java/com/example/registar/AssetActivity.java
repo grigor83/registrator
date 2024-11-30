@@ -128,7 +128,7 @@ public class AssetActivity extends AppCompatActivity {
         if (file.exists()){
             Uri imageUri = Uri.fromFile(file);
             imageView.post(() -> {
-                BitmapHelper.processImageInBackground(this, imageView, imageUri);
+                BitmapHelper.processImageInBackground(this, imageView, imageUri, true);
             });
         }
     }

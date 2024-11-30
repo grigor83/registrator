@@ -62,7 +62,8 @@ public class AssetCreateActivity extends AppCompatActivity {
                 result -> {
                     if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                         Uri selectedImageUri = result.getData().getData();
-                        imageView.setImageURI(selectedImageUri); // Set the selected image to the ImageView
+                        ImageHelper.createFileFromUri(this, imageView, selectedImageUri);
+                        //imageView.setImageURI(selectedImageUri); // Set the selected image to the ImageView
                     }
                 }
         );
@@ -71,7 +72,7 @@ public class AssetCreateActivity extends AppCompatActivity {
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == RESULT_OK)
-                        BitmapHelper.processImageInBackground(this, imageView, ImageHelper.photoURI);
+                        BitmapHelper.processImageInBackground(this, imageView, ImageHelper.photoURI, true);
                 }
         );
     }

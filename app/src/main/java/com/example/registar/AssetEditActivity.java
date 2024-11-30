@@ -70,7 +70,7 @@ public class AssetEditActivity extends AppCompatActivity {
                 Uri imageUri = Uri.fromFile(file);
                 // Dimensions of imageview are now available
                 imageView.post(() -> {
-                    BitmapHelper.processImageInBackground(this, imageView, imageUri);
+                    BitmapHelper.processImageInBackground(this, imageView, imageUri, true);
                 });
             }
         }
@@ -80,7 +80,7 @@ public class AssetEditActivity extends AppCompatActivity {
                 result -> {
                     if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                         Uri selectedImageUri = result.getData().getData();
-                        imageView.setImageURI(selectedImageUri); // Set the selected image to the ImageView
+                        ImageHelper.createFileFromUri(this, imageView, selectedImageUri);
                     }
                 }
         );
@@ -89,7 +89,7 @@ public class AssetEditActivity extends AppCompatActivity {
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == RESULT_OK)
-                        BitmapHelper.processImageInBackground(this, imageView, ImageHelper.photoURI);
+                        BitmapHelper.processImageInBackground(this, imageView, ImageHelper.photoURI, true);
                 }
         );
     }

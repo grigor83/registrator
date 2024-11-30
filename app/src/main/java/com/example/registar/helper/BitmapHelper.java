@@ -19,23 +19,38 @@ import java.util.concurrent.Executors;
 
 public class BitmapHelper {
 
-    private static ExecutorService executor;
+    public static ExecutorService executor;
 
-    public static void processImageInBackground(Context context, ImageView imageView, Uri photoUri) {
-        createThreadpool();
-        executor.execute(() -> {
+    public static void processImageInBackground(Context context, ImageView imageView, Uri photoUri, boolean startNewThread) {
+        if (startNewThread){
+            createThreadpool();
+            executor.execute(() -> {
+                try {
+                    Bitmap scaledBitmap = getBitmapFromUri(context, photoUri, imageView.getWidth(), imageView.getHeight());
+                    Handler handler = new Handler(Looper.getMainLooper());
+                    handler.post(() -> {
+                        imageView.setImageBitmap(scaledBitmap);
+                    });
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                ImageHelper.photoURI = null;
+            });
+        }
+        else {
             try {
                 Bitmap scaledBitmap = getBitmapFromUri(context, photoUri, imageView.getWidth(), imageView.getHeight());
                 Handler handler = new Handler(Looper.getMainLooper());
                 handler.post(() -> {
-                        imageView.setImageBitmap(scaledBitmap);
+                    imageView.setImageBitmap(scaledBitmap);
                 });
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
             ImageHelper.photoURI = null;
-        });
+        }
     }
 
     private static Bitmap getBitmapFromUri(Context context, Uri photoUri, int width, int height) throws IOException {

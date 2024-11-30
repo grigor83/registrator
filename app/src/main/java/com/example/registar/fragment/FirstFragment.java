@@ -49,7 +49,6 @@ public class FirstFragment extends Fragment {
                     Asset updatedAsset = (Asset) Objects.requireNonNull(result.getData()).getSerializableExtra("updatedAsset");
                     if (updatedAsset != null)
                         adapter.replaceAssetInList(updatedAsset);
-
                 }
                 else
                     adapter.notifyDataSetChanged();

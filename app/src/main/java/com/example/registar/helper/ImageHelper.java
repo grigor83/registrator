@@ -10,6 +10,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -23,12 +24,15 @@ import androidx.core.content.FileProvider;
 import com.example.registar.R;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.time.LocalDateTime;
 
 public class ImageHelper extends AppCompatActivity {
-    public static final int CAMERA_PERMISSION_CODE = 100;
-    public static final String[] CAMERA_PERMISSION = { Manifest.permission.CAMERA };
+    private static final int CAMERA_PERMISSION_CODE = 100;
+    private static final String[] CAMERA_PERMISSION = { Manifest.permission.CAMERA };
     public static ActivityResultLauncher<Intent> pickImageLauncher, takePictureLauncher;
     public static Uri photoURI;
     public static String imagePath;
@@ -70,7 +74,7 @@ public class ImageHelper extends AppCompatActivity {
         // Ensure the camera intent can be handled
         if (cameraIntent.resolveActivity(context.getPackageManager()) != null)
             try {
-                File photoFile = createImageFile(context);
+                File photoFile = createFile(context);
                 imagePath = photoFile.getAbsolutePath();
                 photoURI = FileProvider.getUriForFile(context, "com.example.registar.fileprovider", photoFile);
                 cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
@@ -82,7 +86,7 @@ public class ImageHelper extends AppCompatActivity {
             }
     }
 
-    private static File createImageFile(Context context) throws IOException {
+    private static File createFile(Context context) throws IOException {
         //  App-Specific Directory does not require WRITE_EXTERNAL_STORAGE permissions; files in this dir are not
         // accessible from MediaStore content provider
         File storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
@@ -104,6 +108,29 @@ public class ImageHelper extends AppCompatActivity {
         // Create the file
         return new File(storageDir, fileName);
         //return File.createTempFile(imageFileName, ".jpg", storageDir);
+    }
+
+    public static void createFileFromUri(Context context, ImageView imageView, Uri uri) {
+        BitmapHelper.createThreadpool();
+        BitmapHelper.executor.execute(() -> {
+            try {
+                File newFile = createFile(context);
+                InputStream inputStream = context.getContentResolver().openInputStream(uri);
+                OutputStream outputStream = new FileOutputStream(newFile);
+                byte[] buffer = new byte[1024];
+                int bytesRead;
+                while ((bytesRead = inputStream.read(buffer)) != -1) {
+                    outputStream.write(buffer, 0, bytesRead);
+                }
+                inputStream.close(); outputStream.close();
+
+                imagePath = newFile.getAbsolutePath();
+                photoURI = FileProvider.getUriForFile(context, "com.example.registar.fileprovider", newFile);
+                BitmapHelper.processImageInBackground(context, imageView, photoURI, false);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     @Override

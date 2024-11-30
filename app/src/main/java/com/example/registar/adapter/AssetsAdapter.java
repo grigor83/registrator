@@ -104,14 +104,13 @@ public class AssetsAdapter extends RecyclerView.Adapter<AssetsAdapter.ViewHolder
             Uri imageUri = Uri.fromFile(file);
             // Dimensions of imageview are now available
             holder.icon.post(() -> {
-                BitmapHelper.processImageInBackground(popupView.getContext(), holder.icon, imageUri);
+                BitmapHelper.processImageInBackground(popupView.getContext(), holder.icon, imageUri, true);
             });
         }
         else {
             holder.icon.setImageBitmap(null);
             holder.icon.setImageResource(R.drawable.chair);
         }
-
     }
 
     @Override
@@ -169,7 +168,6 @@ public class AssetsAdapter extends RecyclerView.Adapter<AssetsAdapter.ViewHolder
         deleteAssetLauncher.launch(intent);
 
         highlightedItemPosition = -1;
-        notifyDataSetChanged();
     }
 
     // Metod se poziva u FirstFragment u deleteActivityLauncher
