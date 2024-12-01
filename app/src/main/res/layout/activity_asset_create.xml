@@ -26,11 +26,12 @@
         android:background="@drawable/background_editable"/>
 
     <ScrollView
+        android:id="@+id/scrollView2"
         style="@style/ScrollbarStyle"
-        app:layout_constraintTop_toBottomOf="@id/icon"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/icon">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -45,11 +46,12 @@
 
                 <TextView
                     style="@style/TextViewStyleInEditMode"
-                    android:text="@string/textview_title_text"
-                    android:labelFor="@id/title"/>
+                    android:labelFor="@id/title"
+                    android:text="@string/textview_title_text" />
+
                 <EditText
                     android:id="@+id/title"
-                    style="@style/EditTextStyle"/>
+                    style="@style/EditTextStyle" />
             </LinearLayout>
 
             <!-- Description -->
@@ -60,11 +62,12 @@
 
                 <TextView
                     style="@style/TextViewStyleInEditMode"
-                    android:text="@string/textview_description_text"
-                    android:labelFor="@id/description"/>
+                    android:labelFor="@id/description"
+                    android:text="@string/textview_description_text" />
+
                 <EditText
                     android:id="@+id/description"
-                    style="@style/EditTextStyle"/>
+                    style="@style/EditTextStyle" />
             </LinearLayout>
 
             <!-- Location -->
@@ -75,11 +78,15 @@
 
                 <TextView
                     style="@style/TextViewStyleInEditMode"
-                    android:text="@string/textview_location_text"
-                    android:labelFor="@id/location"/>
-                <EditText
+                    android:labelFor="@id/location"
+                    android:text="@string/textview_location_text" />
+
+                <AutoCompleteTextView
                     android:id="@+id/location"
-                    style="@style/EditTextStyle"/>
+                    style="@style/EditTextStyle"
+                    android:cursorVisible="false"
+                    android:hint="@string/select_location"
+                    android:inputType="none"/>
             </LinearLayout>
 
             <!-- Employee -->
@@ -91,11 +98,15 @@
                 <TextView
                     style="@style/TextViewStyleInEditMode"
                     android:layout_width="wrap_content"
-                    android:text="@string/textview_employee_name"
-                    android:labelFor="@id/employee"/>
-                <EditText
+                    android:labelFor="@id/employee"
+                    android:text="@string/textview_employee_name" />
+
+                <AutoCompleteTextView
                     android:id="@+id/employee"
-                    style="@style/EditTextStyle"/>
+                    style="@style/EditTextStyle"
+                    android:cursorVisible="false"
+                    android:hint="@string/select_employee"
+                    android:inputType="none"/>
             </LinearLayout>
 
             <!-- Creation date -->
@@ -107,19 +118,20 @@
                 <TextView
                     style="@style/TextViewStyleInEditMode"
                     android:layout_width="wrap_content"
-                    android:text="@string/textview_creation_date_text"/>
+                    android:text="@string/textview_creation_date_text" />
+
                 <TextView
                     android:id="@+id/creation_date"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/textview_creation_date_text"
-                    android:background="@drawable/background_recycler_item"
                     android:layout_margin="@dimen/recycler_imageview_margins"
-                    android:padding="@dimen/recycler_imageview_padding"/>
+                    android:layout_weight="1"
+                    android:background="@drawable/background_recycler_item"
+                    android:padding="@dimen/recycler_imageview_padding"
+                    android:text="@string/textview_creation_date_text" />
             </LinearLayout>
 
-            <!-- Barcode -->
+            <!--Price and Barcode -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -128,48 +140,45 @@
                 <TextView
                     style="@style/TextViewStyleInEditMode"
                     android:layout_width="wrap_content"
-                    android:text="@string/textview_price_text"
-                    android:labelFor="@id/price"/>
+                    android:labelFor="@id/price"
+                    android:text="@string/textview_price_text" />
+
                 <EditText
                     android:id="@+id/price"
                     style="@style/EditTextStyle"
-                    android:inputType="number"/>
+                    android:inputType="number" />
 
                 <TextView
                     style="@style/TextViewStyleInEditMode"
                     android:layout_width="wrap_content"
                     android:layout_gravity="center"
-                    android:text="@string/textview_barcode"/>
-                <TextView
+                    android:text="@string/textview_barcode" />
+
+                <EditText
                     android:id="@+id/barcode"
-                    android:layout_width="@dimen/asset_recycler_item_height"
-                    android:layout_height="@dimen/asset_recycler_item_height"
-                    android:gravity="center"
-                    android:text="@string/textview_barcode"
-                    android:background="@drawable/background_recycler_item"
-                    android:layout_margin="@dimen/recycler_imageview_margins"
-                    android:padding="@dimen/recycler_imageview_padding"/>
+                    style="@style/EditTextStyle"
+                    android:inputType="none"/>
             </LinearLayout>
 
             <!-- Save and Cancel buttons -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:layout_marginTop="@dimen/btn_container_margin"
-                android:gravity="center">
+                android:gravity="center"
+                android:orientation="horizontal">
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/cancel"
                     style="@style/CancelSaveButton"
-                    android:text="@string/btn_cancel_text"
-                    android:onClick="cancel"/>
+                    android:onClick="cancel"
+                    android:text="@string/btn_cancel_text" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/save"
                     style="@style/CancelSaveButton"
-                    android:text="@string/btn_save_text"
-                    android:onClick="saveAsset"/>
+                    android:onClick="saveAsset"
+                    android:text="@string/btn_save_text" />
             </LinearLayout>
 
         </LinearLayout>

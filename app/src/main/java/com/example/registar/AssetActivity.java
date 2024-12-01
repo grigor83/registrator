@@ -19,23 +19,22 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.registar.helper.BitmapHelper;
-import com.example.registar.model.Asset;
+import com.example.registar.model.AssetWithRelations;
 
 import java.io.File;
 import java.util.Objects;
 
 public class AssetActivity extends AppCompatActivity {
-    private Asset asset;
+    private AssetWithRelations assetWithRelations;
     private int position;
     private TextView titleTextview, descriptionTextview,priceTextview, employeeTextview,
             locationTextview, creationDateTextview, barcodeTextview;
     private ImageView imageView;
     private boolean shouldReturn = false;
-
     private final ActivityResultLauncher<Intent> editActivityLauncher =
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
                 if (result.getResultCode() == RESULT_OK) {
-                    asset = (Asset) Objects.requireNonNull(result.getData()).getSerializableExtra("updatedAsset");
+                    assetWithRelations = (AssetWithRelations) Objects.requireNonNull(result.getData()).getSerializableExtra("updatedAsset");
                     shouldReturn = true;
                     updateUI();
                 }
@@ -65,9 +64,9 @@ public class AssetActivity extends AppCompatActivity {
         barcodeTextview = findViewById(R.id.barcode);
         imageView = findViewById(R.id.icon);
 
-        Asset clickedAsset = (Asset) getIntent().getSerializableExtra("clickedAsset");
+        AssetWithRelations clickedAsset = (AssetWithRelations) getIntent().getSerializableExtra("clickedAsset");
         if (clickedAsset != null) {
-            asset = clickedAsset;
+            assetWithRelations = clickedAsset;
             updateUI();
         }
         position = getIntent().getIntExtra("position", -1);
@@ -99,7 +98,7 @@ public class AssetActivity extends AppCompatActivity {
         }
         else if (item.getItemId() == R.id.action_edit){
             Intent intent = new Intent(this, AssetEditActivity.class);
-            intent.putExtra("clickedAsset", asset);
+            intent.putExtra("clickedAsset", assetWithRelations);
             editActivityLauncher.launch(intent);
         }
         else if (item.getItemId() == android.R.id.home){
@@ -117,14 +116,16 @@ public class AssetActivity extends AppCompatActivity {
     }
 
     private void updateUI(){
-        titleTextview.setText(asset.getTitle().trim());
-        descriptionTextview.setText(asset.getDescription().trim());
-        creationDateTextview.setText(asset.getCreationDate().toString().trim());
-        priceTextview.setText(String.valueOf(asset.getPrice()));
-        employeeTextview.setText(asset.getEmployee().getFullName().trim());
-        barcodeTextview.setText(String.valueOf(asset.getBarcode()).trim());
-        locationTextview.setText(asset.getLocation().getCity().trim());
-        File file = new File(asset.getImagePath());
+        titleTextview.setText(assetWithRelations.getAsset().getTitle().trim());
+        descriptionTextview.setText(assetWithRelations.getAsset().getDescription().trim());
+        if (null != assetWithRelations.getLocation())
+            locationTextview.setText(assetWithRelations.getLocation().getCity().trim());
+        if (null != assetWithRelations.getEmployee())
+            employeeTextview.setText(assetWithRelations.getEmployee().getFullName().trim());
+        creationDateTextview.setText(assetWithRelations.getAsset().getCreationDate().toString().trim());
+        priceTextview.setText(String.valueOf(assetWithRelations.getAsset().getPrice()));
+        barcodeTextview.setText(String.valueOf(assetWithRelations.getAsset().getBarcode()));
+        File file = new File(assetWithRelations.getAsset().getImagePath());
         if (file.exists()){
             Uri imageUri = Uri.fromFile(file);
             imageView.post(() -> {
@@ -136,7 +137,7 @@ public class AssetActivity extends AppCompatActivity {
     private void putAssetToResultIntent(){
         if (shouldReturn){
             Intent resultIntent = new Intent();
-            resultIntent.putExtra("updatedAsset", asset);
+            resultIntent.putExtra("updatedAsset", assetWithRelations);
             setResult(RESULT_OK, resultIntent);
         }
     }

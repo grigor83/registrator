@@ -9,7 +9,9 @@ import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.text.InputType;
 import android.util.Log;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -22,6 +24,8 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
 import com.example.registar.R;
+import com.example.registar.util.Constants;
+import com.journeyapps.barcodescanner.CaptureActivity;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -29,11 +33,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.time.LocalDateTime;
+import java.util.concurrent.ExecutorService;
 
-public class ImageHelper extends AppCompatActivity {
-    private static final int CAMERA_PERMISSION_CODE = 100;
-    private static final String[] CAMERA_PERMISSION = { Manifest.permission.CAMERA };
-    public static ActivityResultLauncher<Intent> pickImageLauncher, takePictureLauncher;
+public class CameraHelper extends AppCompatActivity {
+
+    public static ActivityResultLauncher<Intent> pickImageLauncher, takePictureLauncher, scanBarcodeLauncher;
     public static Uri photoURI;
     public static String imagePath;
 
@@ -62,7 +66,7 @@ public class ImageHelper extends AppCompatActivity {
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
             // Request the camera permission
-            ActivityCompat.requestPermissions((Activity) context, CAMERA_PERMISSION, CAMERA_PERMISSION_CODE);
+            ActivityCompat.requestPermissions((Activity) context, Constants.CAMERA_PERMISSION, Constants.CAMERA_PERMISSION_CODE);
         } else {
             // Permission is already granted
             takePicture(context);
@@ -111,8 +115,8 @@ public class ImageHelper extends AppCompatActivity {
     }
 
     public static void createFileFromUri(Context context, ImageView imageView, Uri uri) {
-        BitmapHelper.createThreadpool();
-        BitmapHelper.executor.execute(() -> {
+        ExecutorService executor = ExecutorHelper.getExecutor();
+        executor.execute(() -> {
             try {
                 File newFile = createFile(context);
                 InputStream inputStream = context.getContentResolver().openInputStream(uri);
@@ -136,7 +140,7 @@ public class ImageHelper extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-        if (requestCode == CAMERA_PERMISSION_CODE) {
+        if (requestCode == Constants.CAMERA_PERMISSION_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permission granted
                 takePicture(this);
@@ -168,6 +172,27 @@ public class ImageHelper extends AppCompatActivity {
                 .setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss())
                 .create()
                 .show();
+    }
+
+    public static void showBarcodeInputDialog(EditText barcodeView) {
+        // Create a dialog to choose between entering manually or scanning
+        AlertDialog.Builder builder = new AlertDialog.Builder(barcodeView.getContext());
+        builder.setTitle(R.string.choose_barcode_input_method);
+        String[] options = {barcodeView.getContext().getString(R.string.enter_number), barcodeView.getContext().getString(R.string.scan_barcode)};
+        builder.setItems(options, (dialog, which) -> {
+            if (which == 0)
+                // User chooses to enter the barcode manually (input as number)
+                barcodeView.setInputType(InputType.TYPE_CLASS_NUMBER);
+            else if (which == 1)
+                scanBarcode(barcodeView);
+        });
+        builder.show();
+    }
+
+    private static void scanBarcode(EditText barcodeView) {
+        // Start the barcode scanner activity (using a library like Zxing or ZBar)
+        Intent intent = new Intent(barcodeView.getContext(), CaptureActivity.class); // Zxing scanner activity
+        scanBarcodeLauncher.launch(intent);
     }
 
 }

@@ -10,20 +10,15 @@ import android.os.Handler;
 import android.os.Looper;
 import android.widget.ImageView;
 
-import com.example.registar.R;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class BitmapHelper {
 
-    public static ExecutorService executor;
-
     public static void processImageInBackground(Context context, ImageView imageView, Uri photoUri, boolean startNewThread) {
         if (startNewThread){
-            createThreadpool();
+            ExecutorService executor = ExecutorHelper.getExecutor();
             executor.execute(() -> {
                 try {
                     Bitmap scaledBitmap = getBitmapFromUri(context, photoUri, imageView.getWidth(), imageView.getHeight());
@@ -35,7 +30,7 @@ public class BitmapHelper {
                     e.printStackTrace();
                 }
 
-                ImageHelper.photoURI = null;
+                CameraHelper.photoURI = null;
             });
         }
         else {
@@ -49,7 +44,7 @@ public class BitmapHelper {
                 e.printStackTrace();
             }
 
-            ImageHelper.photoURI = null;
+            CameraHelper.photoURI = null;
         }
     }
 
@@ -129,11 +124,6 @@ public class BitmapHelper {
         }
         else
             return null;
-    }
-
-    public static void createThreadpool(){
-        if (executor == null)
-            executor = Executors.newFixedThreadPool(7);
     }
 
 }

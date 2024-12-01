@@ -1,15 +1,33 @@
 package com.example.registar.model;
 
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+import com.example.registar.util.Constants;
+
 import java.io.Serializable;
-
+@Entity(tableName = Constants.TABLE_NAME_EMPLOYEE)
 public class Employee implements Serializable {
+    @PrimaryKey(autoGenerate = true)
+    private int id;
+    private String name;
+    private String lastName;
+    private String department;
+    private double salary;
 
-    private String name, lastName, position;
-
-    public Employee(String name, String lastName, String position) {
+    public Employee(String name, String lastName, String department) {
         this.name = name;
         this.lastName = lastName;
-        this.position = position;
+        this.department = department;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -32,11 +50,40 @@ public class Employee implements Serializable {
         return name + " " + lastName;
     }
 
-    public String getPosition() {
-        return position;
+    public String getDepartment() {
+        return department;
     }
 
-    public void setPosition(String position) {
-        this.position = position;
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    public double getSalary() {
+        return salary;
+    }
+
+    public void setSalary(double salary) {
+        this.salary = salary;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return getFullName();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null || getClass() != obj.getClass())
+            return false;
+        Employee other = (Employee) obj;
+        return id == other.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(id); // Generate hash code based on id
     }
 }

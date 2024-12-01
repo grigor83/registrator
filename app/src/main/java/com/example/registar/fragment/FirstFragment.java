@@ -11,17 +11,24 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.example.registar.AssetCreateActivity;
+import com.example.registar.MainActivity;
 import com.example.registar.R;
 import com.example.registar.adapter.AssetsAdapter;
+import com.example.registar.helper.BitmapHelper;
+import com.example.registar.helper.ExecutorHelper;
 import com.example.registar.model.Asset;
+import com.example.registar.model.AssetWithRelations;
 import com.example.registar.model.Employee;
 import com.example.registar.model.Location;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -30,59 +37,56 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
 
 public class FirstFragment extends Fragment {
 
-    private final List<Asset> assets = new ArrayList<>();
+    private List<AssetWithRelations> assets;
     private AssetsAdapter adapter;
-
-    //Launcher za rezultat koji se vraća iz AssetActivity. Ovaj launcher se proslijedi Asset adapteru, koji onda pokreće AssetActivity pomoću njega.
-    // Ako user u AssetActivity stisne dugme za brisanje iz toolbar-a, vratiće int position. Ako user stisne dugme edit, pa ode na AssetEditActivity
-    // i u slučaju da napravi neke izmjene, te izmjene ce se vratiti prvo u AssetActivity, pa onda ovdje, tj. u AssetAdapter.
-    private final ActivityResultLauncher<Intent> deleteAssetLauncher =
-            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-                if (result.getResultCode() == RESULT_OK) {
-                    int position = Objects.requireNonNull(result.getData()).getIntExtra("position", -1);
-                    if (position != -1)
-                        adapter.deleteAssetFromList(position);
-
-                    Asset updatedAsset = (Asset) Objects.requireNonNull(result.getData()).getSerializableExtra("updatedAsset");
-                    if (updatedAsset != null)
-                        adapter.replaceAssetInList(updatedAsset);
-                }
-                else
-                    adapter.notifyDataSetChanged();
-            });
-
-    private final ActivityResultLauncher<Intent> createAssetLauncher =
-            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-                if (result.getResultCode() == RESULT_OK) {
-                    Asset createdAsset = (Asset) Objects.requireNonNull(result.getData()).getSerializableExtra("createdAsset");
-                    if (createdAsset != null)
-                        adapter.addAssetToList(createdAsset);
-                }
-                else
-                    adapter.notifyDataSetChanged();
-            });
+    private ActivityResultLauncher<Intent> createAssetLauncher;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Employee m = new Employee("Jovan", "Jovanović", "magacioner");
-        Employee k = new Employee("ivan", "Ivanković", "komercijalista");
-        Location bl = new Location("Banjaluka");
-        Location kv = new Location("Kotor Varoš");
-        for (int i=0; i<17; i++){
-            if (i%2 == 0)
-                assets.add(new Asset(i, "stolica"+i, "kancelarijska stolica", "slika",
-                        555, 45, LocalDate.now(), m, bl));
-            else
-                assets.add(new Asset(i, "računar"+i, "desktop računar", "slika",
-                        1000, 500, LocalDate.now(), k, kv));
-        }
+        //Launcher za rezultat koji se vraća iz AssetActivity. Ovaj launcher se proslijedi Asset adapteru, koji onda pokreće AssetActivity pomoću njega.
+        // Ako user u AssetActivity stisne dugme za brisanje iz toolbar-a, vratiće int position. Ako user stisne dugme edit, pa ode na AssetEditActivity
+        // i u slučaju da napravi neke izmjene, te izmjene ce se vratiti prvo u AssetActivity, pa onda ovdje, tj. u AssetAdapter.
+        ActivityResultLauncher<Intent> deleteAssetLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            if (result.getResultCode() == RESULT_OK) {
+                int position = Objects.requireNonNull(result.getData()).getIntExtra("position", -1);
+                if (position != -1) {
+                    AssetWithRelations asset = adapter.deleteAssetFromList(position);
+                    deleteAsset(asset);
+                    return;
+                }
 
+                AssetWithRelations updatedAsset = (AssetWithRelations) Objects.requireNonNull(result.getData()).getSerializableExtra("updatedAsset");
+                if (updatedAsset != null){
+                    adapter.replaceAssetInList(updatedAsset);
+                    updateAsset(updatedAsset);
+                }
+            }
+            else
+                adapter.notifyDataSetChanged();
+        });
+
+        createAssetLauncher =
+                registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                    if (result.getResultCode() == RESULT_OK) {
+                        AssetWithRelations createdAsset = (AssetWithRelations) Objects.requireNonNull(result.getData()).getSerializableExtra("createdAsset");
+                        if (createdAsset != null){
+                            adapter.addAssetToList(createdAsset);
+                            insertAsset(createdAsset);
+                        }
+                    }
+                    else
+                        adapter.notifyDataSetChanged();
+                });
+
+        assets = new ArrayList<>();
         adapter = new AssetsAdapter(assets, deleteAssetLauncher);
+        loadAssets();
     }
 
     @Override
@@ -136,6 +140,39 @@ public class FirstFragment extends Fragment {
         String locationQuery = locationSearch.getText().toString();
 
         adapter.filter(titleQuery, locationQuery);
+    }
+
+    private void loadAssets() {
+        ExecutorService executor = ExecutorHelper.getExecutor();
+        executor.execute(() -> {
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.post(() -> {
+                assets.addAll(MainActivity.registarDB.assetDao().getAssetWithRelations());
+                adapter.refresh();
+            });
+        });
+    }
+
+    private void deleteAsset(AssetWithRelations assetWithRelations) {
+        ExecutorService executor = ExecutorHelper.getExecutor();
+        executor.execute(() -> {
+            MainActivity.registarDB.assetDao().delete(assetWithRelations.getAsset());
+        });
+    }
+
+    private void updateAsset(AssetWithRelations updatedAsset) {
+        ExecutorService executor = ExecutorHelper.getExecutor();
+        executor.execute(() -> {
+            MainActivity.registarDB.assetDao().update(updatedAsset.getAsset());
+        });
+    }
+
+    private void insertAsset(AssetWithRelations createdAsset) {
+        ExecutorService executor = ExecutorHelper.getExecutor();
+        executor.execute(() -> {
+            long id = MainActivity.registarDB.assetDao().insert(createdAsset.getAsset());
+            createdAsset.getAsset().setId((int) id);
+        });
     }
 
 }

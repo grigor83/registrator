@@ -17,10 +17,16 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.registar.adapter.ViewPagerAdapter;
+import com.example.registar.helper.ExecutorHelper;
+import com.example.registar.model.Employee;
+import com.example.registar.model.Location;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
+import java.util.concurrent.ExecutorService;
+
 public class MainActivity extends AppCompatActivity {
+    public static RegistarDatabase registarDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }).attach();
 
+        registarDB = RegistarDatabase.getInstance(this);
     }
 
     @Override
@@ -85,5 +92,23 @@ public class MainActivity extends AppCompatActivity {
         toast.show();
     }
 
+    @Override
+    protected void onDestroy() {
+        registarDB.cleanUp();
+        ExecutorHelper.executor.shutdown();
+        super.onDestroy();
+    }
+
+    public void createEmployee(View v){
+        ExecutorService executor = ExecutorHelper.getExecutor();
+        executor.execute(() -> {
+            Employee employee = new Employee("John", "Don", "IT");
+            MainActivity.registarDB.employeeDao().insert(employee);
+            Location location = new Location("Banja Luka", "ulica Braće Kavića");
+            MainActivity.registarDB.locationDao().insert(location);
+            location = new Location("Kotor Varoš", "Svetosavska ulica");
+            MainActivity.registarDB.locationDao().insert(location);
+        });
+    }
 
 }

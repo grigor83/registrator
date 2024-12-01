@@ -3,8 +3,12 @@ package com.example.registar;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -18,17 +22,26 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.registar.helper.BitmapHelper;
-import com.example.registar.helper.ImageHelper;
-import com.example.registar.model.Asset;
+import com.example.registar.helper.ExecutorHelper;
+import com.example.registar.helper.CameraHelper;
+import com.example.registar.model.AssetWithRelations;
+import com.example.registar.model.Employee;
 import com.example.registar.model.Location;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
 
 public class AssetEditActivity extends AppCompatActivity {
-    private Asset asset;
-    private EditText titleTextview, descriptionTextview,priceTextview, employeeTextview, locationTextview;
-    private TextView barcodeTextview;
+    private AssetWithRelations asset;
+    private EditText titleView, descriptionView, priceView, barcodeView;
+    private AutoCompleteTextView locationView, employeeView;
+    private Location selectedLocation;
+    private Employee selectedEmployee;
+    private String imagePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,27 +58,50 @@ public class AssetEditActivity extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         setTitle(R.string.assets_tab_name);
 
-        titleTextview = findViewById(R.id.title);
-        descriptionTextview = findViewById(R.id.description);
-        locationTextview = findViewById(R.id.location);
-        employeeTextview = findViewById(R.id.employee);
+        titleView = findViewById(R.id.title);
+        descriptionView = findViewById(R.id.description);
+        locationView = findViewById(R.id.location);
+        locationView.setOnClickListener(v -> {
+            locationView.showDropDown(); // Force the dropdown to appear when clicked
+        });
+        locationView.setOnItemClickListener((parent, view, position, id) -> {
+            selectedLocation = (Location) parent.getItemAtPosition(position);
+            locationView.setError(null);
+        });
+        employeeView = findViewById(R.id.employee);
+        employeeView.setOnClickListener(v -> {
+            employeeView.showDropDown(); // Force the dropdown to appear when clicked
+        });
+        employeeView.setOnItemClickListener((parent, view, position, id) -> {
+            selectedEmployee = (Employee) parent.getItemAtPosition(position);
+            employeeView.setError(null);
+        });
+        setAdapters(locationView, employeeView);
         TextView creationDateTextview = findViewById(R.id.creation_date);
-        priceTextview = findViewById(R.id.price);
-        barcodeTextview = findViewById(R.id.barcode);
-        ImageView imageView = findViewById(R.id.icon);
-        imageView.setOnClickListener(v -> ImageHelper.showImageOptions(this));
+        priceView = findViewById(R.id.price);
 
-        final Asset retrievedAsset = (Asset) getIntent().getSerializableExtra("clickedAsset");
+        barcodeView = findViewById(R.id.barcode);
+        barcodeView.setOnClickListener(v -> {
+            CameraHelper.showBarcodeInputDialog(barcodeView);
+        });
+
+        ImageView imageView = findViewById(R.id.icon);
+        imageView.setOnClickListener(v -> CameraHelper.showImageOptions(this));
+
+        AssetWithRelations retrievedAsset = (AssetWithRelations) getIntent().getSerializableExtra("clickedAsset");
         if (retrievedAsset != null) {
             asset = retrievedAsset;
-            titleTextview.setText(asset.getTitle());
-            descriptionTextview.setText(asset.getDescription());
-            locationTextview.setText(asset.getLocation().getCity());
-            employeeTextview.setText(asset.getEmployee().getFullName());
-            creationDateTextview.setText(asset.getCreationDate().toString());
-            priceTextview.setText(String.valueOf(asset.getPrice()));
-            barcodeTextview.setText(String.valueOf(asset.getBarcode()));
-            File file = new File(asset.getImagePath());
+            titleView.setText(asset.getAsset().getTitle());
+            descriptionView.setText(asset.getAsset().getDescription());
+            if (null != asset.getLocation())
+                locationView.setText(asset.getLocation().getCity());
+            if (null != asset.getEmployee())
+                employeeView.setText(asset.getEmployee().getFullName());
+            creationDateTextview.setText(asset.getAsset().getCreationDate().toString());
+            priceView.setText(String.valueOf(asset.getAsset().getPrice()));
+            barcodeView.setText(String.valueOf(asset.getAsset().getBarcode()));
+            imagePath = asset.getAsset().getImagePath();
+            File file = new File(imagePath);
             if (file.exists()) {
                 Uri imageUri = Uri.fromFile(file);
                 // Dimensions of imageview are now available
@@ -75,21 +111,31 @@ public class AssetEditActivity extends AppCompatActivity {
             }
         }
 
-        ImageHelper.pickImageLauncher = registerForActivityResult(
+        CameraHelper.pickImageLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                         Uri selectedImageUri = result.getData().getData();
-                        ImageHelper.createFileFromUri(this, imageView, selectedImageUri);
+                        CameraHelper.createFileFromUri(this, imageView, selectedImageUri);
                     }
                 }
         );
 
-        ImageHelper.takePictureLauncher = registerForActivityResult(
+        CameraHelper.takePictureLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == RESULT_OK)
-                        BitmapHelper.processImageInBackground(this, imageView, ImageHelper.photoURI, true);
+                        BitmapHelper.processImageInBackground(this, imageView, CameraHelper.photoURI, true);
+                }
+        );
+
+        CameraHelper.scanBarcodeLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null){
+                        String scannedBarcode = result.getData().getStringExtra("SCAN_RESULT");
+                        barcodeView.setText(scannedBarcode);
+                    }
                 }
         );
     }
@@ -97,7 +143,7 @@ public class AssetEditActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home){
-            ImageHelper.imagePath = null;
+            CameraHelper.imagePath = null;
             this.finish();
         }
 
@@ -105,22 +151,29 @@ public class AssetEditActivity extends AppCompatActivity {
     }
 
     public void cancelEditing(View view) {
-        ImageHelper.imagePath = null;
+        CameraHelper.imagePath = null;
         finish();
     }
 
     public void saveAsset(View view) {
-        if (!validateInputs())
+        if (!validateInputs(Arrays.asList(titleView, descriptionView, locationView, employeeView, priceView, barcodeView)))
             return;
 
-        asset.setTitle(String.valueOf(titleTextview.getText()).trim());
-        asset.setDescription(String.valueOf(descriptionTextview.getText()).trim());
-        asset.setPrice((Integer.parseInt(priceTextview.getText().toString().trim())));
-        asset.setLocation(new Location((String.valueOf(locationTextview.getText())).trim()));
-        asset.getEmployee().setName((String.valueOf(employeeTextview.getText())).trim());
-        if (ImageHelper.imagePath != null){
-            asset.setImagePath(ImageHelper.imagePath);
-            ImageHelper.imagePath = null;
+        asset.getAsset().setTitle(String.valueOf(titleView.getText()).trim());
+        asset.getAsset().setDescription(String.valueOf(descriptionView.getText()).trim());
+        if (null != selectedEmployee){
+            asset.getAsset().setEmployeeId(selectedEmployee.getId());
+            asset.setEmployee(selectedEmployee);
+        }
+        if (null != selectedLocation){
+            asset.getAsset().setLocationId(selectedLocation.getId());
+            asset.setLocation(selectedLocation);
+        }
+        asset.getAsset().setPrice((Integer.parseInt(priceView.getText().toString().trim())));
+        asset.getAsset().setBarcode(Integer.parseInt(barcodeView.getText().toString()));
+        if (CameraHelper.imagePath != null && !CameraHelper.imagePath.equals(imagePath)){
+            asset.getAsset().setImagePath(CameraHelper.imagePath);
+            CameraHelper.imagePath = null;
         }
 
         Intent resultIntent = new Intent();
@@ -129,46 +182,39 @@ public class AssetEditActivity extends AppCompatActivity {
         finish();
     }
 
-    private boolean validateInputs() {
-        boolean isValid = true;
+    public static boolean validateInputs(List<EditText> list) {
+        for (EditText view : list)
+            if (!isValid(view))
+                return false;
 
-        if (titleTextview.getText().toString().trim().isEmpty()) {
-            titleTextview.setError(getString(R.string.error_text));
-            titleTextview.requestFocus();
-            return false;
-        }
-
-        if (descriptionTextview.getText().toString().trim().isEmpty()) {
-            descriptionTextview.setError(getString(R.string.error_text));
-            descriptionTextview.requestFocus();
-            return false;
-        }
-
-        if (locationTextview.getText().toString().trim().isEmpty()) {
-            locationTextview.setError(getString(R.string.error_text));
-            locationTextview.requestFocus();
-            return false;
-        }
-
-        if (employeeTextview.getText().toString().trim().isEmpty()) {
-            employeeTextview.setError(getString(R.string.error_text));
-            employeeTextview.requestFocus();
-            return false;
-        }
-
-        if (priceTextview.getText().toString().trim().isEmpty()) {
-            priceTextview.setError(getString(R.string.error_text));
-            priceTextview.requestFocus();
-            return false;
-        }
-
-        if (barcodeTextview.getText().toString().trim().isEmpty()) {
-            barcodeTextview.setError(getString(R.string.error_text));
-            barcodeTextview.requestFocus();
-            return false;
-        }
-
-        return isValid;
+        return true;
     }
+
+    private static boolean isValid(EditText view) {
+        if (view.getText().toString().trim().isEmpty()) {
+            view.setError(view.getContext().getString(R.string.error_text));
+            view.requestFocus();
+            return false;
+        }
+        else
+            return true;
+    }
+
+    public static void setAdapters(AutoCompleteTextView locationView, AutoCompleteTextView employeeView) {
+        ExecutorService executor = ExecutorHelper.getExecutor();
+        executor.execute(() -> {
+            ArrayList<Location> locations = new ArrayList<>(MainActivity.registarDB.locationDao().getAll());
+            ArrayAdapter<Location> adapter = new ArrayAdapter<>(locationView.getContext(), R.layout.dropdown_item, locations);
+            ArrayList<Employee> employees = new ArrayList<>(MainActivity.registarDB.employeeDao().getAll());
+            ArrayAdapter<Employee> adapter2 = new ArrayAdapter<>(employeeView.getContext(), R.layout.dropdown_item, employees);
+
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.post(() -> {
+                locationView.setAdapter(adapter);
+                employeeView.setAdapter(adapter2);
+            });
+        });
+    }
+
 
 }

@@ -77,9 +77,12 @@
                     style="@style/TextViewStyleInEditMode"
                     android:text="@string/textview_location_text"
                     android:labelFor="@id/location"/>
-                <EditText
+                <AutoCompleteTextView
                     android:id="@+id/location"
-                    style="@style/EditTextStyle"/>
+                    style="@style/EditTextStyle"
+                    android:cursorVisible="false"
+                    android:hint="@string/select_location"
+                    android:inputType="none"/>
             </LinearLayout>
 
             <!-- Employee -->
@@ -93,9 +96,12 @@
                     android:layout_width="wrap_content"
                     android:text="@string/textview_employee_name"
                     android:labelFor="@id/employee"/>
-                <EditText
+                <AutoCompleteTextView
                     android:id="@+id/employee"
-                    style="@style/EditTextStyle"/>
+                    style="@style/EditTextStyle"
+                    android:cursorVisible="false"
+                    android:hint="@string/select_employee"
+                    android:inputType="none"/>
             </LinearLayout>
 
             <!-- Creation date -->
@@ -140,15 +146,10 @@
                     android:layout_width="wrap_content"
                     android:layout_gravity="center"
                     android:text="@string/textview_barcode"/>
-                <TextView
+                <EditText
                     android:id="@+id/barcode"
-                    android:layout_width="@dimen/asset_recycler_item_height"
-                    android:layout_height="@dimen/asset_recycler_item_height"
-                    android:gravity="center"
-                    android:text="@string/textview_barcode"
-                    android:background="@drawable/background_recycler_item"
-                    android:layout_margin="@dimen/recycler_imageview_margins"
-                    android:padding="@dimen/recycler_imageview_padding"/>
+                    style="@style/EditTextStyle"
+                    android:inputType="none"/>
             </LinearLayout>
 
             <!-- Save and Cancel buttons -->

@@ -7,60 +7,28 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.Spinner;
 
 import com.example.registar.R;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link FourthFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class FourthFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public FourthFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment FourthFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static FourthFragment newInstance(String param1, String param2) {
-        FourthFragment fragment = new FourthFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fourth_fragment, container, false);
+        View fragmentLayout = inflater.inflate(R.layout.fourth_fragment, container, false);
+        AutoCompleteTextView autoCompleteTextView = fragmentLayout.findViewById(R.id.location);
+        String[] options = {"Option 1", "Option 2", "Option 3", "Option 4", "Option 5"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(fragmentLayout.getContext(), android.R.layout.simple_spinner_dropdown_item, options);
+        autoCompleteTextView.setAdapter(adapter);
+        autoCompleteTextView.setOnClickListener(v -> {
+            autoCompleteTextView.showDropDown(); // Force the dropdown to appear when clicked
+        });
+
+        return fragmentLayout;
     }
 }

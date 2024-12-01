@@ -6,9 +6,17 @@
     tools:context=".fragment.FourthFragment">
 
     <!-- TODO: Update blank fragment layout -->
+
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:text="@string/hello_blank_fragment" />
+
+    <AutoCompleteTextView
+        android:id="@+id/location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:focusable="true"
+        android:hint="@string/select_location" />
 
 </FrameLayout>
