@@ -19,22 +19,21 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.registar.helper.BitmapHelper;
-import com.example.registar.model.AssetWithRelations;
+import com.example.registar.model.Employee;
 
 import java.io.File;
 import java.util.Objects;
 
-public class AssetActivity extends AppCompatActivity {
-    private AssetWithRelations assetWithRelations;
+public class EmployeeActivity extends AppCompatActivity {
+    private Employee employee;
     private int position;
-    private TextView titleTextview, descriptionTextview,priceTextview, employeeTextview,
-            locationTextview, creationDateTextview, barcodeTextview;
-    private ImageView imageView;
     private boolean shouldReturn = false;
+    private TextView firstnameView, lastnameView, departmentView, salaryView;
+    private ImageView imageView;
     private final ActivityResultLauncher<Intent> editActivityLauncher =
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
                 if (result.getResultCode() == RESULT_OK) {
-                    assetWithRelations = (AssetWithRelations) Objects.requireNonNull(result.getData()).getSerializableExtra("updatedAsset");
+                    employee = (Employee) Objects.requireNonNull(result.getData()).getSerializableExtra("updatedEmployee");
                     shouldReturn = true;
                     updateUI();
                 }
@@ -44,7 +43,7 @@ public class AssetActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_asset);
+        setContentView(R.layout.activity_employee);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -53,22 +52,17 @@ public class AssetActivity extends AppCompatActivity {
 
         setSupportActionBar(findViewById(R.id.toolbar));
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-        setTitle(R.string.assets_tab_name);
+        setTitle(R.string.employers_tab_name);
 
-        titleTextview = findViewById(R.id.title);
-        descriptionTextview = findViewById(R.id.description);
-        creationDateTextview = findViewById(R.id.creation_date);
-        priceTextview = findViewById(R.id.price);
-        employeeTextview = findViewById(R.id.employee);
-        locationTextview = findViewById(R.id.location);
-        barcodeTextview = findViewById(R.id.barcode);
+        firstnameView = findViewById(R.id.firstname);
+        lastnameView = findViewById(R.id.lastname);
+        departmentView = findViewById(R.id.department);
+        salaryView = findViewById(R.id.salary);
         imageView = findViewById(R.id.icon);
 
-        AssetWithRelations clickedAsset = (AssetWithRelations) getIntent().getSerializableExtra("clickedAsset");
-        if (clickedAsset != null) {
-            assetWithRelations = clickedAsset;
+        employee = (Employee) getIntent().getSerializableExtra("clickedEmployee");
+        if (employee != null)
             updateUI();
-        }
         position = getIntent().getIntExtra("position", -1);
     }
 
@@ -97,8 +91,8 @@ public class AssetActivity extends AppCompatActivity {
             finish();
         }
         else if (item.getItemId() == R.id.action_edit){
-            Intent intent = new Intent(this, AssetEditActivity.class);
-            intent.putExtra("clickedAsset", assetWithRelations);
+            Intent intent = new Intent(this, EmployeeEditActivity.class);
+            intent.putExtra("clickedEmployee", employee);
             editActivityLauncher.launch(intent);
         }
         else if (item.getItemId() == android.R.id.home){
@@ -115,18 +109,13 @@ public class AssetActivity extends AppCompatActivity {
         super.onBackPressed();
     }
 
-    private void updateUI(){
-        titleTextview.setText(assetWithRelations.getAsset().getTitle().trim());
-        descriptionTextview.setText(assetWithRelations.getAsset().getDescription().trim());
-        if (null != assetWithRelations.getLocation())
-            locationTextview.setText(assetWithRelations.getLocation().getCity().trim());
-        if (null != assetWithRelations.getEmployee())
-            employeeTextview.setText(assetWithRelations.getEmployee().getFullName().trim());
-        creationDateTextview.setText(assetWithRelations.getAsset().getCreationDate().toString().trim());
-        priceTextview.setText(String.valueOf(assetWithRelations.getAsset().getPrice()));
-        barcodeTextview.setText(String.valueOf(assetWithRelations.getAsset().getBarcode()));
-        if (assetWithRelations.getAsset().getImagePath() != null){
-            File file = new File(assetWithRelations.getAsset().getImagePath());
+    private void updateUI() {
+        firstnameView.setText(employee.getName().trim());
+        lastnameView.setText(employee.getLastName().trim());
+        departmentView.setText(employee.getDepartment().trim());
+        salaryView.setText(String.valueOf(employee.getSalary()));
+        if (employee.getImagePath() != null){
+            File file = new File(employee.getImagePath());
             if (file.exists()){
                 Uri imageUri = Uri.fromFile(file);
                 imageView.post(() -> {
@@ -135,13 +124,11 @@ public class AssetActivity extends AppCompatActivity {
             }
         }
     }
-
     private void putAssetToResultIntent(){
         if (shouldReturn){
             Intent resultIntent = new Intent();
-            resultIntent.putExtra("updatedAsset", assetWithRelations);
+            resultIntent.putExtra("updatedEmployee", employee);
             setResult(RESULT_OK, resultIntent);
         }
     }
-
 }

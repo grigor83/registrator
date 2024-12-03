@@ -11,15 +11,20 @@ import java.io.Serializable;
 public class Employee implements Serializable {
     @PrimaryKey(autoGenerate = true)
     private int id;
+    @NonNull
     private String name;
+    @NonNull
     private String lastName;
+    @NonNull
     private String department;
     private double salary;
+    private String imagePath;
 
-    public Employee(String name, String lastName, String department) {
-        this.name = name;
-        this.lastName = lastName;
-        this.department = department;
+    public Employee() {
+        this.name = "John";
+        this.lastName = "Don";
+        this.department = "none";
+        imagePath = "no image";
     }
 
     public int getId() {
@@ -30,19 +35,21 @@ public class Employee implements Serializable {
         this.id = id;
     }
 
+    @NonNull
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(@NonNull String name) {
         this.name = name;
     }
 
+    @NonNull
     public String getLastName() {
         return lastName;
     }
 
-    public void setLastName(String lastName) {
+    public void setLastName(@NonNull String lastName) {
         this.lastName = lastName;
     }
 
@@ -50,11 +57,12 @@ public class Employee implements Serializable {
         return name + " " + lastName;
     }
 
+    @NonNull
     public String getDepartment() {
         return department;
     }
 
-    public void setDepartment(String department) {
+    public void setDepartment(@NonNull String department) {
         this.department = department;
     }
 
@@ -64,6 +72,14 @@ public class Employee implements Serializable {
 
     public void setSalary(double salary) {
         this.salary = salary;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 
     @NonNull

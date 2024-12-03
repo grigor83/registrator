@@ -21,12 +21,10 @@ public class Asset implements Serializable {
     private String title;
     private  String description;
     private String imagePath;
-    private int barcode;
+    private long barcode;
     private int price;
     private LocalDate creationDate;
-    @NonNull
     private Integer employeeId;
-    @NonNull
     private Integer locationId;
     
     public Asset(){
@@ -62,10 +60,10 @@ public class Asset implements Serializable {
         this.imagePath = imagePath;
     }
 
-    public int getBarcode() {
+    public long getBarcode() {
         return barcode;
     }
-    public void setBarcode(int barcode) {
+    public void setBarcode(long barcode) {
         this.barcode = barcode;
     }
 
@@ -83,19 +81,17 @@ public class Asset implements Serializable {
         this.creationDate = creationDate;
     }
 
-    @NonNull
     public Integer getEmployeeId() {
         return employeeId;
     }
-    public void setEmployeeId(@NonNull Integer employeeId) {
+    public void setEmployeeId(Integer employeeId) {
         this.employeeId = employeeId;
     }
 
-    @NonNull
     public Integer getLocationId() {
         return locationId;
     }
-    public void setLocationId(@NonNull Integer locationId) {
+    public void setLocationId(Integer locationId) {
         this.locationId = locationId;
     }
 

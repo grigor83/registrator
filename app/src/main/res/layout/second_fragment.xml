@@ -1,35 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:layout_marginTop="25dp">
+    tools:context=".fragment.SecondFragment">
 
-    <EditText
-        android:id="@+id/titleSearch"
+    <!-- Main Linear Layout -->
+    <LinearLayout
+        android:id="@+id/main"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="FRAGMENT TWO" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/locationSearch"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Search by location" />
+        <!-- Container for EditTexts -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="@dimen/edit_texts_container_padding_top">
 
-    <Button
-        android:id="@+id/btn"
-        android:layout_width="match_parent"
+            <EditText
+                android:id="@+id/nameSearch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/search_by_name" />
+
+            <EditText
+                android:id="@+id/departmentSearch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/search_by_department"/>
+        </LinearLayout>
+
+        <!-- RecyclerView -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/recyclerview_margin_top"
+            android:layout_marginLeft="@dimen/recyclerview_side_margin"
+            android:layout_marginRight="@dimen/recyclerview_side_margin"/>
+    </LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="start"
+        android:layout_margin="@dimen/floating_action_button_margin"
+        android:layout_gravity="end|bottom"
+        app:srcCompat="@drawable/ic_add"
+        android:contentDescription="@string/fab_contentDescription"
         android:onClick="createEmployee"/>
-
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/fixedAssetsRecycler"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-</LinearLayout>
+</FrameLayout>

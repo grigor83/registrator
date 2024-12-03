@@ -3,7 +3,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@drawable/background_editable"
-    android:padding="@dimen/edit_texts_container_padding_top"
+    android:padding="@dimen/textview_padding_side"
     android:orientation="horizontal">
 
     <TextView

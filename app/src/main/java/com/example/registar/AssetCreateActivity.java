@@ -1,9 +1,11 @@
 package com.example.registar;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
@@ -37,6 +39,7 @@ public class AssetCreateActivity extends AppCompatActivity {
     private Employee selectedEmployee;
 
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,7 +80,9 @@ public class AssetCreateActivity extends AppCompatActivity {
 
         barcodeView = findViewById(R.id.barcode);
         barcodeView.setOnClickListener(v -> {
-            CameraHelper.showBarcodeInputDialog(barcodeView);
+            if (!barcodeView.isFocusable()) {
+                CameraHelper.showBarcodeInputDialog(barcodeView);
+            }
         });
 
         ImageView imageView = findViewById(R.id.icon);
@@ -145,7 +150,14 @@ public class AssetCreateActivity extends AppCompatActivity {
         }
         asset.getAsset().setCreationDate(LocalDate.parse(creationDateTextview.getText()));
         asset.getAsset().setPrice(Integer.parseInt(priceView.getText().toString()));
-        asset.getAsset().setBarcode(Integer.parseInt(priceView.getText().toString()));
+        try {
+            String text = barcodeView.getText().toString();
+            asset.getAsset().setBarcode(Long.parseLong(text));
+        }
+        catch (NumberFormatException e){
+            MainActivity.showCustomToast(this, getString(R.string.error_converting_string));
+            return;
+        }
         if (CameraHelper.imagePath != null){
             asset.getAsset().setImagePath(CameraHelper.imagePath);
             CameraHelper.imagePath = null;

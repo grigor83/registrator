@@ -23,6 +23,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Registar.Custom">
         <activity
+            android:name=".EmployeeEditActivity"
+            android:exported="false" />
+        <activity
+            android:name=".EmployeeActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity2"
             android:exported="false" />
 

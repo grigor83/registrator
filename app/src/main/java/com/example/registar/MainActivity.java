@@ -2,10 +2,12 @@ package com.example.registar;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -18,12 +20,8 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.registar.adapter.ViewPagerAdapter;
 import com.example.registar.helper.ExecutorHelper;
-import com.example.registar.model.Employee;
-import com.example.registar.model.Location;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
-
-import java.util.concurrent.ExecutorService;
 
 public class MainActivity extends AppCompatActivity {
     public static RegistarDatabase registarDB;
@@ -81,13 +79,17 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public static void showCustomToast(Context context){
+    public static void showCustomToast(Context context, String message){
         LayoutInflater inflater = LayoutInflater.from(context);
         View layout = inflater.inflate(R.layout.toast_custom, null);
-        //TextView text = layout.findViewById(R.id.toast_text);
 
         Toast toast = new Toast(context);
+        if (message != null){
+            TextView text = layout.findViewById(R.id.toast_text);
+            text.setText(message);
+        }
         toast.setDuration(Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.CENTER, 0, 0); // Center of the screen
         toast.setView(layout);
         toast.show();
     }
@@ -97,18 +99,6 @@ public class MainActivity extends AppCompatActivity {
         registarDB.cleanUp();
         ExecutorHelper.executor.shutdown();
         super.onDestroy();
-    }
-
-    public void createEmployee(View v){
-        ExecutorService executor = ExecutorHelper.getExecutor();
-        executor.execute(() -> {
-            Employee employee = new Employee("John", "Don", "IT");
-            MainActivity.registarDB.employeeDao().insert(employee);
-            Location location = new Location("Banja Luka", "ulica Braće Kavića");
-            MainActivity.registarDB.locationDao().insert(location);
-            location = new Location("Kotor Varoš", "Svetosavska ulica");
-            MainActivity.registarDB.locationDao().insert(location);
-        });
     }
 
 }

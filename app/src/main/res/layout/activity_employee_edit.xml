@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AssetEditActivity">
+    tools:context=".EmployeeEditActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-                        <!-- Title -->
+            <!-- First name -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -45,14 +45,14 @@
 
                 <TextView
                     style="@style/TextViewStyleInEditMode"
-                    android:text="@string/textview_title_text"
-                    android:labelFor="@id/title"/>
+                    android:text="@string/first_name"
+                    android:labelFor="@id/firstname"/>
                 <EditText
-                    android:id="@+id/title"
+                    android:id="@+id/firstname"
                     style="@style/EditTextStyle"/>
             </LinearLayout>
 
-            <!-- Description -->
+            <!-- Last name -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -60,14 +60,14 @@
 
                 <TextView
                     style="@style/TextViewStyleInEditMode"
-                    android:text="@string/textview_description_text"
-                    android:labelFor="@id/description"/>
+                    android:text="@string/last_name"
+                    android:labelFor="@id/lastname"/>
                 <EditText
-                    android:id="@+id/description"
+                    android:id="@+id/lastname"
                     style="@style/EditTextStyle"/>
             </LinearLayout>
 
-            <!-- Location -->
+            <!-- Department -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -75,18 +75,18 @@
 
                 <TextView
                     style="@style/TextViewStyleInEditMode"
-                    android:text="@string/textview_location_text"
-                    android:labelFor="@id/location"/>
+                    android:text="@string/department"
+                    android:labelFor="@id/department"/>
                 <AutoCompleteTextView
-                    android:id="@+id/location"
+                    android:id="@+id/department"
                     style="@style/EditTextStyle"
                     android:focusable="false"
                     android:cursorVisible="false"
-                    android:hint="@string/select_location"
+                    android:hint="@string/select_department"
                     android:inputType="none"/>
             </LinearLayout>
 
-            <!-- Employee -->
+            <!-- Salary -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -94,65 +94,12 @@
 
                 <TextView
                     style="@style/TextViewStyleInEditMode"
-                    android:layout_width="wrap_content"
-                    android:text="@string/textview_employee_name"
-                    android:labelFor="@id/employee"/>
-                <AutoCompleteTextView
-                    android:id="@+id/employee"
-                    style="@style/EditTextStyle"
-                    android:focusable="false"
-                    android:cursorVisible="false"
-                    android:hint="@string/select_employee"
-                    android:inputType="none"/>
-            </LinearLayout>
-
-            <!-- Creation date -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/TextViewStyleInEditMode"
-                    android:layout_width="wrap_content"
-                    android:text="@string/textview_creation_date_text"/>
-                <TextView
-                    android:id="@+id/creation_date"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/textview_creation_date_text"
-                    android:background="@drawable/background_recycler_item"
-                    android:layout_margin="@dimen/recycler_imageview_margins"
-                    android:padding="@dimen/recycler_imageview_padding"/>
-            </LinearLayout>
-
-            <!-- Barcode -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/TextViewStyleInEditMode"
-                    android:layout_width="wrap_content"
-                    android:text="@string/textview_price_text"
-                    android:labelFor="@id/price"/>
+                    android:text="@string/salary"
+                    android:labelFor="@id/salary"/>
                 <EditText
-                    android:id="@+id/price"
+                    android:id="@+id/salary"
                     style="@style/EditTextStyle"
                     android:inputType="number"/>
-
-                <TextView
-                    style="@style/TextViewStyleInEditMode"
-                    android:layout_width="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="@string/textview_barcode"/>
-                <EditText
-                    android:id="@+id/barcode"
-                    style="@style/EditTextStyle"
-                    android:focusable="false"
-                    android:inputType="none"/>
             </LinearLayout>
 
             <!-- Save and Cancel buttons -->
@@ -173,7 +120,7 @@
                     android:id="@+id/save"
                     style="@style/CancelSaveButton"
                     android:text="@string/btn_save_text"
-                    android:onClick="saveAsset"/>
+                    android:onClick="saveEmployee"/>
             </LinearLayout>
 
         </LinearLayout>

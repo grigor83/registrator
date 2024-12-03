@@ -44,5 +44,16 @@
     <string name="choose_barcode_input_method">Izaberi metod unosa barkoda</string>
     <string name="enter_number">Unesi broj</string>
     <string name="scan_barcode">Skeniraj barkod</string>
+    <string name="error_converting_string">Tekst ne može biti konvertovan u broj!</string>
+    <string name="first_name">Ime:</string>
+    <string name="last_name">Prezime:</string>
+    <string name="department">Odjeljenje:</string>
+    <string name="salary">Plata:</string>
+    <string name="search_by_name">Pretraži po imenu</string>
+    <string name="search_by_department">Pretraži po odjeljenju</string>
+    <string name="full_name">Ime i prezime</string>
+    <string name="edit_employee">promijeni podatke</string>
+    <string name="create_employee">Kreiraj novog zaposlenog</string>
+    <string name="select_department">Izaberi odjeljenje</string>
 
 </resources>

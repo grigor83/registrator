@@ -180,11 +180,20 @@ public class CameraHelper extends AppCompatActivity {
         builder.setTitle(R.string.choose_barcode_input_method);
         String[] options = {barcodeView.getContext().getString(R.string.enter_number), barcodeView.getContext().getString(R.string.scan_barcode)};
         builder.setItems(options, (dialog, which) -> {
-            if (which == 0)
+            if (which == 0) {
                 // User chooses to enter the barcode manually (input as number)
-                barcodeView.setInputType(InputType.TYPE_CLASS_NUMBER);
-            else if (which == 1)
+                barcodeView.setFocusable(true);
+                barcodeView.setFocusableInTouchMode(true);
+                barcodeView.setInputType(InputType.TYPE_CLASS_NUMBER); // Allow number input
+                barcodeView.requestFocus();
+            }
+            else if (which == 1){
+                barcodeView.setFocusable(false);
+                barcodeView.setFocusableInTouchMode(false);
+                barcodeView.setInputType(InputType.TYPE_NULL);
+                barcodeView.requestFocus();
                 scanBarcode(barcodeView);
+            }
         });
         builder.show();
     }

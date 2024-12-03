@@ -51,7 +51,7 @@ public class AssetsAdapter extends RecyclerView.Adapter<AssetsAdapter.ViewHolder
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        View v = layoutInflater.inflate(R.layout.assets_recycler_item, parent, false);
+        View v = layoutInflater.inflate(R.layout.recycler_item_asset, parent, false);
         this.popupView = LayoutInflater.from(parent.getContext()).inflate(R.layout.popup_crud, null);
         return new ViewHolder(v);
     }
@@ -131,9 +131,7 @@ public class AssetsAdapter extends RecyclerView.Adapter<AssetsAdapter.ViewHolder
 
         for (AssetWithRelations asset : assetList) {
             boolean matchesTitle = !titleQuery.isEmpty() && asset.getAsset().getTitle().toLowerCase().startsWith(title);
-            boolean matchesLocation = false;
-            if (null != asset.getLocation())
-                   matchesLocation = !locationQuery.isEmpty() && asset.getLocation().getCity().toLowerCase().startsWith(location);
+            boolean matchesLocation = !locationQuery.isEmpty() && asset.getLocation().getCity().toLowerCase().startsWith(location);
 
             // If either query is empty, skip checking it; otherwise match one or both
             if ((titleQuery.isEmpty() && matchesLocation) ||
@@ -207,7 +205,7 @@ public class AssetsAdapter extends RecyclerView.Adapter<AssetsAdapter.ViewHolder
 
         highlightedItemPosition = -1;
         notifyItemRemoved(position);
-        showCustomToast(popupView.getContext());
+        showCustomToast(popupView.getContext(), null);
         return assetToRemove;
     }
 

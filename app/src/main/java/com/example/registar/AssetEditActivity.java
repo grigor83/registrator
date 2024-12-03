@@ -1,11 +1,13 @@
 package com.example.registar;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -43,6 +45,7 @@ public class AssetEditActivity extends AppCompatActivity {
     private Employee selectedEmployee;
     private String imagePath;
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,12 +80,15 @@ public class AssetEditActivity extends AppCompatActivity {
             employeeView.setError(null);
         });
         setAdapters(locationView, employeeView);
+
         TextView creationDateTextview = findViewById(R.id.creation_date);
         priceView = findViewById(R.id.price);
 
         barcodeView = findViewById(R.id.barcode);
         barcodeView.setOnClickListener(v -> {
-            CameraHelper.showBarcodeInputDialog(barcodeView);
+            if (!barcodeView.isFocusable()) {
+                CameraHelper.showBarcodeInputDialog(barcodeView);
+            }
         });
 
         ImageView imageView = findViewById(R.id.icon);
@@ -170,7 +176,15 @@ public class AssetEditActivity extends AppCompatActivity {
             asset.setLocation(selectedLocation);
         }
         asset.getAsset().setPrice((Integer.parseInt(priceView.getText().toString().trim())));
-        asset.getAsset().setBarcode(Integer.parseInt(barcodeView.getText().toString()));
+        try {
+            String text = barcodeView.getText().toString();
+            asset.getAsset().setBarcode(Long.parseLong(text));
+        }
+        catch (NumberFormatException e){
+            MainActivity.showCustomToast(this, getString(R.string.error_converting_string));
+            return;
+        }
+
         if (CameraHelper.imagePath != null && !CameraHelper.imagePath.equals(imagePath)){
             asset.getAsset().setImagePath(CameraHelper.imagePath);
             CameraHelper.imagePath = null;
