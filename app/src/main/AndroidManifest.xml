@@ -23,6 +23,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Registar.Custom">
         <activity
+            android:name=".LocationEditActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LocationActivity"
+            android:exported="false" />
+        <activity
             android:name=".EmployeeEditActivity"
             android:exported="false" />
         <activity

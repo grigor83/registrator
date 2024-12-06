@@ -55,5 +55,10 @@
     <string name="edit_employee">promijeni podatke</string>
     <string name="create_employee">Kreiraj novog zaposlenog</string>
     <string name="select_department">Izaberi odjeljenje</string>
+    <string name="city">Grad:</string>
+    <string name="address">Ulica:</string>
+    <string name="search_by_city_name">Pretraži po imenu grada</string>
+    <string name="search_by_address">Pretraži po adresi</string>
+    <string name="create_location">Kreiraj novu lokaciju</string>
 
 </resources>

@@ -14,11 +14,6 @@ public class Location implements Serializable {
     private String city;
     private String address;
 
-    public Location(String city, String address) {
-        this.city = city;
-        this.address = address;
-    }
-
     public int getId() {
         return id;
     }

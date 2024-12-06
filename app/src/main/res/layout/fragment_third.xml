@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragment.FirstFragment">
+    tools:context=".fragment.ThirdFragment">
 
     <!-- Main Linear Layout -->
     <LinearLayout
@@ -21,26 +21,24 @@
             android:paddingTop="@dimen/edit_texts_container_padding_top">
 
             <EditText
-                android:id="@+id/titleSearch"
+                android:id="@+id/cityNameSearch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/search_by_title" />
+                android:hint="@string/search_by_city_name" />
 
             <EditText
-                android:id="@+id/locationSearch"
+                android:id="@+id/addressSearch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/search_by_location" />
+                android:hint="@string/search_by_address"/>
         </LinearLayout>
 
         <!-- RecyclerView -->
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/fixedAssetsRecycler"
+            android:id="@+id/recycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/recyclerview_margin_top"
-            android:layout_marginLeft="@dimen/recyclerview_side_margin"
-            android:layout_marginRight="@dimen/recyclerview_side_margin"/>
+            android:layout_margin="@dimen/fab_margin"/>
     </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -50,5 +48,6 @@
         android:layout_margin="@dimen/floating_action_button_margin"
         android:layout_gravity="end|bottom"
         app:srcCompat="@drawable/ic_add"
-        android:contentDescription="@string/fab_contentDescription"/>
+        android:contentDescription="@string/fab_contentDescription"
+        android:onClick="createLocation"/>
 </FrameLayout>

@@ -1,66 +1,171 @@
 package com.example.registar.fragment;
 
+import static android.app.Activity.RESULT_OK;
+
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
+import android.os.Looper;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
+import com.example.registar.LocationEditActivity;
+import com.example.registar.MainActivity;
 import com.example.registar.R;
+import com.example.registar.adapter.LocationAdapter;
+import com.example.registar.helper.ExecutorHelper;
+import com.example.registar.model.Location;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ThirdFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+
 public class ThirdFragment extends Fragment {
+    private List<Location> locations;
+    private LocationAdapter adapter;
+    private ActivityResultLauncher<Intent> locationActivityLauncher;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public ThirdFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ThirdFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ThirdFragment newInstance(String param1, String param2) {
-        ThirdFragment fragment = new ThirdFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+
+        locationActivityLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK) {
+                        int position = Objects.requireNonNull(result.getData()).getIntExtra("position", -1);
+                        if (position != -1) {
+                            Location location = adapter.deleteLocationFromList(position);
+                            deleteLocation(location);
+                            return;
+                        }
+
+                        Location location = (Location) Objects.requireNonNull(result.getData()).getSerializableExtra("createdLocation");
+                        if (location != null) {
+                            adapter.addLocationToList(location);
+                            insertLocation(location);
+                            return;
+                        }
+
+                        location = (Location) Objects.requireNonNull(result.getData()).getSerializableExtra("updatedLocation");
+                        if (location != null) {
+                            adapter.replaceLocationInList(location);
+                            updateLocation(location);
+                        }
+                    }
+                    else
+                        adapter.notifyDataSetChanged();
+                });
+
+        locations = new ArrayList<>();
+        adapter = new LocationAdapter(locations, locationActivityLauncher);
+
     }
+
+    @Override
+    public void onResume() {
+        adapter.refresh();
+        loadLocations();
+        super.onResume();
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.third_fragment, container, false);
+        View fragmentLayout = inflater.inflate(R.layout.fragment_third, container, false);
+
+        RecyclerView recyclerView = fragmentLayout.findViewById(R.id.recycler);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(fragmentLayout.getContext()));
+        recyclerView.setAdapter(adapter);
+
+        EditText citySearch = fragmentLayout.findViewById(R.id.cityNameSearch);
+        EditText addressSearch = fragmentLayout.findViewById(R.id.addressSearch);
+
+        citySearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                filter(citySearch, addressSearch, adapter);
+            }
+
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+        });
+
+        addressSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                filter(citySearch, addressSearch, adapter);
+            }
+
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+        });
+
+        FloatingActionButton fab = fragmentLayout.findViewById(R.id.fab);
+        fab.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), LocationEditActivity.class);
+            locationActivityLauncher.launch(intent);
+            adapter.highlightedItemPosition = -1;
+        });
+
+        return fragmentLayout;
     }
+
+    private void loadLocations() {
+        locations.clear();
+        ExecutorService executor = ExecutorHelper.getExecutor();
+        executor.execute(() -> {
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.post(() -> {
+                locations.addAll(MainActivity.registarDB.locationDao().getAll());
+                adapter.refresh();
+            });
+        });
+    }
+
+    public static void deleteLocation(Location location) {
+        ExecutorService executor = ExecutorHelper.getExecutor();
+        executor.execute(() -> {
+            MainActivity.registarDB.locationDao().delete(location);
+        });
+    }
+
+    private void updateLocation(Location location) {
+        ExecutorService executor = ExecutorHelper.getExecutor();
+        executor.execute(() -> {
+            MainActivity.registarDB.locationDao().update(location);
+        });
+    }
+
+    private void insertLocation(Location location) {
+        ExecutorService executor = ExecutorHelper.getExecutor();
+        executor.execute(() -> {
+            long id = MainActivity.registarDB.locationDao().insert(location);
+            location.setId((int) id);
+        });
+    }
+
+    private void filter(EditText citySearch, EditText addressSearch, LocationAdapter adapter) {
+        String cityQuery = citySearch.getText().toString();
+        String addressQuery = addressSearch.getText().toString();
+
+        adapter.filter(cityQuery, addressQuery);
+    }
+
+
 }

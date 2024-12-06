@@ -15,7 +15,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,15 +24,10 @@ import com.example.registar.AssetCreateActivity;
 import com.example.registar.MainActivity;
 import com.example.registar.R;
 import com.example.registar.adapter.AssetsAdapter;
-import com.example.registar.helper.BitmapHelper;
 import com.example.registar.helper.ExecutorHelper;
-import com.example.registar.model.Asset;
 import com.example.registar.model.AssetWithRelations;
-import com.example.registar.model.Employee;
-import com.example.registar.model.Location;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -93,7 +87,7 @@ public class FirstFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View fragmentLayout = inflater.inflate(R.layout.first_fragment, container, false);
+        View fragmentLayout = inflater.inflate(R.layout.fragment_first, container, false);
 
         RecyclerView recyclerView = fragmentLayout.findViewById(R.id.fixedAssetsRecycler);
         recyclerView.setHasFixedSize(true);

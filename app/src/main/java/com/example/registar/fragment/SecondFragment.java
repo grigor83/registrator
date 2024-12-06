@@ -83,7 +83,7 @@ public class SecondFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View fragmentLayout = inflater.inflate(R.layout.second_fragment, container, false);
+        View fragmentLayout = inflater.inflate(R.layout.fragment_second, container, false);
 
         RecyclerView recyclerView = fragmentLayout.findViewById(R.id.recycler);
         recyclerView.setHasFixedSize(true);

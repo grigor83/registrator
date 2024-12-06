@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".EmployeeEditActivity">
+    tools:context=".LocationEditActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- First name -->
+            <!-- City name -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -45,14 +45,14 @@
 
                 <TextView
                     style="@style/TextViewStyleInEditMode"
-                    android:text="@string/first_name"
-                    android:labelFor="@id/firstname"/>
+                    android:text="@string/city"
+                    android:labelFor="@id/city"/>
                 <EditText
-                    android:id="@+id/firstname"
+                    android:id="@+id/city"
                     style="@style/EditTextStyle"/>
             </LinearLayout>
 
-            <!-- Last name -->
+            <!-- Address -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -60,46 +60,11 @@
 
                 <TextView
                     style="@style/TextViewStyleInEditMode"
-                    android:text="@string/last_name"
-                    android:labelFor="@id/lastname"/>
+                    android:text="@string/address"
+                    android:labelFor="@id/address"/>
                 <EditText
-                    android:id="@+id/lastname"
+                    android:id="@+id/address"
                     style="@style/EditTextStyle"/>
-            </LinearLayout>
-
-            <!-- Department -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/TextViewStyleInEditMode"
-                    android:text="@string/department"
-                    android:labelFor="@id/department"/>
-                <AutoCompleteTextView
-                    android:id="@+id/department"
-                    style="@style/EditTextStyle"
-                    android:focusable="false"
-                    android:cursorVisible="false"
-                    android:hint="@string/select_department"
-                    android:inputType="none"/>
-            </LinearLayout>
-
-            <!-- Salary -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/TextViewStyleInEditMode"
-                    android:text="@string/salary"
-                    android:labelFor="@id/salary"/>
-                <EditText
-                    android:id="@+id/salary"
-                    style="@style/EditTextStyle"
-                    android:inputType="number"/>
             </LinearLayout>
 
             <!-- Save and Cancel buttons -->

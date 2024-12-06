@@ -49,11 +49,11 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.ViewHo
 
     @NonNull
     @Override
-    public EmployeeAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         View v = layoutInflater.inflate(R.layout.recycle_item_employee, parent, false);
         this.popupView = LayoutInflater.from(parent.getContext()).inflate(R.layout.popup_crud, null);
-        return new EmployeeAdapter.ViewHolder(v);
+        return new ViewHolder(v);
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -111,6 +111,11 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.ViewHo
         }
     }
 
+    @Override
+    public int getItemCount() {
+        return filteredEmployees.size();
+    }
+
     private void showPopupMenu(View view, Employee employee, int position) {
         PopupWindow popupWindow = new PopupWindow(popupView,
                 ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -137,11 +142,6 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.ViewHo
         intent.putExtra("position", position);
         employeeActivityLauncher.launch(intent);
         highlightedItemPosition = -1;
-    }
-
-    @Override
-    public int getItemCount() {
-        return filteredEmployees.size();
     }
 
     public void refresh() {
