@@ -4,6 +4,7 @@ import static com.example.registar.MainActivity.showCustomToast;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.net.Uri;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -21,8 +22,10 @@ import com.example.registar.LocationActivity;
 import com.example.registar.LocationEditActivity;
 import com.example.registar.R;
 import com.example.registar.fragment.ThirdFragment;
+import com.example.registar.util.BitmapHelper;
 import com.example.registar.model.Location;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,7 +46,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        View v = layoutInflater.inflate(R.layout.recycle_item_employee, parent, false);
+        View v = layoutInflater.inflate(R.layout.recycler_item_employee, parent, false);
         this.popupView = LayoutInflater.from(parent.getContext()).inflate(R.layout.popup_crud, null);
         return new ViewHolder(v);
     }
@@ -89,6 +92,18 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
             return true;
         });
 
+        File file = new File(location.getImagePath());
+        if (file.exists()) {
+            Uri imageUri = Uri.fromFile(file);
+            // Dimensions of imageview are now available
+            holder.icon.post(() -> {
+                BitmapHelper.processImageInBackground(popupView.getContext(), holder.icon, imageUri, true);
+            });
+        }
+        else {
+            holder.icon.setImageBitmap(null);
+            holder.icon.setImageResource(R.drawable.chair);
+        }
     }
 
     @Override
@@ -167,19 +182,21 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
         String address = addressQuery.toLowerCase();
 
         for (Location location : locations) {
-            boolean matchesCity = !cityQuery.isEmpty() && location.getCity().toLowerCase().startsWith(city);
-            boolean matchesAddress = !addressQuery.isEmpty() && location.getAddress().toLowerCase().startsWith(address);
+            boolean matchesCity = !cityQuery.isEmpty() && location.getCity().toLowerCase().contains(city);
+            boolean matchesAddress = !addressQuery.isEmpty() && location.getAddress().toLowerCase().contains(address);
 
             // If either query is empty, skip checking it; otherwise match one or both
             if ((cityQuery.isEmpty() && matchesAddress) ||
                     (addressQuery.isEmpty() && matchesCity) ||
-                    (matchesCity && matchesAddress))
+                    (matchesCity && matchesAddress)){
                 filteredLocations.add(location);
+            }
             else if (cityQuery.isEmpty() && addressQuery.isEmpty()) {
                 filteredLocations.clear();
                 filteredLocations.addAll(locations);
             }
         }
+        notifyDataSetChanged();
     }
 
 
@@ -190,7 +207,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
             super(itemView);
             city = itemView.findViewById(R.id.fullName);
             address = itemView.findViewById(R.id.department);
-            //icon = itemView.findViewById(R.id.icon);
+            icon = itemView.findViewById(R.id.icon);
         }
     }
 }

@@ -5,7 +5,6 @@ import static com.example.registar.MainActivity.showCustomToast;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -21,27 +20,24 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.registar.EmployeeActivity;
 import com.example.registar.EmployeeEditActivity;
-import com.example.registar.MainActivity;
 import com.example.registar.R;
 import com.example.registar.fragment.SecondFragment;
-import com.example.registar.helper.BitmapHelper;
-import com.example.registar.helper.ExecutorHelper;
-import com.example.registar.model.Employee;
+import com.example.registar.model.EmployeeWithRelations;
+import com.example.registar.util.BitmapHelper;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
 
 public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.ViewHolder> {
 
-    private final List<Employee> employees, filteredEmployees;
+    private final List<EmployeeWithRelations> employees, filteredEmployees;
     private final ActivityResultLauncher<Intent> employeeActivityLauncher;
     private View popupView;
     private float touchX, touchY;
     public int highlightedItemPosition = -1;
 
-    public EmployeeAdapter(List<Employee> employees, ActivityResultLauncher<Intent> employeeActivityLauncher) {
+    public EmployeeAdapter(List<EmployeeWithRelations> employees, ActivityResultLauncher<Intent> employeeActivityLauncher) {
         this.employees = employees;
         this.filteredEmployees = new ArrayList<>(employees);
         this.employeeActivityLauncher = employeeActivityLauncher;
@@ -51,7 +47,7 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.ViewHo
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        View v = layoutInflater.inflate(R.layout.recycle_item_employee, parent, false);
+        View v = layoutInflater.inflate(R.layout.recycler_item_employee, parent, false);
         this.popupView = LayoutInflater.from(parent.getContext()).inflate(R.layout.popup_crud, null);
         return new ViewHolder(v);
     }
@@ -59,9 +55,10 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.ViewHo
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onBindViewHolder(@NonNull EmployeeAdapter.ViewHolder holder, int position) {
-        final Employee employee = filteredEmployees.get(position);
-        holder.fullName.setText(employee.getFullName());
-        holder.department.setText(employee.getDepartment());
+        final EmployeeWithRelations employee = filteredEmployees.get(position);
+        holder.fullName.setText(employee.getEmployee().getFullName());
+        if (employee.getDepartment() != null)
+            holder.department.setText(employee.getDepartment().getName());
 
         // Set the background based on whether the item is highlighted
         if (highlightedItemPosition == position)
@@ -97,7 +94,7 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.ViewHo
             return true;
         });
 
-        File file = new File(employee.getImagePath());
+        File file = new File(employee.getEmployee().getImagePath());
         if (file.exists()) {
             Uri imageUri = Uri.fromFile(file);
             // Dimensions of imageview are now available
@@ -116,7 +113,7 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.ViewHo
         return filteredEmployees.size();
     }
 
-    private void showPopupMenu(View view, Employee employee, int position) {
+    private void showPopupMenu(View view, EmployeeWithRelations employee, int position) {
         PopupWindow popupWindow = new PopupWindow(popupView,
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -137,7 +134,7 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.ViewHo
         popupWindow.showAtLocation(view, Gravity.NO_GRAVITY, (int) touchX, (int) touchY);
     }
 
-    private void startEmployeeActivity(Intent intent, Employee employee, int position) {
+    private void startEmployeeActivity(Intent intent, EmployeeWithRelations employee, int position) {
         intent.putExtra("clickedEmployee", employee);
         intent.putExtra("position", position);
         employeeActivityLauncher.launch(intent);
@@ -157,9 +154,9 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.ViewHo
         String name = nameQuery.toLowerCase();
         String department = departmentQuery.toLowerCase();
 
-        for (Employee employee : employees) {
-            boolean matchesName = !name.isEmpty() && employee.getFullName().toLowerCase().contains(name);
-            boolean matchesDepartment = !department.isEmpty() && employee.getDepartment().toLowerCase().startsWith(department);
+        for (EmployeeWithRelations employee : employees) {
+            boolean matchesName = !name.isEmpty() && employee.getEmployee().getFullName().toLowerCase().contains(name);
+            boolean matchesDepartment = !department.isEmpty() && employee.getDepartment().getName().toLowerCase().startsWith(department);
 
             // If either query is empty, skip checking it; otherwise match one or both
             if ((nameQuery.isEmpty() && matchesDepartment) ||
@@ -175,8 +172,8 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.ViewHo
         notifyDataSetChanged();
     }
 
-    public Employee deleteEmployeeFromList(int position){
-        Employee employee = filteredEmployees.remove(position);
+    public EmployeeWithRelations deleteEmployeeFromList(int position){
+        EmployeeWithRelations employee = filteredEmployees.remove(position);
         if (employee != null)
             employees.remove(employee);
 
@@ -185,14 +182,14 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.ViewHo
         showCustomToast(popupView.getContext(), null);
         return employee;
     }
-    public void addEmployeeToList(Employee employee) {
+    public void addEmployeeToList(EmployeeWithRelations employee) {
         employees.add(employee);
         filteredEmployees.add(employee);
         notifyDataSetChanged();
     }
-    public void replaceEmployeeInList(Employee employee) {
+    public void replaceEmployeeInList(EmployeeWithRelations employee) {
         for (int i = 0; i < employees.size(); i++) {
-            if (employees.get(i).getId() == employee.getId()) {
+            if (employees.get(i).getEmployee().getId() == employee.getEmployee().getId()) {
                 employees.set(i, employee);
                 filteredEmployees.clear();
                 filteredEmployees.addAll(employees);

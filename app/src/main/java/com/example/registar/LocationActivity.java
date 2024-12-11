@@ -1,9 +1,11 @@
 package com.example.registar;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,15 +18,24 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.registar.util.BitmapHelper;
 import com.example.registar.model.Location;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.File;
 import java.util.Objects;
 
-public class LocationActivity extends AppCompatActivity {
+public class LocationActivity extends AppCompatActivity implements OnMapReadyCallback {
     private Location location;
     private int position;
     private boolean shouldReturn = false;
-    private TextView cityView, addressView;
+    private TextView cityView, addressView, latitudeView, longitudeView;
+    private ImageView imageView;
 
     private final ActivityResultLauncher<Intent> editLocationLauncher =
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
@@ -50,8 +61,16 @@ public class LocationActivity extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         setTitle(R.string.locations_tab_name);
 
+        // Get the map fragment and request the map to load
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map_fragment);
+        if (mapFragment != null)
+            mapFragment.getMapAsync(this);
+
         cityView = findViewById(R.id.city);
         addressView = findViewById(R.id.address);
+        latitudeView = findViewById(R.id.latitude);
+        longitudeView = findViewById(R.id.longitude);
+        imageView = findViewById(R.id.icon);
 
         location = (Location) getIntent().getSerializableExtra("clickedLocation");
         if (location != null)
@@ -113,5 +132,24 @@ public class LocationActivity extends AppCompatActivity {
     private void updateUI() {
         cityView.setText(location.getCity().trim());
         addressView.setText(location.getAddress().trim());
+        latitudeView.setText(String.valueOf(location.getLatitude()));
+        longitudeView.setText(String.valueOf(location.getLongitude()));
+        if (location.getImagePath() != null){
+            File file = new File(location.getImagePath());
+            if (file.exists()){
+                Uri imageUri = Uri.fromFile(file);
+                imageView.post(() -> {
+                    BitmapHelper.processImageInBackground(this, imageView, imageUri, true);
+                });
+            }
+        }
+    }
+
+    @Override
+    public void onMapReady(@NonNull GoogleMap googleMap) {
+        LatLng objectLocation = new LatLng(location.getLatitude(), location.getLongitude());
+        googleMap.addMarker(new MarkerOptions().position(objectLocation));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(objectLocation, 15));
+        googleMap.getUiSettings().setZoomControlsEnabled(true);
     }
 }

@@ -31,7 +31,7 @@
     <dimen name="popup_crud_side_padding">30dp</dimen>
 
     <!-- settings for activity_asset layout  -->
-    <dimen name="textview_title_width">95dp</dimen>
+    <dimen name="textview_title_width">110dp</dimen>
     <dimen name="textview_padding_side">12dp</dimen>
     <dimen name="textview_padding">8dp</dimen>
     <dimen name="imageview_height">300dp</dimen>
@@ -42,5 +42,6 @@
     <dimen name="btn_container_margin">20dp</dimen>
     <dimen name="main_layout_padding">8dp</dimen>
     <dimen name="fab_margin">10dp</dimen>
+    <dimen name="textview_label_width">180dp</dimen>
 
 </resources>

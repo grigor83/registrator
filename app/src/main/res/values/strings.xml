@@ -60,5 +60,9 @@
     <string name="search_by_city_name">Pretraži po imenu grada</string>
     <string name="search_by_address">Pretraži po adresi</string>
     <string name="create_location">Kreiraj novu lokaciju</string>
+    <string name="latitude">Geografska širina:</string>
+    <string name="longitude">Geografska dužina:</string>
+    <string name="department_tab_name">odjeljenja</string>
+    <string name="create_department">Kreiraj novo odjeljenje</string>
 
 </resources>

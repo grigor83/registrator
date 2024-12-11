@@ -24,7 +24,7 @@ import com.example.registar.LocationEditActivity;
 import com.example.registar.MainActivity;
 import com.example.registar.R;
 import com.example.registar.adapter.LocationAdapter;
-import com.example.registar.helper.ExecutorHelper;
+import com.example.registar.util.ExecutorHelper;
 import com.example.registar.model.Location;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 

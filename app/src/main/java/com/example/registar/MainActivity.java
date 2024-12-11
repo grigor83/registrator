@@ -19,7 +19,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.registar.adapter.ViewPagerAdapter;
-import com.example.registar.helper.ExecutorHelper;
+import com.example.registar.util.ExecutorHelper;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
                         case 1: tab.setText(R.string.employers_tab_name); break;
                         case 2: tab.setText(R.string.locations_tab_name); break;
                         case 3: tab.setText(R.string.census_lists_tab_name); break;
+                        case 4: tab.setText(R.string.department_tab_name); break;
                     }
                 }).attach();
 

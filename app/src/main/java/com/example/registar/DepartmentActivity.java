@@ -1,11 +1,9 @@
 package com.example.registar;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,23 +16,20 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.registar.util.BitmapHelper;
-import com.example.registar.model.AssetWithRelations;
+import com.example.registar.model.Department;
 
-import java.io.File;
 import java.util.Objects;
 
-public class AssetActivity extends AppCompatActivity {
-    private AssetWithRelations assetWithRelations;
+public class DepartmentActivity extends AppCompatActivity {
+    private Department department;
     private int position;
-    private TextView titleTextview, descriptionTextview,priceTextview, employeeTextview,
-            locationTextview, creationDateTextview, barcodeTextview;
-    private ImageView imageView;
     private boolean shouldReturn = false;
+    private TextView departmentView;
+
     private final ActivityResultLauncher<Intent> editActivityLauncher =
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
                 if (result.getResultCode() == RESULT_OK) {
-                    assetWithRelations = (AssetWithRelations) Objects.requireNonNull(result.getData()).getSerializableExtra("updatedAsset");
+                    department = (Department) Objects.requireNonNull(result.getData()).getSerializableExtra("updatedDepartment");
                     shouldReturn = true;
                     updateUI();
                 }
@@ -44,7 +39,7 @@ public class AssetActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_asset);
+        setContentView(R.layout.activity_department);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -53,22 +48,13 @@ public class AssetActivity extends AppCompatActivity {
 
         setSupportActionBar(findViewById(R.id.toolbar));
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-        setTitle(R.string.assets_tab_name);
+        setTitle(R.string.department_tab_name);
 
-        titleTextview = findViewById(R.id.title);
-        descriptionTextview = findViewById(R.id.description);
-        creationDateTextview = findViewById(R.id.creation_date);
-        priceTextview = findViewById(R.id.price);
-        employeeTextview = findViewById(R.id.employee);
-        locationTextview = findViewById(R.id.location);
-        barcodeTextview = findViewById(R.id.barcode);
-        imageView = findViewById(R.id.icon);
+        departmentView = findViewById(R.id.department);
 
-        AssetWithRelations clickedAsset = (AssetWithRelations) getIntent().getSerializableExtra("clickedAsset");
-        if (clickedAsset != null) {
-            assetWithRelations = clickedAsset;
+        department = (Department) getIntent().getSerializableExtra("clickedDepartment");
+        if (department != null)
             updateUI();
-        }
         position = getIntent().getIntExtra("position", -1);
     }
 
@@ -97,12 +83,12 @@ public class AssetActivity extends AppCompatActivity {
             finish();
         }
         else if (item.getItemId() == R.id.action_edit){
-            Intent intent = new Intent(this, AssetEditActivity.class);
-            intent.putExtra("clickedAsset", assetWithRelations);
+            Intent intent = new Intent(this, DepartmentEditActivity.class);
+            intent.putExtra("clickedDepartment", department);
             editActivityLauncher.launch(intent);
         }
         else if (item.getItemId() == android.R.id.home){
-            putAssetToResultIntent();
+            putDepartmentToResultIntent();
             this.finish();
         }
 
@@ -111,37 +97,18 @@ public class AssetActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        putAssetToResultIntent();
+        putDepartmentToResultIntent();
         super.onBackPressed();
     }
 
-    private void updateUI(){
-        titleTextview.setText(assetWithRelations.getAsset().getTitle().trim());
-        descriptionTextview.setText(assetWithRelations.getAsset().getDescription().trim());
-        if (null != assetWithRelations.getLocation())
-            locationTextview.setText(assetWithRelations.getLocation().getCity().trim());
-        if (null != assetWithRelations.getEmployee())
-            employeeTextview.setText(assetWithRelations.getEmployee().getFullName().trim());
-        creationDateTextview.setText(assetWithRelations.getAsset().getCreationDate().toString().trim());
-        priceTextview.setText(String.valueOf(assetWithRelations.getAsset().getPrice()));
-        barcodeTextview.setText(String.valueOf(assetWithRelations.getAsset().getBarcode()));
-        if (assetWithRelations.getAsset().getImagePath() != null){
-            File file = new File(assetWithRelations.getAsset().getImagePath());
-            if (file.exists()){
-                Uri imageUri = Uri.fromFile(file);
-                imageView.post(() -> {
-                    BitmapHelper.processImageInBackground(this, imageView, imageUri, true);
-                });
-            }
-        }
+    private void updateUI() {
+        departmentView.setText(department.getName().trim());
     }
-
-    private void putAssetToResultIntent(){
+    private void putDepartmentToResultIntent(){
         if (shouldReturn){
             Intent resultIntent = new Intent();
-            resultIntent.putExtra("updatedAsset", assetWithRelations);
+            resultIntent.putExtra("updatedDepartment", department);
             setResult(RESULT_OK, resultIntent);
         }
     }
-
 }

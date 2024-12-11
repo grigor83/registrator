@@ -20,9 +20,11 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.registar.helper.BitmapHelper;
-import com.example.registar.helper.CameraHelper;
-import com.example.registar.helper.ExecutorHelper;
+import com.example.registar.model.Department;
+import com.example.registar.model.EmployeeWithRelations;
+import com.example.registar.util.BitmapHelper;
+import com.example.registar.util.CameraHelper;
+import com.example.registar.util.ExecutorHelper;
 import com.example.registar.model.Employee;
 
 import java.io.File;
@@ -32,11 +34,12 @@ import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 
 public class EmployeeEditActivity extends AppCompatActivity {
-    private Employee employee;
+    private EmployeeWithRelations employee;
     private EditText firstnameView, lastnameView, salaryView;
     private AutoCompleteTextView departmentView;
     private ImageView imageView;
-    private String selectedDepartment, imagePath;
+    private Department selectedDepartment;
+    private String imagePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,14 +62,13 @@ public class EmployeeEditActivity extends AppCompatActivity {
             departmentView.showDropDown();
         });
         departmentView.setOnItemClickListener((parent, view, position, id) -> {
-            selectedDepartment = (String) parent.getItemAtPosition(position);
+            selectedDepartment = (Department) parent.getItemAtPosition(position);
             departmentView.setError(null);
         });
         ExecutorService executor = ExecutorHelper.getExecutor();
         executor.execute(() -> {
-            ArrayList<String> departments = new ArrayList<>(Arrays.asList("IT", "HR"));
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(departmentView.getContext(), R.layout.dropdown_item, departments);
-
+            ArrayList<Department> departments = new ArrayList<>(MainActivity.registarDB.departmentDao().getAll());
+            ArrayAdapter<Department> adapter = new ArrayAdapter<>(departmentView.getContext(), R.layout.dropdown_item, departments);
             Handler handler = new Handler(Looper.getMainLooper());
             handler.post(() -> {
                 departmentView.setAdapter(adapter);
@@ -77,14 +79,15 @@ public class EmployeeEditActivity extends AppCompatActivity {
         imageView = findViewById(R.id.icon);
         imageView.setOnClickListener(v -> CameraHelper.showImageOptions(this));
 
-        employee = (Employee) getIntent().getSerializableExtra("clickedEmployee");
+        employee = (EmployeeWithRelations) getIntent().getSerializableExtra("clickedEmployee");
         if (employee != null) {
-            firstnameView.setText(employee.getName());
-            lastnameView.setText(employee.getLastName());
-            departmentView.setText(employee.getDepartment());
-            salaryView.setText(String.valueOf(employee.getSalary()));
-            if (employee.getImagePath() != null){
-                imagePath = employee.getImagePath();
+            firstnameView.setText(employee.getEmployee().getName());
+            lastnameView.setText(employee.getEmployee().getLastName());
+            if (employee.getDepartment() != null)
+                departmentView.setText(employee.getDepartment().getName());
+            salaryView.setText(String.valueOf(employee.getEmployee().getSalary()));
+            if (employee.getEmployee().getImagePath() != null){
+                imagePath = employee.getEmployee().getImagePath();
                 File file = new File(imagePath);
                 if (file.exists()) {
                     Uri imageUri = Uri.fromFile(file);
@@ -97,7 +100,8 @@ public class EmployeeEditActivity extends AppCompatActivity {
             setTitle(R.string.edit_employee);
         }
         else{
-            employee = new Employee();
+            employee = new EmployeeWithRelations();
+            employee.setEmployee(new Employee());
             setTitle(R.string.create_employee);
         }
 
@@ -134,19 +138,23 @@ public class EmployeeEditActivity extends AppCompatActivity {
     }
 
     public void saveEmployee(View view) {
-        if (!AssetEditActivity.validateInputs(Arrays.asList(firstnameView, lastnameView, departmentView, salaryView)))
+        if (!AssetEditActivity.validateInputs(Arrays.asList(firstnameView, lastnameView, salaryView)))
             return;
 
-        employee.setName(firstnameView.getText().toString().trim());
-        employee.setLastName(lastnameView.getText().toString().trim());
-        if (selectedDepartment != null)
+        employee.getEmployee().setName(firstnameView.getText().toString().trim());
+        employee.getEmployee().setLastName(lastnameView.getText().toString().trim());
+        if (selectedDepartment != null){
+            employee.getEmployee().setDepartmentId(selectedDepartment.getId());
             employee.setDepartment(selectedDepartment);
-        employee.setSalary(Double.parseDouble(salaryView.getText().toString().trim()));
+        }
+        employee.getEmployee().setSalary(Double.parseDouble(salaryView.getText().toString().trim()));
 
         if (CameraHelper.imagePath != null && !CameraHelper.imagePath.equals(imagePath)){
-            employee.setImagePath(CameraHelper.imagePath);
+            employee.getEmployee().setImagePath(CameraHelper.imagePath);
             CameraHelper.imagePath = null;
         }
+        else
+            employee.getEmployee().setImagePath("no image");
 
         Intent resultIntent = new Intent();
         if (getTitle().equals(getString(R.string.edit_employee)))

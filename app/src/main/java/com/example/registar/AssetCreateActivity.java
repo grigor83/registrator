@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
@@ -20,8 +19,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.registar.helper.BitmapHelper;
-import com.example.registar.helper.CameraHelper;
+import com.example.registar.util.BitmapHelper;
+import com.example.registar.util.CameraHelper;
 import com.example.registar.model.Asset;
 import com.example.registar.model.AssetWithRelations;
 import com.example.registar.model.Employee;

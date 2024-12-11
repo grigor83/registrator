@@ -1,4 +1,4 @@
-package com.example.registar.helper;
+package com.example.registar.util;
 
 import android.content.Context;
 import android.graphics.Bitmap;

@@ -18,14 +18,15 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.registar.helper.BitmapHelper;
+import com.example.registar.model.EmployeeWithRelations;
+import com.example.registar.util.BitmapHelper;
 import com.example.registar.model.Employee;
 
 import java.io.File;
 import java.util.Objects;
 
 public class EmployeeActivity extends AppCompatActivity {
-    private Employee employee;
+    private EmployeeWithRelations employee;
     private int position;
     private boolean shouldReturn = false;
     private TextView firstnameView, lastnameView, departmentView, salaryView;
@@ -33,7 +34,7 @@ public class EmployeeActivity extends AppCompatActivity {
     private final ActivityResultLauncher<Intent> editActivityLauncher =
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
                 if (result.getResultCode() == RESULT_OK) {
-                    employee = (Employee) Objects.requireNonNull(result.getData()).getSerializableExtra("updatedEmployee");
+                    employee = (EmployeeWithRelations) Objects.requireNonNull(result.getData()).getSerializableExtra("updatedEmployee");
                     shouldReturn = true;
                     updateUI();
                 }
@@ -60,7 +61,7 @@ public class EmployeeActivity extends AppCompatActivity {
         salaryView = findViewById(R.id.salary);
         imageView = findViewById(R.id.icon);
 
-        employee = (Employee) getIntent().getSerializableExtra("clickedEmployee");
+        employee = (EmployeeWithRelations) getIntent().getSerializableExtra("clickedEmployee");
         if (employee != null)
             updateUI();
         position = getIntent().getIntExtra("position", -1);
@@ -110,12 +111,13 @@ public class EmployeeActivity extends AppCompatActivity {
     }
 
     private void updateUI() {
-        firstnameView.setText(employee.getName().trim());
-        lastnameView.setText(employee.getLastName().trim());
-        departmentView.setText(employee.getDepartment().trim());
-        salaryView.setText(String.valueOf(employee.getSalary()));
-        if (employee.getImagePath() != null){
-            File file = new File(employee.getImagePath());
+        firstnameView.setText(employee.getEmployee().getName().trim());
+        lastnameView.setText(employee.getEmployee().getLastName().trim());
+        if (employee.getDepartment() != null)
+            departmentView.setText(employee.getDepartment().getName().trim());
+        salaryView.setText(String.valueOf(employee.getEmployee().getSalary()));
+        if (employee.getEmployee().getImagePath() != null){
+            File file = new File(employee.getEmployee().getImagePath());
             if (file.exists()){
                 Uri imageUri = Uri.fromFile(file);
                 imageView.post(() -> {

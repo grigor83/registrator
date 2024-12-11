@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    tools:context=".DepartmentEditActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/EditToolbar">
+    </androidx.appcompat.widget.Toolbar>
+
+    <!-- Department name -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/TextViewStyleInEditMode"
+            android:text="@string/first_name"
+            android:labelFor="@id/department"/>
+        <EditText
+            android:id="@+id/department"
+            style="@style/EditTextStyle"/>
+    </LinearLayout>
+
+    <!-- Save and Cancel buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/btn_container_margin"
+        android:gravity="center">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/cancel"
+            style="@style/CancelSaveButton"
+            android:text="@string/btn_cancel_text"
+            android:onClick="cancel"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/save"
+            style="@style/CancelSaveButton"
+            android:text="@string/btn_save_text"
+            android:onClick="saveDepartment"/>
+    </LinearLayout>
+
+</LinearLayout>

@@ -2,12 +2,17 @@ package com.example.registar.model;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
+import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
 import com.example.registar.util.Constants;
-
 import java.io.Serializable;
-@Entity(tableName = Constants.TABLE_NAME_EMPLOYEE)
+
+@Entity(
+        tableName = Constants.TABLE_NAME_EMPLOYEE,
+        foreignKeys = {
+                @ForeignKey(entity = Department.class, parentColumns = "id", childColumns = "departmentId", onDelete = ForeignKey.SET_NULL)
+        })
 public class Employee implements Serializable {
     @PrimaryKey(autoGenerate = true)
     private int id;
@@ -15,17 +20,15 @@ public class Employee implements Serializable {
     private String name;
     @NonNull
     private String lastName;
-    @NonNull
-    private String department;
+    private Integer departmentId;
     private double salary;
     private String imagePath;
 
     public Employee() {
-        this.name = "John";
-        this.lastName = "Don";
-        this.department = "none";
-        imagePath = "no image";
+        name = "";
+        lastName = "";
     }
+
 
     public int getId() {
         return id;
@@ -57,13 +60,12 @@ public class Employee implements Serializable {
         return name + " " + lastName;
     }
 
-    @NonNull
-    public String getDepartment() {
-        return department;
+    public Integer getDepartmentId() {
+        return departmentId;
     }
 
-    public void setDepartment(@NonNull String department) {
-        this.department = department;
+    public void setDepartmentId(Integer departmentId) {
+        this.departmentId = departmentId;
     }
 
     public double getSalary() {
