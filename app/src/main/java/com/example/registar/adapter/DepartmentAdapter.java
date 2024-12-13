@@ -131,7 +131,7 @@ public class DepartmentAdapter extends RecyclerView.Adapter<DepartmentAdapter.Vi
     }
 
     public void filter(String departmentQuery) {
-        departments.clear();
+        filteredDepartments.clear();
         String name = departmentQuery.toLowerCase();
 
         for (Department department : departments) {

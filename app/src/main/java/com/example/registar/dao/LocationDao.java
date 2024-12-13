@@ -20,13 +20,7 @@ public interface LocationDao {
     @Delete
     void delete(Location location);
 
-    // Note... is varargs, here assets is an array
-    @Delete
-    void deleteEmployees(Location... locations);
-
     @Query("SELECT * FROM location")
     List<Location> getAll();
 
-    @Query("SELECT * FROM location WHERE id = :locationId")
-    Location getById(int locationId);
 }

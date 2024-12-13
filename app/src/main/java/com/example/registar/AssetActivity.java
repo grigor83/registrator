@@ -3,9 +3,18 @@ package com.example.registar;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,13 +27,25 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.registar.model.Asset;
+import com.example.registar.model.Location;
 import com.example.registar.util.BitmapHelper;
 import com.example.registar.model.AssetWithRelations;
+import com.example.registar.util.ExecutorHelper;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
 
-public class AssetActivity extends AppCompatActivity {
+public class AssetActivity extends AppCompatActivity implements OnMapReadyCallback {
     private AssetWithRelations assetWithRelations;
     private int position;
     private TextView titleTextview, descriptionTextview,priceTextview, employeeTextview,
@@ -67,6 +88,9 @@ public class AssetActivity extends AppCompatActivity {
         AssetWithRelations clickedAsset = (AssetWithRelations) getIntent().getSerializableExtra("clickedAsset");
         if (clickedAsset != null) {
             assetWithRelations = clickedAsset;
+            SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map_fragment);
+            if (mapFragment != null)
+                mapFragment.getMapAsync(this);
             updateUI();
         }
         position = getIntent().getIntExtra("position", -1);
@@ -144,4 +168,44 @@ public class AssetActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onMapReady(@NonNull GoogleMap googleMap) {
+        Location location = assetWithRelations.getLocation();
+        LatLng objectLocation = new LatLng(location.getLatitude(), location.getLongitude());
+        Marker marker = googleMap.addMarker(new MarkerOptions().position(objectLocation));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(objectLocation, 15));
+        googleMap.getUiSettings().setZoomControlsEnabled(true);
+
+        googleMap.setOnMarkerClickListener(clickedMarker -> {
+            if (clickedMarker.equals(marker)){
+                showPopupWindow(findViewById(R.id.description));
+                return true;
+            }
+
+            return false; // Return false to allow the default behavior (camera moves to marker)
+        });
+    }
+
+    public void showPopupWindow(View anchorView) {
+        View popupView = LayoutInflater.from(this).inflate(R.layout.popup_list_assets, null);
+        PopupWindow popupWindow = new PopupWindow(popupView,
+                                                ViewGroup.LayoutParams.WRAP_CONTENT,
+                                                ViewGroup.LayoutParams.WRAP_CONTENT, true);
+
+        ExecutorService executor = ExecutorHelper.getExecutor();
+        executor.execute(() -> {
+            ListView listView = popupView.findViewById(R.id.popup_list);
+            ArrayList<Asset> locations = new ArrayList<>(MainActivity.registarDB.assetDao()
+                                            .getAllByLocationId(assetWithRelations.getAsset().getLocationId()));
+            ArrayAdapter<Asset> adapter = new ArrayAdapter<>(anchorView.getContext(), android.R.layout.simple_list_item_1, locations);
+            listView.setAdapter(adapter);
+
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.post(() -> {
+                popupWindow.showAtLocation(anchorView, Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL, 0, 0);
+                //popupWindow.showAsDropDown(anchorView);
+            });
+        });
+
+    }
 }

@@ -31,7 +31,8 @@
             android:layout_height="wrap_content"
             app:tabBackground="@drawable/tab_background_selector"
             app:tabIndicator="@color/secondary"
-            app:tabTextAppearance="@style/CustomTabTextStyle"/>
+            app:tabTextAppearance="@style/CustomTabTextStyle"
+            app:tabMode="scrollable"/>
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.viewpager2.widget.ViewPager2

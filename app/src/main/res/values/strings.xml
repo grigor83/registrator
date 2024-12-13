@@ -64,5 +64,7 @@
     <string name="longitude">Geografska dužina:</string>
     <string name="department_tab_name">odjeljenja</string>
     <string name="create_department">Kreiraj novo odjeljenje</string>
+    <string name="create_asset">Kreiraj novo sredstvo</string>
+    <string name="assets_on_location">Sredstva na ovoj lokaciji</string>
 
 </resources>

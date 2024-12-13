@@ -52,7 +52,7 @@ public class AssetCreateActivity extends AppCompatActivity {
 
         setSupportActionBar(findViewById(R.id.toolbar));
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-        setTitle(R.string.assets_tab_name);
+        setTitle(R.string.create_asset);
 
         titleView = findViewById(R.id.title);
         descriptionView = findViewById(R.id.description);
@@ -158,6 +158,7 @@ public class AssetCreateActivity extends AppCompatActivity {
             return;
         }
         if (CameraHelper.imagePath != null){
+            CameraHelper.deleteOldImageFile(asset.getAsset().getImagePath());
             asset.getAsset().setImagePath(CameraHelper.imagePath);
             CameraHelper.imagePath = null;
         }

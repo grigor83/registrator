@@ -80,7 +80,13 @@ public class FirstFragment extends Fragment {
 
         assets = new ArrayList<>();
         adapter = new AssetsAdapter(assets, deleteAssetLauncher);
+    }
+
+    @Override
+    public void onResume() {
+        adapter.refresh();
         loadAssets();
+        super.onResume();
     }
 
     @Override
@@ -137,6 +143,7 @@ public class FirstFragment extends Fragment {
     }
 
     private void loadAssets() {
+        assets.clear();
         ExecutorService executor = ExecutorHelper.getExecutor();
         executor.execute(() -> {
             Handler handler = new Handler(Looper.getMainLooper());

@@ -136,6 +136,21 @@ public class CameraHelper extends AppCompatActivity {
         });
     }
 
+    public static void deleteOldImageFile(String imagePath) {
+        if (imagePath == null)
+            return;
+
+        File file = new File(imagePath);
+        if (file.exists()) {
+            if (file.delete())
+                Log.d("DeleteFile", "File deleted successfully: " + imagePath);
+            else
+                Log.e("DeleteFile", "Failed to delete the file: " + imagePath);
+        }
+        else
+            Log.e("DeleteFile", "File not found at path: " + imagePath);
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {

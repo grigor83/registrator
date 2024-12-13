@@ -1,5 +1,6 @@
 package com.example.registar.model;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
@@ -109,4 +110,9 @@ public class Asset implements Serializable {
         return Integer.hashCode(id); // Generate hash code based on id
     }
 
+    @NonNull
+    @Override
+    public String toString() {
+        return getTitle();
+    }
 }

@@ -10,6 +10,7 @@
         android:id="@+id/department"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/department"/>
+        android:text="@string/department"
+        android:padding="@dimen/recycler_imageview_padding"/>
 
 </LinearLayout>

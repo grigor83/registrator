@@ -148,6 +148,7 @@ public class AssetsAdapter extends RecyclerView.Adapter<AssetsAdapter.ViewHolder
     }
 
     public void refresh(){
+        highlightedItemPosition = -1;
         filteredAssetList.clear();
         filteredAssetList.addAll(assetList);
         notifyDataSetChanged();

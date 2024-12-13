@@ -135,6 +135,7 @@ public class LocationEditActivity extends AppCompatActivity implements OnMapRead
         location.setLatitude(Double.parseDouble(latitudeView.getText().toString()));
         location.setLongitude(Double.parseDouble(longitudeView.getText().toString()));
         if (CameraHelper.imagePath != null && !CameraHelper.imagePath.equals(imagePath)){
+            CameraHelper.deleteOldImageFile(imagePath);
             location.setImagePath(CameraHelper.imagePath);
             CameraHelper.imagePath = null;
         }

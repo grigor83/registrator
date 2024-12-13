@@ -38,4 +38,8 @@ public interface AssetDao {
     @Query("SELECT * FROM asset")
     List<AssetWithRelations> getAssetWithRelations();
 
+    @Transaction
+    @Query("SELECT * FROM asset WHERE locationId = :locationId")
+    List<Asset> getAllByLocationId(int locationId);
+
 }

@@ -39,7 +39,6 @@ public class EmployeeEditActivity extends AppCompatActivity {
     private AutoCompleteTextView departmentView;
     private ImageView imageView;
     private Department selectedDepartment;
-    private String imagePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,8 +86,7 @@ public class EmployeeEditActivity extends AppCompatActivity {
                 departmentView.setText(employee.getDepartment().getName());
             salaryView.setText(String.valueOf(employee.getEmployee().getSalary()));
             if (employee.getEmployee().getImagePath() != null){
-                imagePath = employee.getEmployee().getImagePath();
-                File file = new File(imagePath);
+                File file = new File(employee.getEmployee().getImagePath());
                 if (file.exists()) {
                     Uri imageUri = Uri.fromFile(file);
                     // Dimensions of imageview are now available
@@ -149,7 +147,8 @@ public class EmployeeEditActivity extends AppCompatActivity {
         }
         employee.getEmployee().setSalary(Double.parseDouble(salaryView.getText().toString().trim()));
 
-        if (CameraHelper.imagePath != null && !CameraHelper.imagePath.equals(imagePath)){
+        if (CameraHelper.imagePath != null && !CameraHelper.imagePath.equals(employee.getEmployee().getImagePath())){
+            CameraHelper.deleteOldImageFile(employee.getEmployee().getImagePath());
             employee.getEmployee().setImagePath(CameraHelper.imagePath);
             CameraHelper.imagePath = null;
         }

@@ -59,7 +59,7 @@ public class AssetEditActivity extends AppCompatActivity {
 
         setSupportActionBar(findViewById(R.id.toolbar));
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-        setTitle(R.string.assets_tab_name);
+        setTitle(R.string.edit_employee);
 
         titleView = findViewById(R.id.title);
         descriptionView = findViewById(R.id.description);
@@ -186,6 +186,7 @@ public class AssetEditActivity extends AppCompatActivity {
         }
 
         if (CameraHelper.imagePath != null && !CameraHelper.imagePath.equals(imagePath)){
+            CameraHelper.deleteOldImageFile(imagePath);
             asset.getAsset().setImagePath(CameraHelper.imagePath);
             CameraHelper.imagePath = null;
         }

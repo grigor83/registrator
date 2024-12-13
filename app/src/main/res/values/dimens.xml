@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="tabTextSize">25sp</dimen>
+    <dimen name="tabTextSize">13sp</dimen>
     <dimen name="drawable_background_padding">8dp</dimen>
     <dimen name="drawable_border_radius">8dp</dimen>
 
@@ -43,5 +43,6 @@
     <dimen name="main_layout_padding">8dp</dimen>
     <dimen name="fab_margin">10dp</dimen>
     <dimen name="textview_label_width">180dp</dimen>
+    <dimen name="map_fragment_height">150dp</dimen>
 
 </resources>
