@@ -102,7 +102,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
         }
         else {
             holder.icon.setImageBitmap(null);
-            holder.icon.setImageResource(R.drawable.chair);
+            holder.icon.setImageResource(R.drawable.location_image);
         }
     }
 

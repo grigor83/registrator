@@ -25,7 +25,8 @@
             <ImageView
                 android:id="@+id/icon"
                 style="@style/ImageviewStyle"
-                android:background="@drawable/background_editable"/>
+                android:background="@drawable/background_editable"
+                android:src="@drawable/location_image"/>
 
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/map_fragment"
@@ -44,7 +45,8 @@
                     android:labelFor="@id/city"/>
                 <EditText
                     android:id="@+id/city"
-                    style="@style/EditTextStyle"/>
+                    style="@style/EditTextStyle"
+                    android:background="@drawable/edittext_selector"/>
             </LinearLayout>
 
             <!-- Address -->

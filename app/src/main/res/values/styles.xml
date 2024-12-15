@@ -55,7 +55,7 @@
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">1</item>
-        <item name="android:background">@drawable/background_edittext</item>
+        <item name="android:background">@drawable/edittext_selector</item>
         <item name="android:layout_margin">@dimen/recycler_imageview_margins</item>
         <item name="android:padding">@dimen/edittext_padding</item>
         <item name="android:inputType">textMultiLine</item>
@@ -83,13 +83,36 @@
         <item name="android:layout_height">@dimen/imageview_height</item>
         <item name="android:layout_margin">@dimen/recycler_imageview_padding</item>
         <item name="android:contentDescription">@string/imageview_contentDescription</item>
-        <item name="android:src">@drawable/chair</item>
+    </style>
+
+    <style name="ImageviewStyleInRecycler">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:contentDescription">@string/imageview_contentDescription</item>
+        <item name="android:scaleType">centerCrop</item>
+    </style>
+
+    <style name="IconContainer">
+        <item name="android:layout_width">@dimen/recycler_imageview_width</item>
+        <item name="android:layout_height">@dimen/recycler_imageview_width</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:layout_alignParentBottom">true</item>
+        <item name="android:layout_alignParentTop">true</item>
+        <item name="android:layout_alignParentStart">true</item>
+        <item name="android:layout_marginTop">@dimen/recycler_imageview_margins</item>
+        <item name="android:layout_marginBottom">@dimen/recycler_imageview_margins</item>
+        <item name="android:layout_marginStart">@dimen/recycler_imageview_margins</item>
+        <item name="android:layout_marginEnd">@dimen/recycler_imageview_margin_end</item>
+        <item name="android:padding">@dimen/recycler_imageview_padding</item>
+        <item name="android:background">@drawable/background_imageview</item>
     </style>
 
     <style name="FragmentContainerViewStyle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/imageview_height</item>
         <item name="android:layout_margin">@dimen/recycler_imageview_padding</item>
+        <item name="android:padding">@dimen/recycler_imageview_padding</item>
+        <item name="android:background">@drawable/background_recycler_item</item>
     </style>
 
 </resources>

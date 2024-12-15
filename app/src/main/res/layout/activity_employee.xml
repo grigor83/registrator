@@ -25,7 +25,8 @@
             <ImageView
                 android:id="@+id/icon"
                 style="@style/ImageviewStyle"
-                android:background="@drawable/background_imageview"/>
+                android:background="@drawable/background_imageview"
+                android:src="@drawable/user_icon"/>
 
             <!-- First name -->
             <LinearLayout

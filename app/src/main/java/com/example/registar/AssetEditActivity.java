@@ -42,7 +42,7 @@ public class AssetEditActivity extends AppCompatActivity {
     private EditText titleView, descriptionView, priceView, barcodeView;
     private AutoCompleteTextView locationView, employeeView;
     private Location selectedLocation;
-    private EmployeeWithRelations selectedEmployee;
+    private Employee selectedEmployee;
     private String imagePath;
 
     @SuppressLint("ClickableViewAccessibility")
@@ -76,7 +76,7 @@ public class AssetEditActivity extends AppCompatActivity {
             employeeView.showDropDown(); // Force the dropdown to appear when clicked
         });
         employeeView.setOnItemClickListener((parent, view, position, id) -> {
-            selectedEmployee = (EmployeeWithRelations) parent.getItemAtPosition(position);
+            selectedEmployee = (Employee) parent.getItemAtPosition(position);
             employeeView.setError(null);
         });
         setAdapters(locationView, employeeView);
@@ -156,7 +156,7 @@ public class AssetEditActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void cancelEditing(View view) {
+    public void cancel(View view) {
         CameraHelper.imagePath = null;
         finish();
     }
@@ -168,8 +168,8 @@ public class AssetEditActivity extends AppCompatActivity {
         asset.getAsset().setTitle(String.valueOf(titleView.getText()).trim());
         asset.getAsset().setDescription(String.valueOf(descriptionView.getText()).trim());
         if (null != selectedEmployee){
-            asset.getAsset().setEmployeeId(selectedEmployee.getEmployee().getId());
-            asset.setEmployee(selectedEmployee.getEmployee());
+            asset.getAsset().setEmployeeId(selectedEmployee.getId());
+            asset.setEmployee(selectedEmployee);
         }
         if (null != selectedLocation){
             asset.getAsset().setLocationId(selectedLocation.getId());

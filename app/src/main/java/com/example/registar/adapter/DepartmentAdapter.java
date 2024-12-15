@@ -178,10 +178,10 @@ public class DepartmentAdapter extends RecyclerView.Adapter<DepartmentAdapter.Vi
 
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-    TextView name;
-    public ViewHolder(@NonNull View itemView) {
-        super(itemView);
-        name = itemView.findViewById(R.id.department);
+        TextView name;
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            name = itemView.findViewById(R.id.department);
+        }
     }
-}
 }

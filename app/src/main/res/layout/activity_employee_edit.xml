@@ -25,7 +25,8 @@
             <ImageView
                 android:id="@+id/icon"
                 style="@style/ImageviewStyle"
-                android:background="@drawable/background_editable"/>
+                android:background="@drawable/background_editable"
+                android:src="@drawable/user_icon"/>
 
             <!-- First name -->
             <LinearLayout
@@ -70,7 +71,6 @@
                 <AutoCompleteTextView
                     android:id="@+id/department"
                     style="@style/EditTextStyle"
-                    android:focusable="false"
                     android:cursorVisible="false"
                     android:hint="@string/select_department"
                     android:inputType="none"/>

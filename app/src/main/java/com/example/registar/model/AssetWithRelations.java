@@ -1,5 +1,6 @@
 package com.example.registar.model;
 
+import androidx.annotation.NonNull;
 import androidx.room.Embedded;
 import androidx.room.Relation;
 
@@ -43,5 +44,11 @@ public class AssetWithRelations implements Serializable {
 
     public void setLocation(Location location) {
         this.location = location;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return getAsset().getTitle();
     }
 }

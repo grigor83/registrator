@@ -104,7 +104,7 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.ViewHo
         }
         else {
             holder.icon.setImageBitmap(null);
-            holder.icon.setImageResource(R.drawable.chair);
+            holder.icon.setImageResource(R.drawable.user_icon);
         }
     }
 

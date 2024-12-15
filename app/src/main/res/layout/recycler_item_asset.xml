@@ -5,29 +5,22 @@
     android:layout_marginBottom="@dimen/asset_recycler_item_margin_bottom"
     android:background="@drawable/background_highlighted">
 
-    <ImageView
-        android:id="@+id/icon"
-        android:layout_width="@dimen/recycler_imageview_width"
-        android:layout_height="@dimen/asset_recycler_item_height"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:padding="@dimen/recycler_imageview_padding"
-        android:layout_marginTop="@dimen/recycler_imageview_margins"
-        android:layout_marginBottom="@dimen/recycler_imageview_margins"
-        android:layout_marginStart="@dimen/recycler_imageview_margins"
-        android:layout_marginEnd="@dimen/recycler_imageview_margin_end"
-        android:contentDescription="@string/imageview_contentDescription"
-        android:background="@drawable/background_imageview"
-        android:src="@drawable/chair">
+    <LinearLayout
+        android:id="@+id/icon_container"
+        style="@style/IconContainer">
 
-    </ImageView>
+        <ImageView
+            android:id="@+id/icon"
+            style="@style/ImageviewStyleInRecycler"
+            android:src="@drawable/chair">
+        </ImageView>
+    </LinearLayout>
 
     <TextView
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toEndOf="@id/icon"
+        android:layout_toEndOf="@id/icon_container"
         android:layout_alignParentTop="true"
         android:paddingTop="@dimen/textview_title_padding"
         android:paddingBottom="@dimen/textview_title_padding"
@@ -39,7 +32,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingEnd="@dimen/recycler_imageview_padding"
-        android:layout_toEndOf="@id/icon"
+        android:layout_toEndOf="@id/icon_container"
         android:layout_below="@id/title"
         android:text="@string/textview_description_text"
         android:textSize="@dimen/textview_textSize"
@@ -51,7 +44,7 @@
         android:id="@+id/location"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toEndOf="@id/icon"
+        android:layout_toEndOf="@id/icon_container"
         android:layout_below="@id/description"
         android:text="@string/textview_location_text"
         android:textSize="@dimen/textview_textSize" />

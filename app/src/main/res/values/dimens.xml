@@ -44,5 +44,6 @@
     <dimen name="fab_margin">10dp</dimen>
     <dimen name="textview_label_width">180dp</dimen>
     <dimen name="map_fragment_height">150dp</dimen>
+    <dimen name="stroke_width">2dp</dimen>
 
 </resources>

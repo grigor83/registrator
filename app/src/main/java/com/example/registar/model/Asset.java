@@ -19,7 +19,7 @@ public class Asset implements Serializable {
     @PrimaryKey(autoGenerate = true)
     private int id;
     private String title;
-    private  String description;
+    private String description;
     private String imagePath;
     private long barcode;
     private int price;

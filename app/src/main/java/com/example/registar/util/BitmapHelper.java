@@ -50,14 +50,12 @@ public class BitmapHelper {
 
     private static Bitmap getBitmapFromUri(Context context, Uri photoUri, int width, int height) throws IOException {
         InputStream inputStream = context.getContentResolver().openInputStream(photoUri);
-
         // Decode with inJustDecodeBounds=true to check dimensions
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeStream(inputStream, null, options);
         if (inputStream != null)
             inputStream.close();
-
         // Calculate sample size
         options.inSampleSize = calculateInSampleSize(options, width, height);
 
@@ -69,17 +67,14 @@ public class BitmapHelper {
             inputStream.close();
 
         // Correct orientation
-        //Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
         return correctBitmapOrientation(context, photoUri, bitmap);
     }
 
     private static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
-        if (options.outHeight <= 0 || options.outWidth <= 0) {
+        if (options.outHeight <= 0 || options.outWidth <= 0)
             throw new IllegalArgumentException("Invalid image dimensions: " + options.outWidth + "x" + options.outHeight);
-        }
-        if (reqWidth <= 0 || reqHeight <= 0) {
+        if (reqWidth <= 0 || reqHeight <= 0)
             throw new IllegalArgumentException("Invalid requested dimensions: " + reqWidth + "x" + reqHeight);
-        }
 
         int height = options.outHeight;
         int width = options.outWidth;

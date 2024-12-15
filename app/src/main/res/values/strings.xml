@@ -66,5 +66,16 @@
     <string name="create_department">Kreiraj novo odjeljenje</string>
     <string name="create_asset">Kreiraj novo sredstvo</string>
     <string name="assets_on_location">Sredstva na ovoj lokaciji</string>
+    <string name="toast_create_message">Kreirano</string>
+    <string name="asset_list_id">ID:</string>
+    <string name="items_of_asset_list">Stavke popisne liste</string>
+    <string name="old_asset_title">Naziv starog sredstva:</string>
+    <string name="new_asset_title">Naziv novog sredstva:</string>
+    <string name="select_asset">Izaberi sredstvo</string>
+    <string name="old_employee">Stari zaduženi radnik:</string>
+    <string name="new_employee">Novi zaduženi radnik:</string>
+    <string name="old_location">Stara lokacija:</string>
+    <string name="new_location">Nova lokacija:</string>
+    <string name="create_list_item">Kreiraj novu stavku</string>
 
 </resources>
