@@ -50,10 +50,11 @@
                 android:paddingTop="@dimen/textview_padding_side"
                 android:paddingLeft="@dimen/textview_padding"/>
 
-            <ListView
-                android:id="@+id/item_list"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/fab_margin"/>
         </LinearLayout>
     </LinearLayout>
 

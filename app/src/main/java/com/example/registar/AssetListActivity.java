@@ -43,7 +43,6 @@ public class AssetListActivity extends AppCompatActivity {
                 }
     });
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,16 +60,18 @@ public class AssetListActivity extends AppCompatActivity {
 
         assetListIdView = findViewById(R.id.asset_list_id);
         listView = findViewById(R.id.item_list);
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(v -> {
-            Intent intent = new Intent(this, ListItemCreateActivity.class);
-            listItemActivityLauncher.launch(intent);
-        });
 
         assetList = (AssetList) getIntent().getSerializableExtra("clickedAssetList");
         if (assetList != null)
             updateUI();
         position = getIntent().getIntExtra("position", -1);
+
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(v -> {
+            Intent intent = new Intent(this, ListItemCreateActivity.class);
+            intent.putExtra("clickedAssetList", assetList);
+            listItemActivityLauncher.launch(intent);
+        });
     }
 
     @Override
@@ -106,8 +107,8 @@ public class AssetListActivity extends AppCompatActivity {
         assetListIdView.setText(String.valueOf(assetList.getId()));
         ExecutorService executor = ExecutorHelper.getExecutor();
         executor.execute(() -> {
-            ArrayList<ListItem> items = new ArrayList<>(MainActivity.registarDB.assetListDao()
-                                        .getAssetWithItems(assetList.getId()));
+            ArrayList<ListItem> items = new ArrayList<>(MainActivity.registarDB.listItemDao()
+                                        .getAllByAssetListId(assetList.getId()));
             ArrayAdapter<ListItem> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
             new Handler(Looper.getMainLooper()).post(() -> {
                 listView.setAdapter(adapter);

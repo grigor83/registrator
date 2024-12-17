@@ -4,11 +4,9 @@ import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
-import androidx.room.Transaction;
 import androidx.room.Update;
 
 import com.example.registar.model.AssetList;
-import com.example.registar.model.ListItem;
 
 import java.util.List;
 @Dao
@@ -24,10 +22,6 @@ public interface AssetListDao {
 
     @Query("SELECT * FROM asset_list")
     List<AssetList> getAll();
-
-    @Transaction
-    @Query("SELECT * FROM list_item WHERE id = :assetListId")
-    List<ListItem> getAssetWithItems(int assetListId);
 
 }
 

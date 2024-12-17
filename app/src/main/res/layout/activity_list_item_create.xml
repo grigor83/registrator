@@ -22,36 +22,19 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- Old asset title -->
+            <!-- Asset -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:gravity="center">
 
                 <TextView
                     style="@style/TextViewStyleInEditMode"
                     android:text="@string/old_asset_title"
-                    android:labelFor="@id/oldAssetTitle"/>
+                    android:labelFor="@id/asset"/>
                 <AutoCompleteTextView
-                    android:id="@+id/oldAssetTitle"
-                    style="@style/EditTextStyle"
-                    android:cursorVisible="false"
-                    android:hint="@string/select_asset"
-                    android:inputType="none"/>
-            </LinearLayout>
-
-            <!-- New asset title -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/TextViewStyleInEditMode"
-                    android:text="@string/new_asset_title"
-                    android:labelFor="@id/newAssetTitle"/>
-                <AutoCompleteTextView
-                    android:id="@+id/newAssetTitle"
+                    android:id="@+id/asset"
                     style="@style/EditTextStyle"
                     android:cursorVisible="false"
                     android:hint="@string/select_asset"
@@ -62,25 +45,26 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:gravity="center">
 
                 <TextView
                     style="@style/TextViewStyleInEditMode"
                     android:text="@string/old_employee"
                     android:labelFor="@id/oldEmployee"/>
-                <AutoCompleteTextView
+                <EditText
                     android:id="@+id/oldEmployee"
                     style="@style/EditTextStyle"
-                    android:cursorVisible="false"
-                    android:hint="@string/select_employee"
-                    android:inputType="none"/>
+                    android:enabled="false"
+                    android:textColor="@color/black"/>
             </LinearLayout>
 
             <!-- New employee -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:gravity="center">
 
                 <TextView
                     style="@style/TextViewStyleInEditMode"
@@ -98,25 +82,26 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:gravity="center">
 
                 <TextView
                     style="@style/TextViewStyleInEditMode"
                     android:text="@string/old_location"
                     android:labelFor="@id/oldLocation"/>
-                <AutoCompleteTextView
+                <EditText
                     android:id="@+id/oldLocation"
                     style="@style/EditTextStyle"
-                    android:cursorVisible="false"
-                    android:hint="@string/select_location"
-                    android:inputType="none"/>
+                    android:enabled="false"
+                    android:textColor="@color/black"/>
             </LinearLayout>
 
             <!-- New location -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:gravity="center">
 
                 <TextView
                     style="@style/TextViewStyleInEditMode"

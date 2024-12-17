@@ -1,5 +1,6 @@
 package com.example.registar.model;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
@@ -15,6 +16,12 @@ import java.io.Serializable;
                         parentColumns = "id",
                         childColumns = "assetListId",
                         onDelete = ForeignKey.CASCADE // Cascade delete if AssetList is deleted
+                ),
+                @ForeignKey(
+                        entity = Asset.class,
+                        parentColumns = "id",
+                        childColumns = "assetId",
+                        onDelete = ForeignKey.SET_NULL
                 ),
                 @ForeignKey(
                         entity = Employee.class,
@@ -35,7 +42,7 @@ import java.io.Serializable;
                         onDelete = ForeignKey.SET_NULL
                 ),
                 @ForeignKey(
-                        entity = Employee.class,
+                        entity = Location.class,
                         parentColumns = "id",
                         childColumns = "newLocationId",
                         onDelete = ForeignKey.SET_NULL
@@ -45,6 +52,7 @@ public class ListItem implements Serializable {
     @PrimaryKey(autoGenerate = true)
     private int id;
     private Integer assetListId;
+    private Integer assetId;
     private Integer oldEmployeeId;
     private Integer newEmployeeId;
     private Integer oldLocationId;
@@ -64,6 +72,14 @@ public class ListItem implements Serializable {
 
     public void setAssetListId(Integer assetListId) {
         this.assetListId = assetListId;
+    }
+
+    public Integer getAssetId() {
+        return assetId;
+    }
+
+    public void setAssetId(Integer assetId) {
+        this.assetId = assetId;
     }
 
     public Integer getNewEmployeeId() {
@@ -96,5 +112,11 @@ public class ListItem implements Serializable {
 
     public void setOldLocationId(Integer oldLocationId) {
         this.oldLocationId = oldLocationId;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "ID: " + getId();
     }
 }

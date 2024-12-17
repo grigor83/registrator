@@ -73,7 +73,6 @@
                 <AutoCompleteTextView
                     android:id="@+id/location"
                     style="@style/EditTextStyle"
-                    android:focusable="false"
                     android:cursorVisible="false"
                     android:hint="@string/select_location"
                     android:inputType="none"/>
@@ -94,7 +93,6 @@
                 <AutoCompleteTextView
                     android:id="@+id/employee"
                     style="@style/EditTextStyle"
-                    android:focusable="false"
                     android:cursorVisible="false"
                     android:hint="@string/select_employee"
                     android:inputType="none"/>
