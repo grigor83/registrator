@@ -31,9 +31,10 @@ import java.util.concurrent.ExecutorService;
 
 public class AssetListActivity extends AppCompatActivity {
     private AssetList assetList;
+    private int position;
     private TextView assetListIdView;
     private ListView listView;
-    private int position;
+
     private final ActivityResultLauncher<Intent> listItemActivityLauncher =
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
                 if (result.getResultCode() == RESULT_OK) {
@@ -62,9 +63,9 @@ public class AssetListActivity extends AppCompatActivity {
         listView = findViewById(R.id.item_list);
 
         assetList = (AssetList) getIntent().getSerializableExtra("clickedAssetList");
+        position = getIntent().getIntExtra("position", -1);
         if (assetList != null)
             updateUI();
-        position = getIntent().getIntExtra("position", -1);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(v -> {
@@ -109,9 +110,14 @@ public class AssetListActivity extends AppCompatActivity {
         executor.execute(() -> {
             ArrayList<ListItem> items = new ArrayList<>(MainActivity.registarDB.listItemDao()
                                         .getAllByAssetListId(assetList.getId()));
-            ArrayAdapter<ListItem> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
+            ArrayAdapter<ListItem> adapter = new ArrayAdapter<>(this, R.layout.list_item, R.id.item, items);
             new Handler(Looper.getMainLooper()).post(() -> {
                 listView.setAdapter(adapter);
+                listView.setOnItemClickListener((parent, view, position, id) -> {
+                    Intent intent = new Intent(view.getContext(), ListItemActivity.class);
+                    intent.putExtra("itemId", items.get(position).getId());
+                    listItemActivityLauncher.launch(intent);
+                });
             });
         });
     }

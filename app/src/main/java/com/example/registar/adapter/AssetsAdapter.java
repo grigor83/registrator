@@ -113,7 +113,7 @@ public class AssetsAdapter extends RecyclerView.Adapter<AssetsAdapter.ViewHolder
         }
         else {
             holder.icon.setImageBitmap(null);
-            holder.icon.setImageResource(R.drawable.chair);
+            holder.icon.setImageResource(R.drawable.asset_icon);
         }
     }
 

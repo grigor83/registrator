@@ -8,6 +8,7 @@ import androidx.room.Transaction;
 import androidx.room.Update;
 
 import com.example.registar.model.ListItem;
+import com.example.registar.model.ListItemWithDetails;
 
 import java.util.List;
 
@@ -26,6 +27,10 @@ public interface ListItemDao {
     @Transaction
     @Query("SELECT * FROM list_item")
     List<ListItem> getAll();
+
+    @Transaction
+    @Query("SELECT * FROM list_item WHERE id = :itemId")
+    ListItemWithDetails getById(int itemId);
 
     @Transaction
     @Query("SELECT * FROM list_item WHERE assetListId = :assetListId")

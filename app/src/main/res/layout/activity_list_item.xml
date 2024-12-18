@@ -5,13 +5,13 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    tools:context=".ListItemCreateActivity">
+    tools:context=".ListItemActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/EditToolbar">
+        android:theme="@style/MyToolbarStyle">
     </androidx.appcompat.widget.Toolbar>
 
     <ScrollView
@@ -22,18 +22,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/scan"
-                style="@style/CancelSaveButton"
-                android:layout_gravity="center"
-                android:layout_width="wrap_content"
-                android:layout_marginTop="@dimen/scan_button_margin"
-                android:layout_marginBottom="@dimen/scan_button_margin"
-                android:paddingLeft="@dimen/scan_button_padding"
-                android:paddingRight="@dimen/scan_button_padding"
-                android:text="@string/scan_barcode"
-                android:onClick="scanBarcode"/>
-
             <!-- Asset -->
             <LinearLayout
                 android:layout_width="match_parent"
@@ -42,15 +30,13 @@
                 android:gravity="center">
 
                 <TextView
-                    style="@style/TextViewStyleInEditMode"
+                    style="@style/TextViewLabelStyle"
                     android:text="@string/asset_title"
                     android:labelFor="@id/asset"/>
-                <AutoCompleteTextView
+                <TextView
                     android:id="@+id/asset"
-                    style="@style/EditTextStyle"
-                    android:cursorVisible="false"
-                    android:hint="@string/select_asset"
-                    android:inputType="none"/>
+                    style="@style/TextViewStyle"
+                    android:textColor="@color/black"/>
             </LinearLayout>
 
             <!-- Old employee -->
@@ -61,13 +47,12 @@
                 android:gravity="center">
 
                 <TextView
-                    style="@style/TextViewStyleInEditMode"
+                    style="@style/TextViewLabelStyle"
                     android:text="@string/old_employee"
                     android:labelFor="@id/oldEmployee"/>
-                <EditText
+                <TextView
                     android:id="@+id/oldEmployee"
-                    style="@style/EditTextStyle"
-                    android:enabled="false"
+                    style="@style/TextViewStyle"
                     android:textColor="@color/black"/>
             </LinearLayout>
 
@@ -79,15 +64,13 @@
                 android:gravity="center">
 
                 <TextView
-                    style="@style/TextViewStyleInEditMode"
+                    style="@style/TextViewLabelStyle"
                     android:text="@string/new_employee"
                     android:labelFor="@id/newEmployee"/>
-                <AutoCompleteTextView
+                <TextView
                     android:id="@+id/newEmployee"
-                    style="@style/EditTextStyle"
-                    android:cursorVisible="false"
-                    android:hint="@string/select_employee"
-                    android:inputType="none"/>
+                    style="@style/TextViewStyle"
+                    android:textColor="@color/black"/>
             </LinearLayout>
 
             <!-- Old location -->
@@ -98,13 +81,12 @@
                 android:gravity="center">
 
                 <TextView
-                    style="@style/TextViewStyleInEditMode"
+                    style="@style/TextViewLabelStyle"
                     android:text="@string/old_location"
                     android:labelFor="@id/oldLocation"/>
-                <EditText
+                <TextView
                     android:id="@+id/oldLocation"
-                    style="@style/EditTextStyle"
-                    android:enabled="false"
+                    style="@style/TextViewStyle"
                     android:textColor="@color/black"/>
             </LinearLayout>
 
@@ -116,36 +98,13 @@
                 android:gravity="center">
 
                 <TextView
-                    style="@style/TextViewStyleInEditMode"
+                    style="@style/TextViewLabelStyle"
                     android:text="@string/new_location"
                     android:labelFor="@id/newLocation"/>
-                <AutoCompleteTextView
+                <TextView
                     android:id="@+id/newLocation"
-                    style="@style/EditTextStyle"
-                    android:cursorVisible="false"
-                    android:hint="@string/select_location"
-                    android:inputType="none"/>
-            </LinearLayout>
-
-            <!-- Save and Cancel buttons -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="@dimen/btn_container_margin"
-                android:gravity="center">
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/cancel"
-                    style="@style/CancelSaveButton"
-                    android:text="@string/btn_cancel_text"
-                    android:onClick="cancel"/>
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/save"
-                    style="@style/CancelSaveButton"
-                    android:text="@string/btn_save_text"
-                    android:onClick="saveListItem"/>
+                    style="@style/TextViewStyle"
+                    android:textColor="@color/black"/>
             </LinearLayout>
 
         </LinearLayout>

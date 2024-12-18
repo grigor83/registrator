@@ -12,7 +12,7 @@
         <ImageView
             android:id="@+id/icon"
             style="@style/ImageviewStyleInRecycler"
-            android:src="@drawable/chair">
+            android:src="@drawable/asset_icon">
         </ImageView>
     </LinearLayout>
 

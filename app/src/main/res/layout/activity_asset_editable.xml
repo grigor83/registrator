@@ -24,7 +24,8 @@
             <ImageView
                 android:id="@+id/icon"
                 style="@style/ImageviewStyle"
-                android:background="@drawable/background_editable"/>
+                android:background="@drawable/background_editable"
+                android:src="@drawable/asset_icon"/>
 
             <!-- Title -->
             <LinearLayout

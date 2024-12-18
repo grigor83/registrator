@@ -212,7 +212,7 @@ public class CameraHelper extends AppCompatActivity {
         builder.show();
     }
 
-    private static void scanBarcode(EditText barcodeView) {
+    public static void scanBarcode(EditText barcodeView) {
         // Start the barcode scanner activity (using a library like Zxing or ZBar)
         Intent intent = new Intent(barcodeView.getContext(), CaptureActivity.class); // Zxing scanner activity
         scanBarcodeLauncher.launch(intent);

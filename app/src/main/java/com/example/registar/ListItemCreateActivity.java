@@ -4,26 +4,27 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.registar.model.Asset;
 import com.example.registar.model.AssetList;
 import com.example.registar.model.AssetWithRelations;
 import com.example.registar.model.Employee;
 import com.example.registar.model.ListItem;
 import com.example.registar.model.Location;
+import com.example.registar.util.CameraHelper;
 import com.example.registar.util.ExecutorHelper;
 
 import java.util.ArrayList;
@@ -87,6 +88,16 @@ public class ListItemCreateActivity extends AppCompatActivity {
 
         setAdapters();
 
+        CameraHelper.scanBarcodeLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null){
+                        String scannedBarcode = result.getData().getStringExtra("SCAN_RESULT");
+                        loadAsset(scannedBarcode);
+                    }
+                }
+        );
+
     }
 
     private void setAdapters(){
@@ -139,11 +150,35 @@ public class ListItemCreateActivity extends AppCompatActivity {
         ExecutorService executor = ExecutorHelper.getExecutor();
         executor.execute(() -> {
             MainActivity.registarDB.listItemDao().insert(listItem);
+            Asset asset = MainActivity.registarDB.assetDao().getById(listItem.getAssetId());
+            asset.setLocationId(listItem.getNewLocationId());
+            asset.setEmployeeId(listItem.getNewEmployeeId());
+            MainActivity.registarDB.assetDao().update(asset);
         });
 
         Intent resultIntent = new Intent();
         resultIntent.putExtra("created", listItem);
         setResult(RESULT_OK, resultIntent);
         finish();
+    }
+
+    public void scanBarcode(View view) {
+        CameraHelper.scanBarcode(oldEmployeeView);
+    }
+
+    private void loadAsset(String scannedBarcode) {
+        ExecutorService executor = ExecutorHelper.getExecutor();
+        executor.execute(() -> {
+            selectedAsset = MainActivity.registarDB.assetDao().getAssetByBarcode(Long.parseLong(scannedBarcode));
+            new Handler(Looper.getMainLooper()).post(() -> {
+                if (selectedAsset != null){
+                    assetView.setText(selectedAsset.getAsset().getTitle());
+                    oldEmployeeView.setText(selectedAsset.getEmployee().getFullName());
+                    oldLocationView.setText(selectedAsset.getLocation().getCity());
+                }
+                else
+                    MainActivity.showCustomToast(this, getString(R.string.asset_not_found));
+            });
+        });
     }
 }

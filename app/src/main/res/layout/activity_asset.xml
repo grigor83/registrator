@@ -25,7 +25,8 @@
             <ImageView
                 android:id="@+id/icon"
                 style="@style/ImageviewStyle"
-                android:background="@drawable/background_imageview"/>
+                android:background="@drawable/background_imageview"
+                android:src="@drawable/asset_icon"/>
 
             <LinearLayout
                 android:layout_width="match_parent"

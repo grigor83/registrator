@@ -35,6 +35,10 @@ public interface AssetDao {
     AssetWithRelations getAssetWithRelationsById(int assetId);
 
     @Transaction
+    @Query("SELECT * FROM asset WHERE barcode = :barcode")
+    AssetWithRelations getAssetByBarcode(long barcode);
+
+    @Transaction
     @Query("SELECT * FROM asset")
     List<AssetWithRelations> getAssetWithRelations();
 

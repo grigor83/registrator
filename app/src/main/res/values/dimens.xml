@@ -45,5 +45,8 @@
     <dimen name="textview_label_width">180dp</dimen>
     <dimen name="map_fragment_height">150dp</dimen>
     <dimen name="stroke_width">2dp</dimen>
+    <dimen name="list_view_margin">13dp</dimen>
+    <dimen name="scan_button_margin">12dp</dimen>
+    <dimen name="scan_button_padding">10dp</dimen>
 
 </resources>
