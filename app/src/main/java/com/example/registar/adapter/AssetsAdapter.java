@@ -212,7 +212,7 @@ public class AssetsAdapter extends RecyclerView.Adapter<AssetsAdapter.ViewHolder
 
     public void addAssetToList(AssetWithRelations createdAsset) {
         assetList.add(createdAsset);
-        filteredAssetList.add(createdAsset);
+        //filteredAssetList.add(createdAsset);
         notifyDataSetChanged();
     }
 

@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
+import android.database.sqlite.SQLiteConstraintException;
 
 public class FirstFragment extends Fragment {
 
@@ -70,7 +71,6 @@ public class FirstFragment extends Fragment {
                     if (result.getResultCode() == RESULT_OK) {
                         AssetWithRelations createdAsset = (AssetWithRelations) Objects.requireNonNull(result.getData()).getSerializableExtra("createdAsset");
                         if (createdAsset != null){
-                            adapter.addAssetToList(createdAsset);
                             insertAsset(createdAsset);
                         }
                     }
@@ -168,11 +168,20 @@ public class FirstFragment extends Fragment {
         });
     }
 
-    private void insertAsset(AssetWithRelations createdAsset) {
+    private void insertAsset(AssetWithRelations createdAsset) throws SQLiteConstraintException {
         ExecutorService executor = ExecutorHelper.getExecutor();
         executor.execute(() -> {
-            long id = MainActivity.registarDB.assetDao().insert(createdAsset.getAsset());
-            createdAsset.getAsset().setId((int) id);
+            try {
+                long id = MainActivity.registarDB.assetDao().insert(createdAsset.getAsset());
+                createdAsset.getAsset().setId((int) id);
+                new Handler(Looper.getMainLooper()).post(() -> {
+                    adapter.addAssetToList(createdAsset);
+                });
+            } catch (SQLiteConstraintException e) {
+                new Handler(Looper.getMainLooper()).post(() -> {
+                    MainActivity.showCustomToast(getContext(), getString(R.string.barcode_unique_exception));
+                });
+            }
         });
     }
 

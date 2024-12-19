@@ -104,6 +104,8 @@ public class AssetActivity extends AppCompatActivity implements OnMapReadyCallba
         MenuItem editItem = menu.findItem(R.id.action_edit);
         deleteItem.setVisible(true);
         editItem.setVisible(true);
+        menu.findItem(R.id.action_settings).setVisible(false);
+        menu.findItem(R.id.action_languages).setVisible(false);
 
         return true;
     }

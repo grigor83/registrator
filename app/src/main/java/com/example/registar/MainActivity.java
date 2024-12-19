@@ -1,6 +1,9 @@
 package com.example.registar;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -12,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -19,9 +23,10 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.registar.adapter.ViewPagerAdapter;
-import com.example.registar.util.ExecutorHelper;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
+
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
     public static RegistarDatabase registarDB;
@@ -36,6 +41,11 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        SharedPreferences preferences = getSharedPreferences("AppSettings", MODE_PRIVATE);
+        String languageCode = preferences.getString("Language", "sr");
+        setLocale(languageCode);
+
         setSupportActionBar(findViewById(R.id.toolbar));
         setTitle(R.string.app_name);
 
@@ -56,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
                 }).attach();
 
         registarDB = RegistarDatabase.getInstance(this);
+
     }
 
     @Override
@@ -74,10 +85,18 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.action_settings)
             Toast.makeText(this, R.string.settings, Toast.LENGTH_SHORT).show();
-        else if (item.getItemId() == R.id.action_languages)
-            Toast.makeText(this, R.string.languages, Toast.LENGTH_SHORT).show();
+        else if (item.getItemId() == R.id.action_languages){
+            showLanguageDialog();
+        }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        registarDB.cleanUp();
+        //ExecutorHelper.executor.shutdown();
+        super.onDestroy();
     }
 
     public static void showCustomToast(Context context, String message){
@@ -95,11 +114,42 @@ public class MainActivity extends AppCompatActivity {
         toast.show();
     }
 
-    @Override
-    protected void onDestroy() {
-        registarDB.cleanUp();
-        ExecutorHelper.executor.shutdown();
-        super.onDestroy();
+    private void showLanguageDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.choose_language);
+        String[] options = { getString(R.string.serbian), getString(R.string.english)};
+        builder.setItems(options, (dialog, which) -> {
+            if (which == 0)
+                changeLocale("sr");
+            else if (which == 1)
+                changeLocale("en");
+        });
+        builder.show();
+    }
+    private void changeLocale(String languageCode) {
+        SharedPreferences preferences = getSharedPreferences("AppSettings", MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("Language", languageCode);
+        editor.apply();
+
+        restartApp();
+    }
+    private void setLocale(String languageCode) {
+        Locale locale = new Locale(languageCode);
+        Locale.setDefault(locale);
+        Configuration config = getResources().getConfiguration();
+        config.setLocale(locale);
+        getResources().updateConfiguration(config, getResources().getDisplayMetrics());
+    }
+
+    private void restartApp(){
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        // Clear the activity stack so the app is restarted fresh
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+        startActivity(intent);
+        // Finish the current activity (optional, for a complete restart)
+        finish();
     }
 
 }

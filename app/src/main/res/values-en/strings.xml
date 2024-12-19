@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Registar</string>
+    <string name="assets_tab_name">assets</string>
+    <string name="employers_tab_name">employee</string>
+    <string name="locations_tab_name">locations</string>
+    <string name="census_lists_tab_name">asset lists</string>
+    <string name="settings">Settings</string>
+    <string name="languages">Languages</string>
+    <string name="search_by_title">Search by title</string>
+    <string name="search_by_location">Search by location</string>
+    <string name="textview_title_text">Title:</string>
+    <string name="textview_description_text">Description:</string>
+    <string name="textview_location_text">Location:</string>
+    <string name="textview_price_text">Price:</string>
+    <string name="textview_creation_date_text">Creation date:</string>
+    <string name="textview_employee_name">The employee in charge:</string>
+    <string name="btn_cancel_text">Cancel</string>
+    <string name="btn_save_text">Save</string>
+
+
+    <string name="fab_contentDescription">Add Item</string>
+    <string name="imageview_contentDescription">Picture</string>
+
+    <string name="popup_crud_textview_edit_text">Edit</string>
+    <string name="popup_crud_textview_delete_text">Delete</string>
+
+    <string name="textview_barcode">Barcode:</string>
+    <string name="toast_delete_message">Deleted</string>
+    <string name="error_text">These field is mandatory!</string>
+    <string name="error_creating_file">File creation failed!</string>
+    <string name="permission_camera_denied">Camera permission denied!</string>
+    <string name="permission_denied_title">Camera permission</string>
+    <string name="permission_permanent_denied">Camera permission is permanently denied. You can enable it in the application settings</string>
+    <string name="select_image_source">Select image</string>
+    <string name="pick_from_gallery">Gallery</string>
+    <string name="take_photo">Capture image</string>
+    <string name="cancel">Cancel</string>
+    <string name="select_location">Select location</string>
+    <string name="select_employee">Select employee</string>
+    <string name="choose_barcode_input_method">Choose barcode input method</string>
+    <string name="enter_number">Enter number</string>
+    <string name="scan_barcode">Scan barcode</string>
+    <string name="error_converting_string">String cannot be converted to a number!</string>
+    <string name="first_name">First name:</string>
+    <string name="last_name">Last name:</string>
+    <string name="department">Department:</string>
+    <string name="salary">Salary:</string>
+    <string name="search_by_name">Search by name</string>
+    <string name="search_by_department">Search by department</string>
+    <string name="full_name">First and last name</string>
+    <string name="edit_employee">Edit information</string>
+    <string name="create_employee">Create new employee</string>
+    <string name="select_department">Select department</string>
+    <string name="city">City:</string>
+    <string name="address">Address:</string>
+    <string name="search_by_city_name">Search by city name</string>
+    <string name="search_by_address">Search by address</string>
+    <string name="create_location">Create new location</string>
+    <string name="latitude">Latitude:</string>
+    <string name="longitude">Longitude:</string>
+    <string name="department_tab_name">departments</string>
+    <string name="create_department">Create new department</string>
+    <string name="create_asset">Create new asset</string>
+    <string name="assets_on_location">Assets at this location</string>
+    <string name="toast_create_message">Created</string>
+    <string name="asset_list_id">ID:</string>
+    <string name="items_of_asset_list">Item of asset list</string>
+    <string name="asset_title">Asset title:</string>
+    <string name="new_asset_title">New asset title:</string>
+    <string name="select_asset">Select asset</string>
+    <string name="old_employee">Old employee in charge:</string>
+    <string name="new_employee">New employee in charge:</string>
+    <string name="old_location">Old location:</string>
+    <string name="new_location">New location:</string>
+    <string name="create_list_item">Create new item</string>
+    <string name="list_item">item</string>
+    <string name="asset_not_found">Asset not found!</string>
+    <string name="barcode_unique_exception">The barcode must be unique!</string>
+    <string name="choose_language">Choose language</string>
+    <string name="serbian">Serbian</string>
+    <string name="english">English</string>
+
+</resources>

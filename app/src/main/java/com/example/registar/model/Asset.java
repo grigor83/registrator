@@ -3,6 +3,7 @@ package com.example.registar.model;
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import com.example.registar.util.Constants;
@@ -11,6 +12,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 @Entity(
         tableName = Constants.TABLE_NAME_ASSET,
+        indices = @Index(value = "barcode", unique = true),
         foreignKeys = {
                 @ForeignKey(entity = Employee.class, parentColumns = "id", childColumns = "employeeId", onDelete = ForeignKey.SET_NULL),
                 @ForeignKey(entity = Location.class, parentColumns = "id", childColumns = "locationId", onDelete = ForeignKey.SET_NULL)
@@ -21,6 +23,7 @@ public class Asset implements Serializable {
     private String title;
     private String description;
     private String imagePath;
+
     private long barcode;
     private int price;
     private LocalDate creationDate;
