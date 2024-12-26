@@ -72,7 +72,6 @@
 
                 <TextView
                     style="@style/TextViewStyleInEditMode"
-                    android:layout_width="@dimen/textview_label_width"
                     android:text="@string/latitude"
                     android:labelFor="@id/latitude"/>
                 <EditText
@@ -90,7 +89,6 @@
 
                 <TextView
                     style="@style/TextViewStyleInEditMode"
-                    android:layout_width="@dimen/textview_label_width"
                     android:text="@string/longitude"
                     android:labelFor="@id/longitude"/>
                 <EditText

@@ -83,7 +83,6 @@
 
                 <TextView
                     style="@style/TextViewStyleInEditMode"
-                    android:layout_width="wrap_content"
                     android:text="@string/textview_employee_name"
                     android:labelFor="@id/employee"/>
                 <AutoCompleteTextView
@@ -91,7 +90,8 @@
                     style="@style/EditTextStyle"
                     android:cursorVisible="false"
                     android:hint="@string/select_employee"
-                    android:inputType="none"/>
+                    android:inputType="none"
+                    android:layout_gravity="center"/>
             </LinearLayout>
 
             <!-- Creation date -->
@@ -102,7 +102,6 @@
 
                 <TextView
                     style="@style/TextViewStyleInEditMode"
-                    android:layout_width="wrap_content"
                     android:text="@string/textview_creation_date_text"/>
                 <TextView
                     android:id="@+id/creation_date"
@@ -112,7 +111,8 @@
                     android:text="@string/textview_creation_date_text"
                     android:background="@drawable/background_recycler_item"
                     android:layout_margin="@dimen/recycler_imageview_margins"
-                    android:padding="@dimen/recycler_imageview_padding"/>
+                    android:padding="@dimen/recycler_imageview_padding"
+                    android:layout_gravity="center"/>
             </LinearLayout>
 
             <!-- Barcode -->

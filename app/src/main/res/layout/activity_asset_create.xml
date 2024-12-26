@@ -87,7 +87,6 @@
 
                 <TextView
                     style="@style/TextViewStyleInEditMode"
-                    android:layout_width="wrap_content"
                     android:labelFor="@id/employee"
                     android:text="@string/textview_employee_name" />
 
@@ -96,7 +95,8 @@
                     style="@style/EditTextStyle"
                     android:cursorVisible="false"
                     android:hint="@string/select_employee"
-                    android:inputType="none"/>
+                    android:inputType="none"
+                    android:layout_gravity="center"/>
             </LinearLayout>
 
             <!-- Creation date -->
@@ -107,7 +107,6 @@
 
                 <TextView
                     style="@style/TextViewStyleInEditMode"
-                    android:layout_width="wrap_content"
                     android:text="@string/textview_creation_date_text" />
 
                 <TextView
@@ -118,7 +117,8 @@
                     android:layout_weight="1"
                     android:background="@drawable/background_recycler_item"
                     android:padding="@dimen/recycler_imageview_padding"
-                    android:text="@string/textview_creation_date_text" />
+                    android:text="@string/textview_creation_date_text"
+                    android:layout_gravity="center"/>
             </LinearLayout>
 
             <!--Price and Barcode -->

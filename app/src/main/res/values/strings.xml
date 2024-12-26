@@ -80,5 +80,6 @@
     <string name="choose_language">Izaberi jezik</string>
     <string name="serbian">Srpski jezik</string>
     <string name="english">Engleski jezik</string>
+    <string name="department_name">Ime:</string>
 
 </resources>

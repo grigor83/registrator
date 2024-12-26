@@ -22,7 +22,7 @@
 
         <TextView
             style="@style/TextViewStyleInEditMode"
-            android:text="@string/first_name"
+            android:text="@string/department_name"
             android:labelFor="@id/department"/>
         <EditText
             android:id="@+id/department"

@@ -71,7 +71,6 @@
 
                 <TextView
                     style="@style/TextViewLabelStyle"
-                    android:layout_width="@dimen/textview_label_width"
                     android:text="@string/latitude"/>
                 <TextView
                     android:id="@+id/latitude"
@@ -87,7 +86,6 @@
 
                 <TextView
                     style="@style/TextViewLabelStyle"
-                    android:layout_width="@dimen/textview_label_width"
                     android:text="@string/longitude"/>
                 <TextView
                     android:id="@+id/longitude"

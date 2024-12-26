@@ -78,7 +78,6 @@ public class AssetListActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.popup, menu);
-        menu.findItem(R.id.action_settings).setVisible(false);
         menu.findItem(R.id.action_languages).setVisible(false);
         MenuItem deleteItem = menu.findItem(R.id.action_delete);
         MenuItem editItem = menu.findItem(R.id.action_edit);
@@ -89,9 +88,7 @@ public class AssetListActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.action_settings)
-            Toast.makeText(this, R.string.settings, Toast.LENGTH_SHORT).show();
-        else if (item.getItemId() == R.id.action_languages)
+        if (item.getItemId() == R.id.action_languages)
             Toast.makeText(this, R.string.languages, Toast.LENGTH_SHORT).show();
         else if (item.getItemId() == R.id.action_delete){
             Intent resultIntent = new Intent();

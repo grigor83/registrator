@@ -12,4 +12,6 @@ public final class Constants {
     public static final String DB_NAME = "registar.db";
     public static final int CAMERA_PERMISSION_CODE = 100;
     public static final String[] CAMERA_PERMISSION = { Manifest.permission.CAMERA };
+    public static final String APP_PREFERENCES = "Language settings";
+
 }

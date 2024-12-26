@@ -80,5 +80,6 @@
     <string name="choose_language">Choose language</string>
     <string name="serbian">Serbian</string>
     <string name="english">English</string>
+    <string name="department_name">Name:</string>
 
 </resources>

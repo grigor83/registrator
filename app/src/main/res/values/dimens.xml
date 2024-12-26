@@ -31,7 +31,7 @@
     <dimen name="popup_crud_side_padding">30dp</dimen>
 
     <!-- settings for activity_asset layout  -->
-    <dimen name="textview_title_width">110dp</dimen>
+    <dimen name="textview_title_width">130dp</dimen>
     <dimen name="textview_padding_side">12dp</dimen>
     <dimen name="textview_padding">8dp</dimen>
     <dimen name="imageview_height">300dp</dimen>

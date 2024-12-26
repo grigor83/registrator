@@ -1,6 +1,6 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
     <solid
-        android:color="@color/primary" />
+        android:color="@color/secondary" />
     <corners
         android:radius="@dimen/drawable_border_radius" />
     <stroke

@@ -104,7 +104,6 @@ public class AssetActivity extends AppCompatActivity implements OnMapReadyCallba
         MenuItem editItem = menu.findItem(R.id.action_edit);
         deleteItem.setVisible(true);
         editItem.setVisible(true);
-        menu.findItem(R.id.action_settings).setVisible(false);
         menu.findItem(R.id.action_languages).setVisible(false);
 
         return true;
@@ -112,9 +111,7 @@ public class AssetActivity extends AppCompatActivity implements OnMapReadyCallba
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.action_settings)
-            Toast.makeText(this, R.string.settings, Toast.LENGTH_SHORT).show();
-        else if (item.getItemId() == R.id.action_languages)
+        if (item.getItemId() == R.id.action_languages)
             Toast.makeText(this, R.string.languages, Toast.LENGTH_SHORT).show();
         else if (item.getItemId() == R.id.action_delete){
             Intent resultIntent = new Intent();

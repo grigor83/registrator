@@ -17,9 +17,9 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/launcher_icon"
+        android:roundIcon="@mipmap/launcher_icon"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Registar.Custom">
         <activity
@@ -29,16 +29,10 @@
             android:name=".ListItemCreateActivity"
             android:exported="false" />
         <activity
-            android:name=".AssetListCreateActivity"
-            android:exported="false" />
-        <activity
             android:name=".AssetListActivity"
             android:exported="false" />
         <activity
             android:name=".DepartmentEditActivity"
-            android:exported="false" />
-        <activity
-            android:name=".AssetEditActivity$DepartmentEditActivity"
             android:exported="false" />
         <activity
             android:name=".DepartmentActivity"

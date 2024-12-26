@@ -23,6 +23,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.registar.adapter.ViewPagerAdapter;
+import com.example.registar.util.Constants;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
@@ -42,8 +43,8 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        SharedPreferences preferences = getSharedPreferences("AppSettings", MODE_PRIVATE);
-        String languageCode = preferences.getString("Language", "sr");
+        SharedPreferences preferences = getSharedPreferences(Constants.APP_PREFERENCES, MODE_PRIVATE);
+        String languageCode = preferences.getString(Constants.APP_PREFERENCES, "sr");
         setLocale(languageCode);
 
         setSupportActionBar(findViewById(R.id.toolbar));
@@ -83,9 +84,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.action_settings)
-            Toast.makeText(this, R.string.settings, Toast.LENGTH_SHORT).show();
-        else if (item.getItemId() == R.id.action_languages){
+        if (item.getItemId() == R.id.action_languages){
             showLanguageDialog();
         }
 
@@ -127,9 +126,9 @@ public class MainActivity extends AppCompatActivity {
         builder.show();
     }
     private void changeLocale(String languageCode) {
-        SharedPreferences preferences = getSharedPreferences("AppSettings", MODE_PRIVATE);
+        SharedPreferences preferences = getSharedPreferences(Constants.APP_PREFERENCES, MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putString("Language", languageCode);
+        editor.putString(Constants.APP_PREFERENCES, languageCode);
         editor.apply();
 
         restartApp();

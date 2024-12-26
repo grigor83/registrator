@@ -28,6 +28,7 @@
         <item name="android:paddingRight">@dimen/textview_padding_side</item>
         <item name="android:paddingTop">@dimen/textview_padding</item>
         <item name="android:paddingBottom">@dimen/textview_padding</item>
+        <item name="android:layout_gravity">center</item>
     </style>
 
     <!-- Custom Textview style  -->
@@ -38,7 +39,7 @@
         <item name="android:layout_gravity">center</item>
         <item name="android:background">@drawable/background_recycler_item</item>
         <item name="android:layout_margin">@dimen/recycler_imageview_margins</item>
-        <item name="android:padding">@dimen/recycler_imageview_padding</item>
+        <item name="android:padding">@dimen/textview_padding</item>
     </style>
 
     <!-- Style for edit mode -->
@@ -60,6 +61,7 @@
         <item name="android:padding">@dimen/edittext_padding</item>
         <item name="android:inputType">textMultiLine</item>
         <item name="android:importantForAutofill">no</item>
+        <item name="android:layout_gravity">center</item>
     </style>
 
     <style name="CancelSaveButton" parent="ThemeOverlay.AppCompat">
